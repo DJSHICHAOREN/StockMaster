@@ -1,8 +1,8 @@
 package com.example.stockmaster.util;
-//
-//import net.sourceforge.pinyin4j.PinyinHelper;
-//import net.sourceforge.pinyin4j.format.HanyuPinyinOutputFormat;
-//import net.sourceforge.pinyin4j.format.HanyuPinyinToneType;
+
+import net.sourceforge.pinyin4j.PinyinHelper;
+import net.sourceforge.pinyin4j.format.HanyuPinyinOutputFormat;
+import net.sourceforge.pinyin4j.format.HanyuPinyinToneType;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -80,19 +80,18 @@ public class HanyuUtil {
      * @return 拼音
      */
     private static String convertSingleHanzi2Pinyin(char hanzi){
-//        HanyuPinyinOutputFormat outputFormat = new HanyuPinyinOutputFormat();
-//        outputFormat.setToneType(HanyuPinyinToneType.WITHOUT_TONE);
-//        String[] res;
-//        StringBuffer sb=new StringBuffer();
-//        try {
-//            res = PinyinHelper.toHanyuPinyinStringArray(hanzi,outputFormat);
-//            sb.append(res[0]);//对于多音字，只用第一个拼音
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//            return "";
-//        }
-//        return sb.toString();
-        return "";
+        HanyuPinyinOutputFormat outputFormat = new HanyuPinyinOutputFormat();
+        outputFormat.setToneType(HanyuPinyinToneType.WITHOUT_TONE);
+        String[] res;
+        StringBuffer sb=new StringBuffer();
+        try {
+            res = PinyinHelper.toHanyuPinyinStringArray(hanzi,outputFormat);
+            sb.append(res[0]);//对于多音字，只用第一个拼音
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "";
+        }
+        return sb.toString();
     }
 
     /***

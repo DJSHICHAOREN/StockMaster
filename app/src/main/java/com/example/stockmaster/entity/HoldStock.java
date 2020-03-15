@@ -1,6 +1,7 @@
 package com.example.stockmaster.entity;
 
-import com.chandler.red.mystock.util.DateUtil;
+
+import com.example.stockmaster.util.DateUtil;
 
 public class HoldStock {
     private String number;

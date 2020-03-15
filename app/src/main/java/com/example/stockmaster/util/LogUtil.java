@@ -2,7 +2,7 @@ package com.example.stockmaster.util;
 
 import android.util.Log;
 
-import com.chandler.red.mystock.BuildConfig;
+import com.example.stockmaster.BuildConfig;
 
 
 /**
