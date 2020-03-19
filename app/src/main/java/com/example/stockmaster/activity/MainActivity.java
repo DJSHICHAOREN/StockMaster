@@ -3,7 +3,11 @@ package com.example.stockmaster.activity;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -12,27 +16,66 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.stockmaster.R;
-import com.example.stockmaster.entity.Stock;
+import com.example.stockmaster.entity.StockPrice;
+import com.example.stockmaster.util.StockManager;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 
 public class MainActivity extends AppCompatActivity {
-    private final static String ShIndex = "s_sh000001";
-    private final static String SzIndex = "s_sz399001";
-    private final static String ChuangIndex = "s_sz399006";
-    private final static String Sh50Index = "s_sh000016";
-    private final static String Sh300Index = "s_sh000300";
-    private final static String ZXIndex = "s_sz399005";
-    private final static String DqsIndex = "gb_$dji";
-    private final static String NsdkIndex = "gb_ixic";
-    private final static String HkIndex = "rt_hkHSI";
+
+    @BindView(R.id.tv_test)
+    public TextView tv_test;
+    private Timer timer;
+    private StockManager mStockManager = new StockManager();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        ButterKnife.bind(this);
+
     }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        timer = new Timer("RefreshStocks");
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                Message message = Message.obtain();
+                message.what = 1;
+                handler.sendMessage(message);
+            }
+        }, 0, 1000); // 1 seconds
+    }
+
+    private Handler handler = new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            switch (msg.what) {
+                case 1:{
+                    querySinaHeadStocks("sh600000");
+                    Log.d("lwd","获取股票数据");
+                    break;
+                }
+                case 2:{
+
+                }
+
+
+            }
+        }
+    };
+
 
     RequestQueue queue;
     public void querySinaHeadStocks(String list){
@@ -48,12 +91,16 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onResponse(String response) {
 //                        updateStockHeader(sinaResponseToStocks(response));
+                        List<StockPrice> stockPriceList = sinaResponseToStocks(response);
+                        tv_test.setText(stockPriceList.get(0).id + " " + stockPriceList.get(0).name + stockPriceList.get(0).current_price);
+
+                        mStockManager.add(stockPriceList);
                     }
                 },
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-//                        Toast.makeText(MainActivity.this,"数据请求失败",Toast.LENGTH_LONG).show();
+                        Toast.makeText(MainActivity.this,"数据请求失败", Toast.LENGTH_LONG).show();
                         Log.e("lwd","请求数据失败");
                     }
                 });
@@ -62,11 +109,11 @@ public class MainActivity extends AppCompatActivity {
         queue.start();
     }
 
-    public List<Stock> sinaResponseToStocks(String response){
+    public List<StockPrice> sinaResponseToStocks(String response){
         response = response.replaceAll("\n", "");
         String[] stocks = response.split(";");
 
-        List<Stock> stockBeanList = new ArrayList<>();
+        List<StockPrice> stockPriceBeanList = new ArrayList<>();
         for(String stock : stocks) {
             String[] leftRight = stock.split("=");
             if (leftRight.length < 2)
@@ -80,41 +127,23 @@ public class MainActivity extends AppCompatActivity {
             if (left.isEmpty())
                 continue;
 
-            Stock stockNow = new Stock();
+            StockPrice stockPriceNow = new StockPrice();
             String[] lefts = left.split("_");
-            stockNow.id_ = lefts[2]+"_"+lefts[3];
+            stockPriceNow.id = lefts[2];
 
             String[] values = right.split(",");
             try{
-                if(stockNow.id_.equals(ShIndex) || stockNow.id_.equals(SzIndex) || stockNow.id_.equals(ChuangIndex)){
-                    stockNow.name_ = values[0];
-                    stockNow.now_ = values[1];
-                    stockNow.increase = values[2];
-                    stockNow.percent = values[3];
-                }else if(stockNow.id_.equals(DqsIndex) || stockNow.id_.equals(NsdkIndex)){
-                    stockNow.name_ = values[0];
-                    stockNow.now_ = values[1];
-                    stockNow.increase = values[4];
-                    stockNow.percent = values[2];
-                }else if(stockNow.id_.equals(HkIndex)){
-                    stockNow.name_ = values[1];
-                    stockNow.now_ = values[6];
-                    stockNow.increase = values[7];
-                    stockNow.percent = values[8];
-                }else {
-                    stockNow.name_ = values[0];
-                    stockNow.now_ = values[1];
-                    stockNow.increase = values[2];
-                    stockNow.percent = values[3];
-                }
+                stockPriceNow.name = values[0];
+                stockPriceNow.current_price = values[3];
+                stockPriceNow.time = values[31];
 
             }catch (ArrayIndexOutOfBoundsException e){
                 Log.e("MainActivity",e.toString());
             }
 
-            stockBeanList.add(stockNow);
+            stockPriceBeanList.add(stockPriceNow);
         }
 
-        return stockBeanList;
+        return stockPriceBeanList;
     }
 }
