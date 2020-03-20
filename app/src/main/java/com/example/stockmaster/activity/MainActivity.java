@@ -135,7 +135,7 @@ public class MainActivity extends AppCompatActivity {
             try{
                 stockPriceNow.name = values[0];
                 stockPriceNow.current_price = values[3];
-                stockPriceNow.time = values[31];
+                stockPriceNow.setTime(values[31]);
 
             }catch (ArrayIndexOutOfBoundsException e){
                 Log.e("MainActivity",e.toString());

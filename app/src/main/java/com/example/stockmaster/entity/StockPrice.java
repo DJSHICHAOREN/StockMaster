@@ -1,9 +1,23 @@
 package com.example.stockmaster.entity;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 public class StockPrice {
     public String id, name, today_begin_price, yesterday_end_price, current_price,
-            today_highest_price, time, increase,percent,yest_value;
+            today_highest_price, increase,percent,yest_value;
 
+    public Date time;
+
+    public void setTime(String timeStr){
+        SimpleDateFormat simpleDateFormat=new SimpleDateFormat("HH:mm:ss");
+        try {
+            this.time = simpleDateFormat.parse(timeStr);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+    }
 
     public String getCurrent_price() {
         double d = Double.parseDouble(current_price);
