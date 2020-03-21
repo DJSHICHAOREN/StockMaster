@@ -1,5 +1,6 @@
 package com.example.stockmaster.util;
 
+import com.example.stockmaster.activity.UIManager;
 import com.example.stockmaster.entity.Stock;
 import com.example.stockmaster.entity.StockPrice;
 
@@ -9,8 +10,9 @@ import java.util.Map;
 
 public class StockManager {
     private Map<String, Stock> mStockMap = new HashMap<String, Stock>();
-    public StockManager(){
-
+    private UIManager mUIManager;
+    public StockManager(UIManager uiManager){
+        mUIManager = uiManager;
     }
 
     public void add(StockPrice stockPrice){
@@ -19,6 +21,7 @@ public class StockManager {
         if(mStockMap.get(id) != null){
             Stock stock = mStockMap.get(id);
             stock.addStockPrice(stockPrice);
+            mUIManager.refreshUI(stock);
         }
         else{
             Stock stock = new Stock(stockPrice.id, stockPrice.name);
