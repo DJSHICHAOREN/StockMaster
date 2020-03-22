@@ -75,8 +75,8 @@ public class SinaDataQueryer {
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        Log.d("lwd", response);
-                         mResponseStringToObject.sinaTodayPriceResponseToObjectList(response);
+                        List<StockPrice> stockPriceList = mResponseStringToObject.sinaTodayPriceResponseToObjectList(response);
+                        mStockManager.add(stockPriceList);
                     }
                 },
                 new Response.ErrorListener() {

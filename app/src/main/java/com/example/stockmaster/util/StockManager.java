@@ -8,11 +8,16 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * 管理股票类：新建股票类，建立新的价格
+ */
 public class StockManager {
     private Map<String, Stock> mStockMap = new HashMap<String, Stock>();
     private UIManager mUIManager;
-    public StockManager(UIManager uiManager){
+    private StockAnalyser mStockAnalyser;
+    public StockManager(UIManager uiManager, StockAnalyser stockAnalyser){
         mUIManager = uiManager;
+        mStockAnalyser = stockAnalyser;
     }
 
     public void add(StockPrice stockPrice){
@@ -21,10 +26,10 @@ public class StockManager {
         if(mStockMap.get(id) != null){
             Stock stock = mStockMap.get(id);
             stock.addStockPrice(stockPrice);
-            mUIManager.refreshUI(stock);
+            mUIManager.refreshUIWhenReceiveNewPrice(stock);
         }
         else{
-            Stock stock = new Stock(stockPrice.id, stockPrice.name);
+            Stock stock = new Stock(mStockAnalyser, stockPrice.id, stockPrice.name);
             stock.addStockPrice(stockPrice);
             mStockMap.put(stockPrice.id, stock);
         }

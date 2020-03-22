@@ -19,6 +19,7 @@ import com.example.stockmaster.R;
 import com.example.stockmaster.entity.Stock;
 import com.example.stockmaster.entity.StockPrice;
 import com.example.stockmaster.http.SinaDataQueryer;
+import com.example.stockmaster.util.StockAnalyser;
 import com.example.stockmaster.util.StockManager;
 
 import java.util.ArrayList;
@@ -37,13 +38,16 @@ public class MainActivity extends AppCompatActivity {
     private Timer timer;
     private StockManager mStockManager;
     private SinaDataQueryer mSinaDataQueryer;
+    private StockAnalyser mStockAnalyser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
-        mStockManager = new StockManager(new MainActivityUIManager());
+        MainActivityUIManager mainActivityUIManager = new MainActivityUIManager();
+        mStockAnalyser = new StockAnalyser(mainActivityUIManager);
+        mStockManager = new StockManager(mainActivityUIManager, mStockAnalyser);
         mSinaDataQueryer = new SinaDataQueryer(MainActivity.this, mStockManager);
     }
 
@@ -54,11 +58,13 @@ public class MainActivity extends AppCompatActivity {
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
-                Message message = Message.obtain();
-                message.what = 2;
-                handler.sendMessage(message);
+
             }
         }, 0, 1000); // 1 seconds
+
+        Message message = Message.obtain();
+        message.what = 2;
+        handler.sendMessage(message);
     }
 
     private Handler handler = new Handler(){
@@ -79,9 +85,15 @@ public class MainActivity extends AppCompatActivity {
         }
     };
 
-    class MainActivityUIManager implements UIManager{
-        public void refreshUI(Stock stock){
+    public class MainActivityUIManager implements UIManager{
+        @Override
+        public void refreshUIWhenReceiveNewPrice(Stock stock){
             tv_test.setText(stock.toString());
+        }
+
+        @Override
+        public void refreshUIWhenGetNewBuyPoint() {
+
         }
     }
 

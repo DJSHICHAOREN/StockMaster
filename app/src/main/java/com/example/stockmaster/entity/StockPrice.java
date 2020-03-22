@@ -5,11 +5,20 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class StockPrice {
-    public String id, name, today_begin_price, yesterday_end_price,
-            today_highest_price, increase,percent,yest_value;
-
+    public String id, name="";
     public Date time;
     public float price;
+    private static SimpleDateFormat mSimpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
+    public StockPrice(){
+
+    }
+
+    public StockPrice(String id, String time, String price){
+        setId(id);
+        setTime(time);
+        setPrice(price);
+    }
 
     public void setId(String id) {
         this.id = id;
@@ -24,9 +33,8 @@ public class StockPrice {
     }
 
     public void setTime(String timeStr){
-        SimpleDateFormat simpleDateFormat=new SimpleDateFormat("HH:mm:ss");
         try {
-            this.time = simpleDateFormat.parse(timeStr);
+            this.time = mSimpleDateFormat.parse(timeStr);
         } catch (ParseException e) {
             e.printStackTrace();
         }
@@ -36,15 +44,6 @@ public class StockPrice {
         return String.format("%.3f", price);
     }
 
-    public String getIncrease() {
-        double d = Double.parseDouble(increase);
-        return String.format("%.2f", d);
-    }
-
-    public String getPercent() {
-        double d = Double.parseDouble(percent);
-        return String.format("%.2f", d) + "% ";
-    }
 
     @Override
     public String toString() {

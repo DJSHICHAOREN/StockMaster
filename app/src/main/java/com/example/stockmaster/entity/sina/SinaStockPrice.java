@@ -6,6 +6,25 @@ public class SinaStockPrice {
     private String volume;
     private String avg_p;
 
+    private String date;
+    private String prevclose;
+
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
+    }
+
+    public String getPrevclose() {
+        return prevclose;
+    }
+
+    public void setPrevclose(String prevclose) {
+        this.prevclose = prevclose;
+    }
+
     public String getM() {
         return m;
     }

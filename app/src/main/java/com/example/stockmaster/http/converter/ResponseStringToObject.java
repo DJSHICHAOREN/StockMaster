@@ -4,6 +4,7 @@ import android.util.Log;
 
 import com.example.stockmaster.entity.StockPrice;
 import com.example.stockmaster.entity.sina.SinaResponse;
+import com.example.stockmaster.entity.sina.SinaStockPrice;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -18,7 +19,7 @@ public class ResponseStringToObject {
         response = response.replaceAll("\n", "");
         String[] stocks = response.split(";");
 
-        List<StockPrice> stockPriceBeanList = new ArrayList<>();
+        List<StockPrice> stockPriceList = new ArrayList<>();
         for(String stock : stocks) {
             String[] leftRight = stock.split("=");
             if (leftRight.length < 2)
@@ -46,10 +47,10 @@ public class ResponseStringToObject {
                 Log.e("MainActivity",e.toString());
             }
 
-            stockPriceBeanList.add(stockPriceNow);
+            stockPriceList.add(stockPriceNow);
         }
 
-        return stockPriceBeanList;
+        return stockPriceList;
     }
 
     public List<StockPrice> sinaTodayPriceResponseToObjectList(String response){
@@ -58,9 +59,31 @@ public class ResponseStringToObject {
 
         String stockId = stockStr[1];
         String stockPriceJsonStr = stockStr[2].replaceAll("\\(", "").replaceAll("\\)", "");
+        // 将字符串转为jsonObject
         JsonObject jsonObject = new JsonParser().parse(stockPriceJsonStr).getAsJsonObject();
+        // 将jsonObject转为SinaResponse对象
         Gson gson = new Gson();
         SinaResponse sinaResponse = gson.fromJson(jsonObject, new TypeToken<SinaResponse>(){}.getType());
-        return null;
+        // 将SinaResponse转为List<StockPrice>
+        List<StockPrice> stockPriceList = new ArrayList<>();
+        if(sinaResponse != null && sinaResponse.getResult() != null && sinaResponse.getResult().getData() != null){
+            List<List<SinaStockPrice>> data = sinaResponse.getResult().getData();
+            for(List<SinaStockPrice> oneDaySinaStockPrice : data){
+                // 得到这一天的日期
+                String date = "";
+                if(oneDaySinaStockPrice.get(0) != null && oneDaySinaStockPrice.get(0).getDate() != null){
+                    date = oneDaySinaStockPrice.get(0).getDate();
+                }
+                for(SinaStockPrice sinaStockPrice : oneDaySinaStockPrice){
+                    if(date == ""){
+                        Log.d("lwd", "sinaTodayPriceResponseToObjectList not get date");
+                    }
+                    // 生成StockPrice
+                    StockPrice stockPrice = new StockPrice(stockId, date+ " " +sinaStockPrice.getM(), sinaStockPrice.getPrice());
+                    stockPriceList.add(stockPrice);
+                }
+            }
+        }
+        return stockPriceList;
     }
 }
