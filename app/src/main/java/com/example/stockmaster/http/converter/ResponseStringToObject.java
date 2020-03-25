@@ -39,9 +39,9 @@ public class ResponseStringToObject {
 
             String[] values = right.split(",");
             try{
-                stockPriceNow.setName(values[0]);
-                stockPriceNow.setPrice(values[3]);
-                stockPriceNow.setTime(values[31]);
+                stockPriceNow.setName(values[1]);
+                stockPriceNow.setPrice(values[6]);
+                stockPriceNow.setTime(values[17] + " " + values[18]);
 
             }catch (ArrayIndexOutOfBoundsException e){
                 Log.e("MainActivity",e.toString());

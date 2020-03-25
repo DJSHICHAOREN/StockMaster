@@ -33,7 +33,8 @@ public class StockAnalyser {
             }
             // 寻找买点
             if(stockPrice2.price < stockPrice1.price && stockPrice2.price < stockPrice3.price){
-                Log.d("lwd", String.format("lower price time:%s, price：%f",stockPrice2.time.toString(), stockPrice2.price));
+                Log.d("lwd", String.format("%s lower price time:%s, price：%f",
+                        stockPrice2.id, stockPrice2.time.toString(), stockPrice2.price));
                 // 添加极小值点
                 stock.lowerStockPriceList.add(stockPrice2);
                 if(stock.lowerStockPriceList.size() >= 2){
@@ -41,6 +42,7 @@ public class StockAnalyser {
                     // 当底部呈上升期时
                     if(stock.lowerStockPriceList.get(lowerStockPriceListSize-1).price >
                             stock.lowerStockPriceList.get(lowerStockPriceListSize-2).price){
+//                        Log.d("lwd", String.format("上一个低点价格： %s", stock.lowerStockPriceList.get(lowerStockPriceListSize-2).price));
                         // 添加买点
                         stock.addBuyAndSaleStockPrice(stock.lowerStockPriceList.get(lowerStockPriceListSize-1), Stock.DealType.BUY);
                     }
@@ -49,13 +51,14 @@ public class StockAnalyser {
             }
             // 寻找卖点
             if(stockPrice2.price > stockPrice1.price && stockPrice2.price > stockPrice3.price){
+                Log.d("lwd", String.format("%s higher price time:%s, price：%f",stockPrice2.id, stockPrice2.time.toString(), stockPrice2.price));
                 // 添加极大值点
                 stock.higherStockPriceList.add(stockPrice2);
                 if(stock.higherStockPriceList.size() >= 2){
                     int higherStockPriceListSize = stock.higherStockPriceList.size();
                     // 当顶部呈下降期时
                     if(stock.higherStockPriceList.get(higherStockPriceListSize-1).price <=
-                            stock.lowerStockPriceList.get(higherStockPriceListSize-2).price){
+                            stock.higherStockPriceList.get(higherStockPriceListSize-2).price){
                         // 添加卖点
                         stock.addBuyAndSaleStockPrice(stock.higherStockPriceList.get(higherStockPriceListSize-1), Stock.DealType.SALE);
                     }

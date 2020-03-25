@@ -1,5 +1,7 @@
 package com.example.stockmaster.util;
 
+import android.util.Log;
+
 import com.example.stockmaster.activity.UIManager;
 import com.example.stockmaster.entity.Stock;
 import com.example.stockmaster.entity.StockPrice;
@@ -32,6 +34,7 @@ public class StockManager {
             Stock stock = new Stock(mStockAnalyser, stockPrice.id, stockPrice.name);
             stock.addStockPrice(stockPrice);
             mStockMap.put(stockPrice.id, stock);
+
         }
     }
 
@@ -43,5 +46,14 @@ public class StockManager {
         for(StockPrice stockPrice : stockPriceList){
             add(stockPrice);
         }
+        Log.d("lwd", String.format("%s 开盘到当前数据加载完毕", stockPriceList.get(0).name));
+    }
+
+    /**
+     * 添加
+     * @param stockPriceList
+     */
+    public void addTodayStockPrice(List<StockPrice> stockPriceList){
+        add(stockPriceList);
     }
 }

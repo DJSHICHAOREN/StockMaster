@@ -34,6 +34,9 @@ public class StockPrice {
 
     public void setTime(String timeStr){
         try {
+            if(timeStr.contains("/")){
+                timeStr = timeStr.replaceAll("/", "-");
+            }
             this.time = mSimpleDateFormat.parse(timeStr);
         } catch (ParseException e) {
             e.printStackTrace();

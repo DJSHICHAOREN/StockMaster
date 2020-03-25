@@ -56,12 +56,12 @@ public class MainActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
 
-        // 请求股票今天的数据
+        ArrayList<String> stockIdList = new ArrayList<String>(Arrays.asList("hk02400", "hk06060", "hk09969"));
+        // 获取从开盘到现在的股票数据
         Message todayPriceMessage = Message.obtain();
         todayPriceMessage.what = 1;
         Bundle bundle = new Bundle();
-        bundle.putStringArrayList("stockIdList", new ArrayList<String>(
-            Arrays.asList("hk02400")) );
+        bundle.putStringArrayList("stockIdList", stockIdList);
         todayPriceMessage.setData(bundle);
         handler.sendMessage(todayPriceMessage);
 
@@ -69,13 +69,11 @@ public class MainActivity extends AppCompatActivity {
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
-
+//                Message message = Message.obtain();
+//                message.what = 2;
+//                handler.sendMessage(message);
             }
         }, 0, 1000); // 1 seconds
-
-        Message message = Message.obtain();
-        message.what = 2;
-        handler.sendMessage(message);
     }
 
     private Handler handler = new Handler(){
@@ -85,11 +83,28 @@ public class MainActivity extends AppCompatActivity {
             switch (msg.what) {
                 case 1:{
                     Log.d("lwd","获取今天股票数据");
-                    mSinaDataQueryer.queryStocksNowPrice("sh600000");
+                    Bundle bundle = msg.getData();
+                    ArrayList<String> stockIdList = bundle.getStringArrayList("stockIdList");
+                    for(final String stockId : stockIdList) {
+                        new Thread() {
+                            @Override
+                            public void run() {
+                                mSinaDataQueryer.queryStocksTodayPrice(stockId);
+                            }
+                        }.start();
+                    }
                     break;
                 }
                 case 2:{
-                    mSinaDataQueryer.queryStocksTodayPrice("02400");
+                    Bundle bundle = msg.getData();
+                    ArrayList<String> stockIdList = bundle.getStringArrayList("stockIdList");
+                    String stockIdStr = "";
+                    for(String stockId : stockIdList) {
+                        stockIdStr = stockIdStr + "rt_" + stockId + ",";
+                    }
+                    mSinaDataQueryer.queryStocksNowPrice(stockIdStr);
+
+                    break;
                 }
 
             }

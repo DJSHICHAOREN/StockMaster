@@ -63,7 +63,7 @@ public class Stock {
         else if(previousDealType == DealType.BUY && dealType == DealType.SALE){
             saleStockPriceList.add(stockPrice);
             previousDealType = DealType.SALE;
-
+            Log.d("lwd", "上一个是卖点");
         }
     }
 
