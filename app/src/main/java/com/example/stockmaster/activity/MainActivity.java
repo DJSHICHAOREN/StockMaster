@@ -57,23 +57,26 @@ public class MainActivity extends AppCompatActivity {
         super.onResume();
 
         ArrayList<String> stockIdList = new ArrayList<String>(Arrays.asList("hk02400", "hk06060", "hk09969"));
+        // 实例化股票对象
+        mStockManager.createStocks(stockIdList);
         // 获取从开盘到现在的股票数据
         Message todayPriceMessage = Message.obtain();
         todayPriceMessage.what = 1;
-        Bundle bundle = new Bundle();
+        final Bundle bundle = new Bundle();
         bundle.putStringArrayList("stockIdList", stockIdList);
         todayPriceMessage.setData(bundle);
         handler.sendMessage(todayPriceMessage);
-
+        // 获取每分钟的数据
         timer = new Timer("RefreshStocks");
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
-//                Message message = Message.obtain();
-//                message.what = 2;
-//                handler.sendMessage(message);
+                Message minutePriceMessage = Message.obtain();
+                minutePriceMessage.what = 2;
+                minutePriceMessage.setData(bundle);
+                handler.sendMessage(minutePriceMessage);
             }
-        }, 0, 1000); // 1 seconds
+        }, 0, 2000); // 1 seconds
     }
 
     private Handler handler = new Handler(){
@@ -103,7 +106,7 @@ public class MainActivity extends AppCompatActivity {
                         stockIdStr = stockIdStr + "rt_" + stockId + ",";
                     }
                     mSinaDataQueryer.queryStocksNowPrice(stockIdStr);
-
+                    Log.d("lwd", String.format("请求每日数据：%s", stockIdStr));
                     break;
                 }
 

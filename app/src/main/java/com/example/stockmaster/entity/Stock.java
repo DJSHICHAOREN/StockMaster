@@ -12,6 +12,7 @@ import java.util.List;
 
 public class Stock {
     public String id, name;
+    public boolean isReceivedTodayData = false; //在为true时，才可以接收分钟的数据
     public StockPrice currentPrice;
     public List<StockPrice> todayStockPriceList = new ArrayList<>();
     public List<StockPrice> lowerStockPriceList = new ArrayList<>();
@@ -65,6 +66,11 @@ public class Stock {
             previousDealType = DealType.SALE;
             Log.d("lwd", "上一个是卖点");
         }
+    }
+
+
+    public void receiveTodayData(){
+        isReceivedTodayData = true;
     }
 
     @NonNull

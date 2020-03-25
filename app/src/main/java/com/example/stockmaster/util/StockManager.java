@@ -6,6 +6,7 @@ import com.example.stockmaster.activity.UIManager;
 import com.example.stockmaster.entity.Stock;
 import com.example.stockmaster.entity.StockPrice;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -22,38 +23,56 @@ public class StockManager {
         mStockAnalyser = stockAnalyser;
     }
 
-    public void add(StockPrice stockPrice){
-        String id = stockPrice.id;
-        // 判断是否已经存在这只股票
-        if(mStockMap.get(id) != null){
-            Stock stock = mStockMap.get(id);
-            stock.addStockPrice(stockPrice);
-            mUIManager.refreshUIWhenReceiveNewPrice(stock);
-        }
-        else{
-            Stock stock = new Stock(mStockAnalyser, stockPrice.id, stockPrice.name);
-            stock.addStockPrice(stockPrice);
-            mStockMap.put(stockPrice.id, stock);
-
-        }
-    }
-
     /**
-     * 将stockList添加到股票管理器中
-     * @param stockPriceList stock列表
+     * 根据股票id列表创建股票实例
+     * @param stockIdList
      */
-    public void add(List<StockPrice> stockPriceList){
-        for(StockPrice stockPrice : stockPriceList){
-            add(stockPrice);
+    public void createStocks(ArrayList<String> stockIdList){
+        for(String stockId : stockIdList){
+            Stock stock = new Stock(mStockAnalyser, stockId, "");
+            mStockMap.put(stockId, stock);
         }
-        Log.d("lwd", String.format("%s 开盘到当前数据加载完毕", stockPriceList.get(0).name));
     }
 
     /**
-     * 添加
+     * 添加单只股票的价格
+     * @param stockPrice
+     */
+    public void add(Stock stock, StockPrice stockPrice){
+        stock.addStockPrice(stockPrice);
+        mUIManager.refreshUIWhenReceiveNewPrice(stock);
+    }
+
+    /**
+     * 添加从开盘到现在的股票价格
+     * @param stockPriceList
+     * @return stockId 获取成功的股票Id
+     */
+    public void addTodayStockPrice(List<StockPrice> stockPriceList, String stockId){
+        Stock stock = mStockMap.get(stockId);
+        if(stock != null){
+            for(StockPrice stockPrice : stockPriceList){
+                add(stock, stockPrice);
+            }
+            // 设置获取开盘到当前数据完毕
+            stock.receiveTodayData();
+            Log.d("lwd", String.format("%s 开盘到当前数据加载完毕", stockId));
+        }
+
+    }
+
+    /**
+     * 添加当前股票价格
+     * 在添加了从开盘到现在的数据之后，再添加实时的每分钟的数据
      * @param stockPriceList
      */
-    public void addTodayStockPrice(List<StockPrice> stockPriceList){
-        add(stockPriceList);
+    public void addMinuteStockPrice(List<StockPrice> stockPriceList){
+        for(StockPrice stockPrice : stockPriceList){
+            Stock stock = mStockMap.get(stockPrice.id);
+            if(stock.isReceivedTodayData){
+                add(stock, stockPrice);
+            }
+            Log.d("lwd", String.format("%s 开盘到当前数据加载完毕", stockPrice.id));
+        }
     }
 }
