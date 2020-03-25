@@ -23,6 +23,7 @@ import com.example.stockmaster.util.StockAnalyser;
 import com.example.stockmaster.util.StockManager;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -54,6 +55,16 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+
+        // 请求股票今天的数据
+        Message todayPriceMessage = Message.obtain();
+        todayPriceMessage.what = 1;
+        Bundle bundle = new Bundle();
+        bundle.putStringArrayList("stockIdList", new ArrayList<String>(
+            Arrays.asList("hk02400")) );
+        todayPriceMessage.setData(bundle);
+        handler.sendMessage(todayPriceMessage);
+
         timer = new Timer("RefreshStocks");
         timer.schedule(new TimerTask() {
             @Override
@@ -73,8 +84,8 @@ public class MainActivity extends AppCompatActivity {
             super.handleMessage(msg);
             switch (msg.what) {
                 case 1:{
+                    Log.d("lwd","获取今天股票数据");
                     mSinaDataQueryer.queryStocksNowPrice("sh600000");
-                    Log.d("lwd","获取股票数据");
                     break;
                 }
                 case 2:{
