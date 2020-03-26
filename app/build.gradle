@@ -21,6 +21,13 @@ android {
         }
     }
 
+
+    compileOptions {
+        // ButterKnife静态接口需要在Java 8下使用
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
 }
 
 dependencies {

@@ -13,6 +13,7 @@ import android.widget.TextView;
 import com.example.stockmaster.R;
 import com.example.stockmaster.entity.Stock;
 import com.example.stockmaster.http.SinaDataQueryer;
+import com.example.stockmaster.ui.adapter.StockListAdapter;
 import com.example.stockmaster.util.StockAnalyser;
 import com.example.stockmaster.util.StockManager;
 
@@ -60,6 +61,10 @@ public class MainActivity extends AppCompatActivity {
 
         // 实例化股票对象
         mStockManager.createStocks(stockIdList);
+
+        StockListAdapter stockListAdapter = new StockListAdapter(mStockManager.getStocks());
+        rv_stock_list.setAdapter(stockListAdapter);
+
         // 获取从开盘到现在的股票数据
         Message todayPriceMessage = Message.obtain();
         todayPriceMessage.what = 1;

@@ -13,18 +13,12 @@ import com.example.stockmaster.entity.Stock;
 
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 public class StockListAdapter extends RecyclerView.Adapter<StockListAdapter.StockListViewHolder> {
     private List<Stock> mStockList;
-
-    public static class StockListViewHolder extends RecyclerView.ViewHolder {
-        // each data item is just a string in this case
-        public TextView mTextView;
-
-        public StockListViewHolder(TextView textView) {
-            super(textView);
-            mTextView = textView;
-        }
-    }
+    private View mLayoutView;
 
     public StockListAdapter(List<Stock> stockList){
         mStockList = stockList;
@@ -34,20 +28,34 @@ public class StockListAdapter extends RecyclerView.Adapter<StockListAdapter.Stoc
     @Override
     public StockListAdapter.StockListViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         // create a new view
-        TextView v = (TextView) LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.stock_list_item, parent, false);
-        LayoutInflater.from(parent.getContext()).inflate(R.layout.stock_list_item, null);
-        StockListViewHolder vh = new StockListViewHolder(v);
-        return vh;
+//        TextView v = (TextView) LayoutInflater.from(parent.getContext())
+//                .inflate(R.layout.stock_list_item, parent, false);
+        if(mLayoutView == null){
+            mLayoutView = LayoutInflater.from(parent.getContext()).inflate(R.layout.stock_list_item, parent, false);
+        }
+        StockListViewHolder stockListViewHolder = new StockListViewHolder(mLayoutView);
+        return stockListViewHolder;
     }
 
     @Override
     public void onBindViewHolder(@NonNull StockListAdapter.StockListViewHolder holder, int position) {
-
+        holder.mTextView.setText(mStockList.get(position).id);
     }
 
     @Override
     public int getItemCount() {
-        return 0;
+        return mStockList.size();
+    }
+
+    public static class StockListViewHolder extends RecyclerView.ViewHolder {
+        // each data item is just a string in this case
+        @BindView(R.id.tv_stock_id)
+        public TextView mTextView;
+
+        public StockListViewHolder(View view) {
+            super(view);
+//            mTextView = textView;
+            ButterKnife.bind(this, view);
+        }
     }
 }

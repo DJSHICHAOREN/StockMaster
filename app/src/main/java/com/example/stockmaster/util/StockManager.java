@@ -6,6 +6,7 @@ import com.example.stockmaster.ui.activity.UIManager;
 import com.example.stockmaster.entity.Stock;
 import com.example.stockmaster.entity.StockPrice;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -76,5 +77,13 @@ public class StockManager {
             }
         }
 
+    }
+    //todo:将stock从map存储改为用两个list存储
+    public List<Stock> getStocks(){
+        List<Stock> stockList = new ArrayList<>();
+        for (String key : mStockMap.keySet()) {
+            stockList.add(mStockMap.get(key));
+        }
+        return stockList;
     }
 }
