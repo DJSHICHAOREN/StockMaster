@@ -1,4 +1,4 @@
-package com.example.stockmaster.activity;
+package com.example.stockmaster.ui.activity;
 
 import com.example.stockmaster.entity.Stock;
 

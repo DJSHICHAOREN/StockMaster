@@ -1,30 +1,23 @@
-package com.example.stockmaster.activity;
+package com.example.stockmaster.ui.activity;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
 import com.example.stockmaster.R;
 import com.example.stockmaster.entity.Stock;
-import com.example.stockmaster.entity.StockPrice;
 import com.example.stockmaster.http.SinaDataQueryer;
 import com.example.stockmaster.util.StockAnalyser;
 import com.example.stockmaster.util.StockManager;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -36,10 +29,13 @@ public class MainActivity extends AppCompatActivity {
 
     @BindView(R.id.tv_test)
     public TextView tv_test;
+    @BindView(R.id.rv_stock_list)
+    public RecyclerView rv_stock_list;
     private Timer timer;
     private StockManager mStockManager;
     private SinaDataQueryer mSinaDataQueryer;
     private StockAnalyser mStockAnalyser;
+    private RecyclerView.Adapter mAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +46,10 @@ public class MainActivity extends AppCompatActivity {
         mStockAnalyser = new StockAnalyser(mainActivityUIManager);
         mStockManager = new StockManager(mainActivityUIManager, mStockAnalyser);
         mSinaDataQueryer = new SinaDataQueryer(MainActivity.this, mStockManager);
+        // 设置RecyclerView的布局
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+        rv_stock_list.setLayoutManager(linearLayoutManager);
+
     }
 
     @Override
