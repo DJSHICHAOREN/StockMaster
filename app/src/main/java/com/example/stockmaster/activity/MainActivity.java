@@ -57,6 +57,7 @@ public class MainActivity extends AppCompatActivity {
         super.onResume();
 
         ArrayList<String> stockIdList = new ArrayList<String>(Arrays.asList("hk02400", "hk06060", "hk09969"));
+
         // 实例化股票对象
         mStockManager.createStocks(stockIdList);
         // 获取从开盘到现在的股票数据
@@ -106,7 +107,6 @@ public class MainActivity extends AppCompatActivity {
                         stockIdStr = stockIdStr + "rt_" + stockId + ",";
                     }
                     mSinaDataQueryer.queryStocksNowPrice(stockIdStr);
-                    Log.d("lwd", String.format("请求每日数据：%s", stockIdStr));
                     break;
                 }
 

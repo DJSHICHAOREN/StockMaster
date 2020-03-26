@@ -10,7 +10,6 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.example.stockmaster.activity.MainActivity;
 import com.example.stockmaster.entity.StockPrice;
 import com.example.stockmaster.http.converter.ResponseStringToObject;
 import com.example.stockmaster.util.StockManager;
@@ -46,8 +45,7 @@ public class SinaDataQueryer {
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        Log.d("lwd response", response);
-                        List<StockPrice> stockPriceList = mResponseStringToObject.sinaNowPriceResponseToObjectList(response);
+                        List<StockPrice> stockPriceList = mResponseStringToObject.sinaMinutePriceResponseToObjectList(response);
                         mStockManager.addMinuteStockPrice(stockPriceList);
                     }
                 },

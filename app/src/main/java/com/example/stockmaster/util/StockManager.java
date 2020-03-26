@@ -28,6 +28,7 @@ public class StockManager {
      * @param stockIdList
      */
     public void createStocks(ArrayList<String> stockIdList){
+        mStockMap.clear();
         for(String stockId : stockIdList){
             Stock stock = new Stock(mStockAnalyser, stockId, "");
             mStockMap.put(stockId, stock);
@@ -69,10 +70,11 @@ public class StockManager {
     public void addMinuteStockPrice(List<StockPrice> stockPriceList){
         for(StockPrice stockPrice : stockPriceList){
             Stock stock = mStockMap.get(stockPrice.id);
-            if(stock.isReceivedTodayData){
+            if(stock != null && stock.isReceivedTodayData){
                 add(stock, stockPrice);
+                Log.d("lwd", String.format("加载分钟数据:%s", stock.id));
             }
-            Log.d("lwd", String.format("%s 开盘到当前数据加载完毕", stockPrice.id));
         }
+
     }
 }

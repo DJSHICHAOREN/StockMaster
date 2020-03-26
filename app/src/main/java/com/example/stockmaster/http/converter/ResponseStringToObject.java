@@ -13,9 +13,17 @@ import com.google.gson.reflect.TypeToken;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * 将接收的数据字符串转化为对象
+ */
 public class ResponseStringToObject {
 
-    public List<StockPrice> sinaNowPriceResponseToObjectList(String response){
+    /**
+     * 将分时价格转换为价格对象列表
+     * @param response
+     * @return
+     */
+    public List<StockPrice> sinaMinutePriceResponseToObjectList(String response){
         response = response.replaceAll("\n", "");
         String[] stocks = response.split(";");
 
@@ -35,7 +43,7 @@ public class ResponseStringToObject {
 
             StockPrice stockPriceNow = new StockPrice();
             String[] lefts = left.split("_");
-            stockPriceNow.setId(lefts[2]);
+            stockPriceNow.setId(lefts[3]);
 
             String[] values = right.split(",");
             try{
@@ -53,6 +61,11 @@ public class ResponseStringToObject {
         return stockPriceList;
     }
 
+    /**
+     * 将今天的价格转换为对象列表
+     * @param response
+     * @return
+     */
     public List<StockPrice> sinaTodayPriceResponseToObjectList(String response){
         response = response.replaceAll("\n", "");
         String[] stockStr = response.split(":::");

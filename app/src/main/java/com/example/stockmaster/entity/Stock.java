@@ -29,25 +29,34 @@ public class Stock {
         mStockAnalyser = stockAnalyser;
     }
 
+    private void addPriceAndAnalyse(StockPrice stockPrice){
+//        if(stockPrice.id.equals("hk02400")){
+//            Log.d("lwd", String.format("心动公司：price:%s time:%s", stockPrice.price, stockPrice.time));
+//        }
+        todayStockPriceList.add(stockPrice);
+        mStockAnalyser.analyse(this);
+    }
+
     public void addStockPrice(StockPrice stockPrice){
+
         currentPrice = stockPrice;
         if(!todayStockPriceList.isEmpty()){
             StockPrice lastStockPrice  = todayStockPriceList.get(todayStockPriceList.size()-1);
             // 对于同一分钟的价格，进行价格的更新
             if(stockPrice.time.compareTo(lastStockPrice.time) == 0 && lastStockPrice.price != stockPrice.price){
                 todayStockPriceList.remove(todayStockPriceList.size()-1);
-                todayStockPriceList.add(stockPrice);
+                addPriceAndAnalyse(stockPrice);
             }
             // 比列表靠后的时间，添加进列表
             else if(stockPrice.time.after(lastStockPrice.time)){
-                todayStockPriceList.add(stockPrice);
+                addPriceAndAnalyse(stockPrice);
             }
         }
         else{
-            todayStockPriceList.add(stockPrice);
+            addPriceAndAnalyse(stockPrice);
         }
 
-        mStockAnalyser.analyse(this);
+
     }
 
     /**
