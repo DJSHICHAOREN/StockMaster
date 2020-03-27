@@ -36,7 +36,7 @@ public class MainActivity extends AppCompatActivity {
     private StockManager mStockManager;
     private SinaDataQueryer mSinaDataQueryer;
     private StockAnalyser mStockAnalyser;
-    private RecyclerView.Adapter mAdapter;
+    private RecyclerView.Adapter stockListAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,7 +50,8 @@ public class MainActivity extends AppCompatActivity {
         // 设置RecyclerView的布局
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         rv_stock_list.setLayoutManager(linearLayoutManager);
-
+        stockListAdapter = new StockListAdapter(mStockManager.getStockList());
+        rv_stock_list.setAdapter(stockListAdapter);
     }
 
     @Override
@@ -61,9 +62,6 @@ public class MainActivity extends AppCompatActivity {
 
         // 实例化股票对象
         mStockManager.createStocks(stockIdList);
-
-        StockListAdapter stockListAdapter = new StockListAdapter(mStockManager.getStocks());
-        rv_stock_list.setAdapter(stockListAdapter);
 
         // 获取从开盘到现在的股票数据
         Message todayPriceMessage = Message.obtain();
@@ -81,6 +79,8 @@ public class MainActivity extends AppCompatActivity {
                 minutePriceMessage.what = 2;
                 minutePriceMessage.setData(bundle);
                 handler.sendMessage(minutePriceMessage);
+
+
             }
         }, 0, 2000); // 1 seconds
     }
@@ -112,6 +112,8 @@ public class MainActivity extends AppCompatActivity {
                         stockIdStr = stockIdStr + "rt_" + stockId + ",";
                     }
                     mSinaDataQueryer.queryStocksNowPrice(stockIdStr);
+
+                    stockListAdapter.notifyDataSetChanged();
                     break;
                 }
 

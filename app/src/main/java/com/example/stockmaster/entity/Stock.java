@@ -33,6 +33,7 @@ public class Stock {
 //        if(stockPrice.id.equals("hk02400")){
 //            Log.d("lwd", String.format("心动公司：price:%s time:%s", stockPrice.price, stockPrice.time));
 //        }
+//        Log.d("lwd", String.format("公司：%s, 新的价格：%s, 时间：%s", stockPrice.id, stockPrice.price, stockPrice.time));
         todayStockPriceList.add(stockPrice);
         mStockAnalyser.analyse(this);
     }
@@ -80,6 +81,13 @@ public class Stock {
 
     public void receiveTodayData(){
         isReceivedTodayData = true;
+    }
+
+    public float getCurrentPrice(){
+        if(currentPrice != null){
+            return currentPrice.price;
+        }
+        return -1;
     }
 
     @NonNull

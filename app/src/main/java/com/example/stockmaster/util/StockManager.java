@@ -16,7 +16,8 @@ import java.util.Map;
  * 管理股票类：新建股票类，建立新的价格
  */
 public class StockManager {
-    private Map<String, Stock> mStockMap = new HashMap<String, Stock>();
+    private List<Stock> mStockList = new ArrayList<Stock>();
+    private List<String> mStockIdList = new ArrayList<String>();
     private UIManager mUIManager;
     private StockAnalyser mStockAnalyser;
     public StockManager(UIManager uiManager, StockAnalyser stockAnalyser){
@@ -29,10 +30,12 @@ public class StockManager {
      * @param stockIdList
      */
     public void createStocks(ArrayList<String> stockIdList){
-        mStockMap.clear();
+        mStockList.clear();
+        mStockIdList.clear();
         for(String stockId : stockIdList){
             Stock stock = new Stock(mStockAnalyser, stockId, "");
-            mStockMap.put(stockId, stock);
+            mStockList.add(stock);
+            mStockIdList.add(stockId);
         }
     }
 
@@ -51,7 +54,8 @@ public class StockManager {
      * @return stockId 获取成功的股票Id
      */
     public void addTodayStockPrice(List<StockPrice> stockPriceList, String stockId){
-        Stock stock = mStockMap.get(stockId);
+        int stockIndex = mStockIdList.indexOf(stockId);
+        Stock stock = mStockList.get(stockIndex);
         if(stock != null){
             for(StockPrice stockPrice : stockPriceList){
                 add(stock, stockPrice);
@@ -70,20 +74,18 @@ public class StockManager {
      */
     public void addMinuteStockPrice(List<StockPrice> stockPriceList){
         for(StockPrice stockPrice : stockPriceList){
-            Stock stock = mStockMap.get(stockPrice.id);
+            int stockIndex = mStockIdList.indexOf(stockPrice.id);
+            Stock stock = mStockList.get(stockIndex);
             if(stock != null && stock.isReceivedTodayData){
                 add(stock, stockPrice);
-                Log.d("lwd", String.format("加载分钟数据:%s", stock.id));
+//                Log.d("lwd", String.format("加载分钟数据:%s", stock.id));
             }
         }
 
     }
     //todo:将stock从map存储改为用两个list存储
-    public List<Stock> getStocks(){
-        List<Stock> stockList = new ArrayList<>();
-        for (String key : mStockMap.keySet()) {
-            stockList.add(mStockMap.get(key));
-        }
-        return stockList;
+    public List<Stock> getStockList(){
+
+        return mStockList;
     }
 }
