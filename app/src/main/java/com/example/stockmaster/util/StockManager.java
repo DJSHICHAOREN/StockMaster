@@ -37,6 +37,11 @@ public class StockManager {
             mStockList.add(stock);
             mStockIdList.add(stockId);
         }
+        mStockIdList = stockIdList;
+    }
+
+    public List<String> getStockIdList(){
+        return mStockIdList;
     }
 
     /**
@@ -78,7 +83,7 @@ public class StockManager {
             Stock stock = mStockList.get(stockIndex);
             if(stock != null && stock.isReceivedTodayData){
                 add(stock, stockPrice);
-//                Log.d("lwd", String.format("加载分钟数据:%s", stock.id));
+                Log.d("lwd", String.format("加载分钟数据:%s", stock.id));
             }
         }
 
