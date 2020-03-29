@@ -1,13 +1,16 @@
 package com.example.stockmaster.entity;
 
+import java.io.Serializable;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class StockPrice {
+public class StockPrice implements Serializable {
     public String id, name="";
     public Date time;
     public float price;
+    public Stock.DealType dealType = Stock.DealType.NULL;
+
     private static SimpleDateFormat mSimpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
     public StockPrice(){
@@ -43,6 +46,14 @@ public class StockPrice {
         }
     }
 
+    public void setDealType(Stock.DealType dealType) {
+        this.dealType = dealType;
+    }
+
+    public Stock.DealType getDealType() {
+        return dealType;
+    }
+
     public String getPrice() {
         return String.format("%.3f", price);
     }
@@ -50,6 +61,13 @@ public class StockPrice {
 
     @Override
     public String toString() {
-        return String.format("price:%s", getPrice());
+        String dealTime = time.getHours()+":"+time.getMinutes()+":"+time.getSeconds();
+        if(dealType == Stock.DealType.BUY){
+            return String.format("买点，时间：%s，价格：%s", dealTime, getPrice());
+        }
+        else if(dealType == Stock.DealType.SALE){
+            return String.format("卖点，时间：%s，价格：%s", dealTime , getPrice());
+        }
+        return "非买卖点";
     }
 }

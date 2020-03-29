@@ -8,7 +8,7 @@ import android.os.IBinder;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.stockmaster.http.SinaDataQueryer;
-import com.example.stockmaster.ui.activity.MainActivity;
+import com.example.stockmaster.ui.activity.main.MainActivity;
 import com.example.stockmaster.util.StockAnalyser;
 import com.example.stockmaster.util.StockManager;
 

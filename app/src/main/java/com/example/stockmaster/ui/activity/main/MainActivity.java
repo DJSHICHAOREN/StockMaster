@@ -1,4 +1,4 @@
-package com.example.stockmaster.ui.activity;
+package com.example.stockmaster.ui.activity.main;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -14,7 +14,10 @@ import android.widget.TextView;
 import com.example.stockmaster.R;
 import com.example.stockmaster.entity.Stock;
 import com.example.stockmaster.service.BrainService;
+import com.example.stockmaster.ui.activity.UIManager;
 import com.example.stockmaster.ui.adapter.StockListAdapter;
+
+import java.io.Serializable;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -57,7 +60,7 @@ public class MainActivity extends AppCompatActivity {
         // 设置RecyclerView的布局
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         rv_stock_list.setLayoutManager(linearLayoutManager);
-        mStockListAdapter = new StockListAdapter(mMainPresent.getStockList());
+        mStockListAdapter = new StockListAdapter(mMainPresent.getStockList(), this);
         rv_stock_list.setAdapter(mStockListAdapter);
 
         // 开启service
@@ -76,7 +79,7 @@ public class MainActivity extends AppCompatActivity {
         super.onResume();
     }
 
-    public class MainActivityUIManager implements UIManager{
+    public class MainActivityUIManager implements UIManager, Serializable {
         @Override
         public void refreshUIWhenReceiveNewPrice(Stock stock){
             tv_test.setText(stock.toString());

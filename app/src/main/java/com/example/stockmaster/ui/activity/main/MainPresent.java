@@ -1,4 +1,4 @@
-package com.example.stockmaster.ui.activity;
+package com.example.stockmaster.ui.activity.main;
 
 import android.os.Bundle;
 import android.os.Handler;

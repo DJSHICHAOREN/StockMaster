@@ -6,11 +6,12 @@ import androidx.annotation.NonNull;
 
 import com.example.stockmaster.util.StockAnalyser;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 
-public class Stock {
+public class Stock implements Serializable {
     public String id, name;
     public boolean isReceivedTodayData = false; //在为true时，才可以接收分钟的数据
     public StockPrice currentPrice;
@@ -19,10 +20,11 @@ public class Stock {
     public List<StockPrice> higherStockPriceList = new ArrayList<>();
     public List<StockPrice> buyStockPriceList = new ArrayList<>();
     public List<StockPrice> saleStockPriceList = new ArrayList<>();
-    public enum DealType{SALE, BUY}
+    public List<StockPrice> dealPriceList = new ArrayList<>(); // 用来在detail页面显示全部交易列表
+    public enum DealType implements Serializable{SALE, BUY, NULL}
     private DealType previousDealType = DealType.SALE;
-
     StockAnalyser mStockAnalyser;
+
     public Stock(StockAnalyser stockAnalyser, String id, String name){
         this.id = id;
         this.name = name;
@@ -56,8 +58,6 @@ public class Stock {
         else{
             addPriceAndAnalyse(stockPrice);
         }
-
-
     }
 
     /**
@@ -70,12 +70,32 @@ public class Stock {
             buyStockPriceList.add(stockPrice);
             previousDealType = DealType.BUY;
             Log.d("lwd", "上一个是买点");
+            stockPrice.setDealType(DealType.BUY);
+            dealPriceList.add(stockPrice);
         }
         else if(previousDealType == DealType.BUY && dealType == DealType.SALE){
             saleStockPriceList.add(stockPrice);
             previousDealType = DealType.SALE;
             Log.d("lwd", "上一个是卖点");
+            stockPrice.setDealType(DealType.SALE);
+            dealPriceList.add(stockPrice);
         }
+    }
+
+    /**
+     * 得到最近的买卖时间点
+     */
+    public String getRecentDealTips(){
+        String dealTip = "";
+        if(previousDealType == DealType.BUY && buyStockPriceList.size() > 0){
+            StockPrice stockPrice = buyStockPriceList.get(buyStockPriceList.size()-1);
+            dealTip = stockPrice.toString();
+        }
+        else if(previousDealType == DealType.SALE && saleStockPriceList.size() > 0){
+            StockPrice stockPrice = saleStockPriceList.get(saleStockPriceList.size()-1);
+            dealTip = stockPrice.toString();
+        }
+        return dealTip;
     }
 
 
@@ -88,6 +108,10 @@ public class Stock {
             return currentPrice.price;
         }
         return -1;
+    }
+
+    public List<StockPrice> getDealPriceList() {
+        return dealPriceList;
     }
 
     @NonNull

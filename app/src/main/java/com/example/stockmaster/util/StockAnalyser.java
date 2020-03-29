@@ -1,16 +1,17 @@
 package com.example.stockmaster.util;
 import android.util.Log;
 
-import com.example.stockmaster.ui.activity.MainActivity.MainActivityUIManager;
+import com.example.stockmaster.ui.activity.main.MainActivity.MainActivityUIManager;
 import com.example.stockmaster.entity.Stock;
 import com.example.stockmaster.entity.StockPrice;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * 分析股票的买卖点
  */
-public class StockAnalyser {
+public class StockAnalyser implements Serializable {
     MainActivityUIManager mMainActivityUIManager;
 
     public StockAnalyser(MainActivityUIManager mainActivityUIManager) {

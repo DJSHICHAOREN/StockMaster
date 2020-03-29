@@ -1,8 +1,10 @@
 package com.example.stockmaster.ui.adapter;
 
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -10,17 +12,21 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.stockmaster.R;
 import com.example.stockmaster.entity.Stock;
+import com.example.stockmaster.ui.activity.detail.DetailActivity;
+import com.example.stockmaster.ui.activity.main.MainActivity;
 
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 public class StockListAdapter extends RecyclerView.Adapter<StockListAdapter.StockListViewHolder> {
     private List<Stock> mStockList;
-
-    public StockListAdapter(List<Stock> stockList){
+    private MainActivity mMainActivity;
+    public StockListAdapter(List<Stock> stockList, MainActivity mainActivity){
         mStockList = stockList;
+        mMainActivity = mainActivity;
     }
 
     @NonNull
@@ -35,7 +41,15 @@ public class StockListAdapter extends RecyclerView.Adapter<StockListAdapter.Stoc
     @Override
     public void onBindViewHolder(@NonNull StockListAdapter.StockListViewHolder holder, int position) {
         holder.tv_stock_id.setText(mStockList.get(position).id);
-        holder.tv_stock_price.setText(mStockList.get(position).getCurrentPrice()+"");
+        holder.tv_deal_tip.setText(mStockList.get(position).getRecentDealTips());
+        holder.ll_stock_item.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(mMainActivity, DetailActivity.class);
+                intent.putExtra("stock", mStockList.get(position));
+                mMainActivity.startActivity(intent);
+            }
+        });
     }
 
     @Override
@@ -48,8 +62,11 @@ public class StockListAdapter extends RecyclerView.Adapter<StockListAdapter.Stoc
         @BindView(R.id.tv_stock_id)
         public TextView tv_stock_id;
 
-        @BindView(R.id.tv_stock_price)
-        public TextView tv_stock_price;
+        @BindView(R.id.tv_deal_tip)
+        public TextView tv_deal_tip;
+
+        @BindView(R.id.ll_stock_item)
+        public LinearLayout ll_stock_item;
 
         public StockListViewHolder(View view) {
             super(view);
