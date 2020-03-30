@@ -46,7 +46,7 @@ public class StockListAdapter extends RecyclerView.Adapter<StockListAdapter.Stoc
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(mMainActivity, DetailActivity.class);
-                intent.putExtra("stock", mStockList.get(position));
+                intent.putExtra("stockIndex", position);
                 mMainActivity.startActivity(intent);
             }
         });

@@ -12,6 +12,7 @@ import com.example.stockmaster.entity.Stock;
 import com.example.stockmaster.ui.activity.main.MainPresent;
 import com.example.stockmaster.ui.adapter.DealListAdapter;
 import com.example.stockmaster.ui.adapter.StockListAdapter;
+import com.example.stockmaster.util.StockManager;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -22,20 +23,20 @@ public class DetailActivity extends AppCompatActivity {
 
     private DetailPresent mDetailPresent;
     private RecyclerView.Adapter mDealListAdapter;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
         ButterKnife.bind(this);
-        mDetailPresent = new DetailPresent(this);
+
+        Intent intent = getIntent();
+        int stockIndex = intent.getIntExtra("stockIndex", 0);
+        mDetailPresent = new DetailPresent(this, stockIndex);
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         rv_deal_list.setLayoutManager(linearLayoutManager);
 
-        Intent intent = getIntent();
-        Stock stock = (Stock) intent.getSerializableExtra("stock");
-        mDealListAdapter = new DealListAdapter(stock.getDealPriceList());
+        mDealListAdapter = new DealListAdapter(mDetailPresent.getDealPriceList());
         rv_deal_list.setAdapter(mDealListAdapter);
     }
 }

@@ -110,7 +110,7 @@ public class Stock implements Serializable {
         return -1;
     }
 
-    public List<StockPrice> getDealPriceList() {
+    public List<StockPrice> getDealStockPriceList() {
         return dealPriceList;
     }
 

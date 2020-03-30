@@ -67,8 +67,8 @@ public class MainPresent extends BasePresent {
         mMainActivity = (MainActivity)view;
         mMainActivityUIManager = mainActivityUIManager;
         // 创建工具实例
-        mStockAnalyser = new StockAnalyser(mMainActivityUIManager);
-        mStockManager = new StockManager(mMainActivityUIManager, mStockAnalyser);
+        mStockManager = new StockManager();
+        mStockManager.setMainActivityUIManager(mMainActivityUIManager);
         mSinaDataQueryer = new SinaDataQueryer(mMainActivity, mStockManager);
         // 实例化股票对象
         // 请求股票数据

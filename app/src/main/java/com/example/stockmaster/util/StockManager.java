@@ -5,6 +5,7 @@ import android.util.Log;
 import com.example.stockmaster.ui.activity.UIManager;
 import com.example.stockmaster.entity.Stock;
 import com.example.stockmaster.entity.StockPrice;
+import com.example.stockmaster.ui.activity.main.MainActivity;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
@@ -16,13 +17,15 @@ import java.util.Map;
  * 管理股票类：新建股票类，建立新的价格
  */
 public class StockManager {
-    private List<Stock> mStockList = new ArrayList<Stock>();
-    private List<String> mStockIdList = new ArrayList<String>();
-    private UIManager mUIManager;
-    private StockAnalyser mStockAnalyser;
-    public StockManager(UIManager uiManager, StockAnalyser stockAnalyser){
-        mUIManager = uiManager;
-        mStockAnalyser = stockAnalyser;
+    private static List<Stock> mStockList = new ArrayList<Stock>();
+    private static List<String> mStockIdList = new ArrayList<String>();
+    private static StockAnalyser mStockAnalyser = new StockAnalyser();
+    private MainActivity.MainActivityUIManager mMainActivityUIManager;
+    public StockManager(){
+    }
+
+    public void setMainActivityUIManager(MainActivity.MainActivityUIManager mainActivityUIManager) {
+        this.mMainActivityUIManager = mainActivityUIManager;
     }
 
     /**
@@ -50,7 +53,7 @@ public class StockManager {
      */
     public void add(Stock stock, StockPrice stockPrice){
         stock.addStockPrice(stockPrice);
-        mUIManager.refreshUIWhenReceiveNewPrice(stock);
+        mMainActivityUIManager.refreshUIWhenReceiveNewPrice(stock);
     }
 
     /**
@@ -90,7 +93,10 @@ public class StockManager {
     }
     //todo:将stock从map存储改为用两个list存储
     public List<Stock> getStockList(){
-
         return mStockList;
+    }
+
+    public List<StockPrice> getThisStockDealPriceList(int stockIndex){
+        return mStockList.get(stockIndex).getDealStockPriceList();
     }
 }

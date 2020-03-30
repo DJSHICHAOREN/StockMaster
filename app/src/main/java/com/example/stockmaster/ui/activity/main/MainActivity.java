@@ -30,7 +30,6 @@ public class MainActivity extends AppCompatActivity {
     @BindView(R.id.rv_stock_list)
     public RecyclerView rv_stock_list;
 
-
     private RecyclerView.Adapter mStockListAdapter;
     private BrainService mBrainService;
     private MainPresent mMainPresent;
@@ -79,13 +78,11 @@ public class MainActivity extends AppCompatActivity {
         super.onResume();
     }
 
-    public class MainActivityUIManager implements UIManager, Serializable {
-        @Override
+    public class MainActivityUIManager {
         public void refreshUIWhenReceiveNewPrice(Stock stock){
             tv_test.setText(stock.toString());
         }
 
-        @Override
         public void refreshUIWhenGetNewBuyPoint() {
 
         }

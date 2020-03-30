@@ -12,10 +12,8 @@ import java.util.List;
  * 分析股票的买卖点
  */
 public class StockAnalyser implements Serializable {
-    MainActivityUIManager mMainActivityUIManager;
 
-    public StockAnalyser(MainActivityUIManager mainActivityUIManager) {
-        mMainActivityUIManager = mainActivityUIManager;
+    public StockAnalyser() {
     }
 
     public static void analyse(Stock stock){
