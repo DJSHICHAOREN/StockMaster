@@ -26,6 +26,7 @@ public class StockManager {
 
     public void setMainActivityUIManager(MainActivity.MainActivityUIManager mainActivityUIManager) {
         this.mMainActivityUIManager = mainActivityUIManager;
+        mStockAnalyser.setMainActivityUIManager(mainActivityUIManager);
     }
 
     /**
@@ -53,7 +54,9 @@ public class StockManager {
      */
     public void add(Stock stock, StockPrice stockPrice){
         stock.addStockPrice(stockPrice);
-        mMainActivityUIManager.refreshUIWhenReceiveNewPrice(stock);
+        if(mMainActivityUIManager != null){
+//            mMainActivityUIManager.refreshUIWhenReceiveNewPrice(stock);
+        }
     }
 
     /**

@@ -55,6 +55,7 @@ public class SinaDataQueryer {
                         queryStocksNowPrice(list);
                         Toast.makeText(mContext,"数据请求失败", Toast.LENGTH_LONG).show();
                         Log.e("lwd","请求数据失败");
+                        Log.e("lwd",error.getMessage());
                     }
                 });
 

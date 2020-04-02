@@ -1,5 +1,7 @@
 package com.example.stockmaster.entity;
 
+import android.util.Log;
+
 import java.io.Serializable;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -10,11 +12,13 @@ public class StockPrice implements Serializable {
     public Date time;
     public float price;
     public Stock.DealType dealType = Stock.DealType.NULL;
+    public static int count = 0;
+    public int stockPriceIndex = 0;
 
     private static SimpleDateFormat mSimpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
     public StockPrice(){
-
+        stockPriceIndex = count++;
     }
 
     public StockPrice(String id, String time, String price){
@@ -48,6 +52,7 @@ public class StockPrice implements Serializable {
 
     public void setDealType(Stock.DealType dealType) {
         this.dealType = dealType;
+        Log.d("lwd", String.format("set id:%s, price:%s, dealType:%s, time:%s", id, price, dealType, time));
     }
 
     public Stock.DealType getDealType() {

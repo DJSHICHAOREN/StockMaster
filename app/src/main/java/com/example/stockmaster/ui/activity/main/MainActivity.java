@@ -25,8 +25,8 @@ import butterknife.ButterKnife;
 
 public class MainActivity extends AppCompatActivity {
 
-    @BindView(R.id.tv_test)
-    public TextView tv_test;
+    @BindView(R.id.tv_deal_point)
+    public TextView tv_deal_point;
     @BindView(R.id.rv_stock_list)
     public RecyclerView rv_stock_list;
 
@@ -80,11 +80,10 @@ public class MainActivity extends AppCompatActivity {
 
     public class MainActivityUIManager {
         public void refreshUIWhenReceiveNewPrice(Stock stock){
-            tv_test.setText(stock.toString());
         }
 
-        public void refreshUIWhenGetNewBuyPoint() {
-
+        public void refreshUIWhenGetNewDealPoint(String dealString) {
+            tv_deal_point.setText(dealString);
         }
     }
 

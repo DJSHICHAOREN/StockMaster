@@ -61,17 +61,18 @@ public class Stock implements Serializable {
     }
 
     /**
-     * 添加买点或者卖点
+     * 添加买点或者卖点，如果上一个是卖点，当前才是买点，上一个是买点，当前才是卖点
      * @param stockPrice 股票价格、时间点
      * @param dealType 交易类型：是买还是卖
      */
-    public void addBuyAndSaleStockPrice(StockPrice stockPrice, DealType dealType){
+    public boolean addBuyAndSaleStockPrice(StockPrice stockPrice, DealType dealType){
         if(previousDealType == DealType.SALE && dealType == DealType.BUY){
             buyStockPriceList.add(stockPrice);
             previousDealType = DealType.BUY;
             Log.d("lwd", "上一个是买点");
             stockPrice.setDealType(DealType.BUY);
             dealPriceList.add(stockPrice);
+            return true;
         }
         else if(previousDealType == DealType.BUY && dealType == DealType.SALE){
             saleStockPriceList.add(stockPrice);
@@ -79,7 +80,9 @@ public class Stock implements Serializable {
             Log.d("lwd", "上一个是卖点");
             stockPrice.setDealType(DealType.SALE);
             dealPriceList.add(stockPrice);
+            return true;
         }
+        return false;
     }
 
     /**
