@@ -63,6 +63,13 @@ public class StockPrice implements Serializable {
         return String.format("%.3f", price);
     }
 
+    public String getNotificationContent(){
+        return id + " " + toString();
+    }
+
+    public int getNotificationId(){
+        return Integer.parseInt(this.id.substring(2));
+    }
 
     @Override
     public String toString() {

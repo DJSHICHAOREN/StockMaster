@@ -95,7 +95,7 @@ public class MainActivity extends AppCompatActivity {
 
     public class MainActivityUIManager {
         private String CHANNEL_ID = "STOCK_MASTER_CHANNEL";
-        private int notificationId = 0;
+//        private int notificationId = 0;
         public MainActivityUIManager(){
             NotificationManager manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
             createNotificationChannel();
@@ -127,7 +127,7 @@ public class MainActivity extends AppCompatActivity {
          * 发送notification
          * @param notificationContent 发送的内容
          */
-        public void sendNotification(String notificationContent){
+        public void sendNotification(int notificationId, String notificationContent){
             // Create an explicit intent for an Activity in your app
             Intent intent = new Intent(MainActivity.this, MainActivity.class);
 //            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -144,16 +144,16 @@ public class MainActivity extends AppCompatActivity {
 
             NotificationManagerCompat notificationManager = NotificationManagerCompat.from(MainActivity.this);
             // notificationId is a unique int for each notification that you must define
-            notificationManager.notify(notificationId++, builder.build());
+            notificationManager.notify(notificationId, builder.build());
         }
 
         /**
          * 处理买卖点
          * @param dealString
          */
-        public void refreshUIWhenGetNewDealPoint(String dealString) {
+        public void refreshUIWhenGetNewDealPoint(String dealString, int notificationId, String notificationContent) {
             tv_deal_point.setText(dealString);
-//            sendNotification(dealString);
+            sendNotification(notificationId, notificationContent);
         }
     }
 
