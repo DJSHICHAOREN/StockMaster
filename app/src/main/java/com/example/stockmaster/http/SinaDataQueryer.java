@@ -13,7 +13,9 @@ import com.android.volley.toolbox.Volley;
 import com.example.stockmaster.entity.StockPrice;
 import com.example.stockmaster.http.converter.ResponseStringToObject;
 import com.example.stockmaster.util.StockManager;
+import com.example.stockmaster.util.TextUtil;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class SinaDataQueryer {
@@ -22,7 +24,7 @@ public class SinaDataQueryer {
     private StockManager mStockManager;
     private RequestQueue mQueue;
     private ResponseStringToObject mResponseStringToObject = new ResponseStringToObject();
-
+    private TextUtil mTextUtil = new TextUtil();
     public SinaDataQueryer (Context context, StockManager stockManager){
         mContext = context;
         mStockManager = stockManager;
@@ -65,10 +67,28 @@ public class SinaDataQueryer {
 
     /**
      * 查询股票今天的价格
+     * @param stockId
+     */
+    public void queryStocksTodayPrice(String stockId){
+        queryStocksNDayPrice(stockId, 1);
+    }
+
+    /**
+     * 查询股票的五日均价
+     * @param stockId
+     */
+    public void queryStocksFiveDayAvgPrice(String stockId){
+        queryStocksNDayPrice(stockId, 5);
+    }
+
+
+
+    /**
+     * 查询股票N天的价格
      * https://quotes.sina.cn/hk/api/openapi.php/HK_MinlineService.getMinline?symbol=02400&day=1&callback=var%20hkT1=
      * @param stockId
      */
-    public void queryStocksTodayPrice(final String stockId){
+    public void queryStocksNDayPrice(final String stockId, final int dayCount){
         if(mQueue ==null)
             mQueue = Volley.newRequestQueue(mContext);
 
@@ -76,15 +96,24 @@ public class SinaDataQueryer {
         if(stockId.contains("hk")){
             noHkStockId = stockId.replace("hk", "");
         }
-        String url ="https://quotes.sina.cn/hk/api/openapi.php/HK_MinlineService.getMinline?symbol=" + noHkStockId + "&day=1&callback=:::hk" + noHkStockId + ":::";
+        String url ="https://quotes.sina.cn/hk/api/openapi.php/HK_MinlineService.getMinline?symbol=" + noHkStockId + "&day="+ dayCount +"&callback=:::hk" + noHkStockId + ":::";
 
         // Request a string response from the provided URL.
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        List<StockPrice> stockPriceList = mResponseStringToObject.sinaTodayPriceResponseToObjectList(response);
-                        mStockManager.addTodayStockPrice(stockPriceList, stockId);
+                        if(dayCount == 1){
+                            List<StockPrice> stockPriceList = mResponseStringToObject.sinaTodayPriceResponseToObjectList(response);
+                            mStockManager.addTodayStockPrice(stockPriceList, stockId);
+                        }
+                        else if(dayCount == 5){
+                            // 得到收盘价列表
+                            ArrayList<String> closedPriceList = mTextUtil.getAllSatisfyStrings(response,
+                                    "\"prevclose\":\"\\d*\\.\\d*\"");
+                            int a = 1;
+                        }
+
                     }
                 },
                 new Response.ErrorListener() {
@@ -99,4 +128,5 @@ public class SinaDataQueryer {
         mQueue.add(stringRequest);
         mQueue.start();
     }
+
 }

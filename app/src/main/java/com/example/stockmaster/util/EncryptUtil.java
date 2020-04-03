@@ -20,7 +20,7 @@ public class EncryptUtil {
     }
 
     public static String md5(String string) {
-        if (TextUtils.isEmpty(string)) {
+        if (TextUtil.isEmpty(string)) {
             return "";
         }
         MessageDigest md5 = null;
@@ -44,7 +44,7 @@ public class EncryptUtil {
 
     /*MD5加盐*/
     public static String md5(String string, String slat) {
-        if (TextUtils.isEmpty(string)) {
+        if (TextUtil.isEmpty(string)) {
             return "";
         }
         MessageDigest md5 = null;

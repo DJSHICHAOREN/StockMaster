@@ -41,6 +41,7 @@ public class MainPresent extends BasePresent {
                             @Override
                             public void run() {
                                 mSinaDataQueryer.queryStocksTodayPrice(stockId);
+                                mSinaDataQueryer.queryStocksFiveDayAvgPrice(stockId);
                             }
                         }.start();
                     }
