@@ -19,18 +19,22 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.os.Vibrator;
 import android.util.Log;
+import android.view.View;
 import android.widget.TextView;
 
 import com.example.stockmaster.R;
 import com.example.stockmaster.entity.Stock;
 import com.example.stockmaster.service.BrainService;
 import com.example.stockmaster.ui.activity.UIManager;
+import com.example.stockmaster.ui.activity.recommand.RecommandActivity;
 import com.example.stockmaster.ui.adapter.StockListAdapter;
 
 import java.io.Serializable;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnCheckedChanged;
+import butterknife.OnClick;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -39,6 +43,7 @@ public class MainActivity extends AppCompatActivity {
     public TextView tv_deal_point;
     @BindView(R.id.rv_stock_list)
     public RecyclerView rv_stock_list;
+
 
     private RecyclerView.Adapter mStockListAdapter;
     private BrainService mBrainService;
@@ -88,6 +93,12 @@ public class MainActivity extends AppCompatActivity {
         mStockListAdapter.notifyDataSetChanged();
     }
 
+    @OnClick(R.id.btn_goto_command_stocks)
+    public void onGotoCommandStocksClick(View view){
+        Intent intent = new Intent(this, RecommandActivity.class);
+        startActivity(intent);
+    }
+
     @Override
     protected void onResume() {
         super.onResume();
@@ -122,6 +133,7 @@ public class MainActivity extends AppCompatActivity {
                 notificationManager.createNotificationChannel(channel);
             }
         }
+
 
         /**
          * 发送notification

@@ -52,7 +52,7 @@ public class StockAnalyser implements Serializable {
                         // 如果是买点，即前一个是卖点
                         if(stock.addBuyAndSaleStockPrice(stockPrice, Stock.DealType.BUY)){
                             if(mMainActivityUIManager != null){
-                                mMainActivityUIManager.refreshUIWhenGetNewDealPoint(stockPrice.toString(),
+                                mMainActivityUIManager.refreshUIWhenGetNewDealPoint(stockPrice.toStringWithId(),
                                         stockPrice.getNotificationId(), stockPrice.getNotificationContent());
                             }
                         }
@@ -74,7 +74,7 @@ public class StockAnalyser implements Serializable {
                         StockPrice stockPrice = stock.higherStockPriceList.get(higherStockPriceListSize-1);
                         if(stock.addBuyAndSaleStockPrice(stockPrice, Stock.DealType.SALE)){
                             if(mMainActivityUIManager != null){
-                                mMainActivityUIManager.refreshUIWhenGetNewDealPoint(stockPrice.toString(),
+                                mMainActivityUIManager.refreshUIWhenGetNewDealPoint(stockPrice.toStringWithId(),
                                         stockPrice.getNotificationId(),
                                         stockPrice.getNotificationContent());
                             }

@@ -23,8 +23,16 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_stock_list"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="600dp"
         android:scrollbars="vertical"/>
+
+    <Button
+        android:id="@+id/btn_goto_command_stocks"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="enter command stocks">
+    </Button>
+
 
 
 </LinearLayout>

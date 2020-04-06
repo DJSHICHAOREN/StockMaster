@@ -82,4 +82,8 @@ public class StockPrice implements Serializable {
         }
         return "非买卖点";
     }
+
+    public String toStringWithId(){
+        return String.format("%s, %s", id, toString());
+    }
 }
