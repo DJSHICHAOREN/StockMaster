@@ -2,16 +2,12 @@ package com.example.stockmaster.util;
 
 import android.util.Log;
 
-import com.example.stockmaster.ui.activity.UIManager;
 import com.example.stockmaster.entity.Stock;
 import com.example.stockmaster.entity.StockPrice;
 import com.example.stockmaster.ui.activity.main.MainActivity;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * 管理股票类：新建股票类，建立新的价格
@@ -21,6 +17,7 @@ public class StockManager {
     private static List<String> mStockIdList = new ArrayList<String>();
     private static StockAnalyser mStockAnalyser = new StockAnalyser();
     private MainActivity.MainActivityUIManager mMainActivityUIManager;
+    private float ma5;
     public StockManager(){
     }
 
@@ -53,9 +50,8 @@ public class StockManager {
      * @param stockPrice
      */
     public void add(Stock stock, StockPrice stockPrice){
-        stock.addStockPrice(stockPrice);
-        if(mMainActivityUIManager != null){
-//            mMainActivityUIManager.refreshUIWhenReceiveNewPrice(stock);
+        if(stock.addStockPrice(stockPrice)){
+            mStockAnalyser.analyse(stock);
         }
     }
 
@@ -76,6 +72,11 @@ public class StockManager {
             Log.d("lwd", String.format("%s 开盘到当前数据加载完毕", stockId));
         }
 
+    }
+
+    public float getMa5() {
+
+        return ma5;
     }
 
     /**
@@ -101,5 +102,24 @@ public class StockManager {
 
     public List<StockPrice> getThisStockDealPriceList(int stockIndex){
         return mStockList.get(stockIndex).getDealStockPriceList();
+    }
+
+    public void setPreviousFourDayPriceList(List<Float> previousFourDayPriceList, String stockId) {
+        int stockIndex = mStockIdList.indexOf(stockId);
+        Stock stock = mStockList.get(stockIndex);
+        if(stock != null){
+            stock.setPreviousFourDayPriceList(previousFourDayPriceList);
+            Log.d("lwd", String.format("%s 加载前四日收盘数据", stockId));
+        }
+        Log.d("lwd", String.format("stockId:%s, ma5:%f", stock.id, stock    .getMa5()));
+    }
+
+    public void addMAPrice(String stockId, String ma10, String ma30, String ma50, String ma100, String ma250) {
+        int stockIndex = mStockIdList.indexOf(stockId);
+        Stock stock = mStockList.get(stockIndex);
+        if(stock != null){
+            stock.setMAPrice(ma10, ma30, ma50, ma100, ma250);
+            Log.d("lwd", String.format("%s 加载前四日收盘数据", stockId));
+        }
     }
 }

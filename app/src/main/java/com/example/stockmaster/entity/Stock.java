@@ -21,9 +21,14 @@ public class Stock implements Serializable {
     public List<StockPrice> buyStockPriceList = new ArrayList<>();
     public List<StockPrice> saleStockPriceList = new ArrayList<>();
     public List<StockPrice> dealPriceList = new ArrayList<>(); // 用来在detail页面显示全部交易列表
+    float ma10, ma30, ma50, ma100, ma250;
+
+
+
     public enum DealType implements Serializable{SALE, BUY, NULL}
     private DealType previousDealType = DealType.SALE;
     StockAnalyser mStockAnalyser;
+    private List<Float> previousFourDayPriceList;
 
     public Stock(StockAnalyser stockAnalyser, String id, String name){
         this.id = id;
@@ -31,33 +36,34 @@ public class Stock implements Serializable {
         mStockAnalyser = stockAnalyser;
     }
 
-    private void addPriceAndAnalyse(StockPrice stockPrice){
-//        if(stockPrice.id.equals("hk02400")){
-//            Log.d("lwd", String.format("心动公司：price:%s time:%s", stockPrice.price, stockPrice.time));
-//        }
-//        Log.d("lwd", String.format("公司：%s, 新的价格：%s, 时间：%s", stockPrice.id, stockPrice.price, stockPrice.time));
-        todayStockPriceList.add(stockPrice);
-        mStockAnalyser.analyse(this);
-    }
-
-    public void addStockPrice(StockPrice stockPrice){
-
+    /**
+     * 加入股票价格
+     * @param stockPrice
+     * @return 如果成功加入，则返回true，否则返回false
+     */
+    public boolean addStockPrice(StockPrice stockPrice){
         currentPrice = stockPrice;
         if(!todayStockPriceList.isEmpty()){
             StockPrice lastStockPrice  = todayStockPriceList.get(todayStockPriceList.size()-1);
-            // 对于同一分钟的价格，进行价格的更新
+            // 对于同一分钟的价格，去掉旧的，加入新的
             if(stockPrice.time.compareTo(lastStockPrice.time) == 0 && lastStockPrice.price != stockPrice.price){
                 todayStockPriceList.remove(todayStockPriceList.size()-1);
-                addPriceAndAnalyse(stockPrice);
+                todayStockPriceList.add(stockPrice);
+                return true;
             }
             // 比列表靠后的时间，添加进列表
             else if(stockPrice.time.after(lastStockPrice.time)){
-                addPriceAndAnalyse(stockPrice);
+                todayStockPriceList.add(stockPrice);
+                return true;
             }
         }
+        // 如果价格列表为空，则直接加入
         else{
-            addPriceAndAnalyse(stockPrice);
+            todayStockPriceList.add(stockPrice);
+            return true;
         }
+
+        return false;
     }
 
     /**
@@ -124,5 +130,42 @@ public class Stock implements Serializable {
             return String.format("id:%s, name:%s, current_price:%s", id, name, currentPrice.toString());
         }
         return super.toString();
+    }
+
+    public void setPreviousFourDayPriceList(List<Float> previousFourDayPriceList) {
+        this.previousFourDayPriceList = previousFourDayPriceList;
+    }
+
+    public float getMa5() {
+        float sum = 0;
+        if(previousFourDayPriceList != null && previousFourDayPriceList.size() == 4 && currentPrice != null){
+            for(Float price : previousFourDayPriceList){
+                sum += price;
+            }
+            sum += currentPrice.price;
+            sum /= 5;
+        }
+        else{
+            Log.d("lwd", "无法获取五日均价");
+        }
+        return sum;
+    }
+
+    public void setMAPrice(String ma10, String ma30, String ma50, String ma100, String ma250) {
+        if(!ma10.equals("NA")){
+            this.ma10 = Float.parseFloat(ma10);
+        }
+        if(!ma30.equals("NA")){
+            this.ma30 = Float.parseFloat(ma30);
+        }
+        if(!ma50.equals("NA")){
+            this.ma50 = Float.parseFloat(ma50);
+        }
+        if(!ma100.equals("NA")){
+            this.ma100 = Float.parseFloat(ma100);
+        }
+        if(!ma250.equals("NA")){
+            this.ma250 = Float.parseFloat(ma250);
+        }
     }
 }

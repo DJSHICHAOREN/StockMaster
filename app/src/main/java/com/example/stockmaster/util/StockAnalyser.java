@@ -24,7 +24,6 @@ public class StockAnalyser implements Serializable {
 
     public static void analyse(Stock stock){
         List<StockPrice> todayStockPriceList = stock.todayStockPriceList;
-        boolean changed = false;
         if(todayStockPriceList.size() >= 3){
             int size = todayStockPriceList.size();
             int stockPrice1Index = size - 3;
@@ -59,7 +58,6 @@ public class StockAnalyser implements Serializable {
                         }
                     }
                 }
-                changed = true;
             }
             // 寻找卖点
             if(stockPrice2.price > stockPrice1.price && stockPrice2.price > stockPrice3.price){
@@ -83,12 +81,10 @@ public class StockAnalyser implements Serializable {
                         }
                     }
                 }
-                changed = true;
             }
         }
-
-        if(changed){
-            // 计算买卖点
+        if(stock != null){
+//            Log.d("lwd", String.format("stockId:%s, ma5:%f", stock.id, stock.getMa5()));
         }
     }
 }

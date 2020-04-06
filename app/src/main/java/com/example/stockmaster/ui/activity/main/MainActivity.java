@@ -79,9 +79,9 @@ public class MainActivity extends AppCompatActivity {
         mMainPresent.beginQueryAndAnalyse();
 
         // 设置手机震动
-        Vibrator v = (Vibrator) MainActivity.this.getSystemService(Context.VIBRATOR_SERVICE);
-        // Vibrate for 500 milliseconds
-        v.vibrate(500);
+//        Vibrator v = (Vibrator) MainActivity.this.getSystemService(Context.VIBRATOR_SERVICE);
+//        // Vibrate for 500 milliseconds
+//        v.vibrate(500);
     }
 
     public void notifyStockListDataSetChanged(){
