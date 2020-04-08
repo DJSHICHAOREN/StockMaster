@@ -35,11 +35,6 @@ public class BrainService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
-
-//        MainActivity.MainActivityUIManager mainActivityUIManager = new MainActivity().MainActivityUIManager();
-//        mStockAnalyser = new StockAnalyser(mainActivityUIManager);
-//        mStockManager = new StockManager(mainActivityUIManager, mStockAnalyser);
-//        mSinaDataQueryer = new SinaDataQueryer(BrainService.this, mStockManager);
     }
 
     @Override

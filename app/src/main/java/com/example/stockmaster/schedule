@@ -21,6 +21,8 @@
 
 6.使用Service请求数据
 （1）在进入MainActivity时开启服务
+    1.使用startService开启服务
+    2.通过均线向上寻找
 （2）在发现买卖点之后震动提示
 
 7.使用ContentProvider存储股票

@@ -12,13 +12,10 @@ public class StockPrice implements Serializable {
     public Date time;
     public float price;
     public Stock.DealType dealType = Stock.DealType.NULL;
-    public static int count = 0;
-    public int stockPriceIndex = 0;
 
     private static SimpleDateFormat mSimpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
     public StockPrice(){
-        stockPriceIndex = count++;
     }
 
     public StockPrice(String id, String time, String price){
@@ -39,7 +36,7 @@ public class StockPrice implements Serializable {
         this.price = Float.parseFloat(price);
     }
 
-    public void setTime(String timeStr){
+    public void setTime(String timeStr) throws NumberFormatException{
         try {
             if(timeStr.contains("/")){
                 timeStr = timeStr.replaceAll("/", "-");

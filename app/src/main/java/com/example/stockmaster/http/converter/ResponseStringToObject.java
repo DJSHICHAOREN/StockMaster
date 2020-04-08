@@ -23,7 +23,7 @@ public class ResponseStringToObject {
      * @param response
      * @return
      */
-    public List<StockPrice> sinaMinutePriceResponseToObjectList(String response){
+    public List<StockPrice> sinaMinutePriceResponseToObjectList(String response)throws NumberFormatException{
         response = response.replaceAll("\n", "");
         String[] stocks = response.split(";");
 

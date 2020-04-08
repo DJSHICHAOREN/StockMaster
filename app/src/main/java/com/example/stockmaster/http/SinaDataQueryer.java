@@ -62,14 +62,12 @@ public class SinaDataQueryer {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         queryStocksNowPrice(list);
-                        Toast.makeText(mContext,"数据请求失败", Toast.LENGTH_LONG).show();
-                        Log.e("lwd","请求数据失败");
-                        Log.e("lwd",error.getMessage());
+//                        Toast.makeText(mContext,"数据请求失败", Toast.LENGTH_LONG).show();
+                        Log.e("lwd",String.format("请求分时数据失败"));
                     }
                 });
 
         mQueue.add(stringRequest);
-        mQueue.start();
     }
 
     /**
@@ -109,40 +107,48 @@ public class SinaDataQueryer {
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        if(dayCount == 1){
-                            List<StockPrice> stockPriceList = mResponseStringToObject.sinaTodayPriceResponseToObjectList(response);
-                            mStockManager.addTodayStockPrice(stockPriceList, stockId);
-                            // 在收到股票分时数据并建立股票实例以后在请求股票的五日数据，计算五日均价
-                            queryStocksFiveDayAvgPrice(stockId);
-                            queryStocksMAPrice(stockId);
-                        }
-                        else if(dayCount == 5){
-                            // 得到收盘价列表
-                            List<String> closedPriceList = mTextUtil.getAllSatisfyStrings(response,
-                                    "\"prevclose\":\"\\d*\\.\\d*\"");
+                        try{
+                            if(dayCount == 1){
+                                List<StockPrice> stockPriceList = mResponseStringToObject.sinaTodayPriceResponseToObjectList(response);
+                                mStockManager.addTodayStockPrice(stockPriceList, stockId);
+                                // 在收到股票分时数据并建立股票实例以后在请求股票的五日数据，计算五日均价
+                                queryStocksFiveDayAvgPrice(stockId);
+                                queryStocksMAPrice(stockId);
+                            }
+                            else if(dayCount == 5){
+                                // 得到收盘价列表
+                                List<String> closedPriceList = mTextUtil.getAllSatisfyStrings(response,
+                                        "\"prevclose\":\"\\d*\\.\\d*\"");
 
-                            List<Float> fiveDayPriceList = new ArrayList<>();
-                            for(String closedPrice : closedPriceList){
-                                String stringPrice = closedPrice.split(":")[1].replaceAll("\"", "");
-                                fiveDayPriceList.add(Float.parseFloat(stringPrice));
-                            }
-                            if(fiveDayPriceList.size() == 5){
-                                mStockManager.setPreviousFourDayPriceList(fiveDayPriceList.subList(1, fiveDayPriceList.size()), stockId);
+                                List<Float> fiveDayPriceList = new ArrayList<>();
+                                for(String closedPrice : closedPriceList){
+                                    String stringPrice = closedPrice.split(":")[1].replaceAll("\"", "");
+                                    fiveDayPriceList.add(Float.parseFloat(stringPrice));
+                                }
+                                if(fiveDayPriceList.size() == 5){
+                                    mStockManager.setPreviousFourDayPriceList(fiveDayPriceList.subList(1, fiveDayPriceList.size()), stockId);
+                                }
                             }
                         }
+                        // 得到的时间为空字符串，则抛出异常
+                        catch (NumberFormatException ex){
+                            Log.e("lwd","得到空的时间字符串");
+                            queryStocksTodayPrice(stockId);
+                        }
+
                     }
                 },
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         queryStocksTodayPrice(stockId);
-                        Toast.makeText(mContext,"数据请求失败", Toast.LENGTH_LONG).show();
-                        Log.e("lwd","请求数据失败");
+//                        Toast.makeText(mContext,"数据请求失败", Toast.LENGTH_LONG).show();
+                        Log.e("lwd",String.format("%s请求%s天数据失败", stockId, dayCount));
+                        Log.e("lwd", "异常信息：" + error.getMessage());
                     }
                 });
 
         mQueue.add(stringRequest);
-        mQueue.start();
     }
 
     /**
@@ -177,13 +183,11 @@ public class SinaDataQueryer {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         queryStocksMAPrice(stockId);
-                        Toast.makeText(mContext,"数据请求失败", Toast.LENGTH_LONG).show();
-                        Log.e("lwd","请求数据失败");
+                        Log.e("lwd","请求均线数据失败");
                     }
                 });
 
         mQueue.add(stringRequest);
-        mQueue.start();
     }
 
 }
