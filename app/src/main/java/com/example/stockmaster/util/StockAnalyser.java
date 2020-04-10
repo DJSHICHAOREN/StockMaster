@@ -37,8 +37,8 @@ public class StockAnalyser implements Serializable {
             }
             // 寻找买点
             if(stockPrice2.price < stockPrice1.price && stockPrice2.price < stockPrice3.price){
-                Log.d("lwd", String.format("%s lower price time:%s, price：%f",
-                        stockPrice2.id, stockPrice2.time.toString(), stockPrice2.price));
+//                Log.d("lwd", String.format("%s lower price time:%s, price：%f",
+//                        stockPrice2.id, stockPrice2.time.toString(), stockPrice2.price));
                 // 添加极小值点
                 stock.lowerStockPriceList.add(stockPrice2);
                 if(stock.lowerStockPriceList.size() >= 2){
@@ -61,8 +61,8 @@ public class StockAnalyser implements Serializable {
             }
             // 寻找卖点
             if(stockPrice2.price > stockPrice1.price && stockPrice2.price > stockPrice3.price){
-                Log.d("lwd", String.format("%s higher price time:%s, price：%f",
-                        stockPrice2.id, stockPrice2.time.toString(), stockPrice2.price));
+//                Log.d("lwd", String.format("%s higher price time:%s, price：%f",
+//                        stockPrice2.id, stockPrice2.time.toString(), stockPrice2.price));
                 // 添加极大值点
                 stock.higherStockPriceList.add(stockPrice2);
                 if(stock.higherStockPriceList.size() >= 2){

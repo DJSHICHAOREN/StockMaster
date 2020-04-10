@@ -18,6 +18,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class MainPresent extends BasePresent {
     private MainActivity mMainActivity;
@@ -26,6 +28,7 @@ public class MainPresent extends BasePresent {
     private SinaDataQueryer mSinaDataQueryer;
     private StockAnalyser mStockAnalyser;
     private Timer timer;
+    final ExecutorService mCachedThreadPool = Executors.newCachedThreadPool();
 
     private Handler handler = new Handler(){
         @Override
@@ -37,13 +40,14 @@ public class MainPresent extends BasePresent {
                     Bundle bundle = msg.getData();
                     ArrayList<String> stockIdList = bundle.getStringArrayList("stockIdList");
                     for(final String stockId : stockIdList) {
-                        new Thread() {
+                        Runnable runnable = new Runnable() {
                             @Override
                             public void run() {
                                 mSinaDataQueryer.queryStocksTodayPrice(stockId);
-//                                mSinaDataQueryer.queryStocksFiveDayAvgPrice(stockId);
                             }
-                        }.start();
+                        };
+
+                        mCachedThreadPool.execute(runnable);
                     }
                     break;
                 }
@@ -55,7 +59,7 @@ public class MainPresent extends BasePresent {
                         stockIdStr = stockIdStr + "rt_" + stockId + ",";
                     }
                     mSinaDataQueryer.queryStocksNowPrice(stockIdStr);
-                    mMainActivity.notifyStockListDataSetChanged();
+//                    mMainActivity.notifyStockListDataSetChanged();
                     break;
                 }
 

@@ -75,6 +75,7 @@ public class SinaDataQueryer {
      * @param stockId
      */
     public void queryStocksTodayPrice(String stockId){
+        Log.d("lwd", String.format("%s 开始请求今天数据", stockId));
         queryStocksNDayPrice(stockId, 1);
     }
 
@@ -111,6 +112,7 @@ public class SinaDataQueryer {
                             if(dayCount == 1){
                                 List<StockPrice> stockPriceList = mResponseStringToObject.sinaTodayPriceResponseToObjectList(response);
                                 mStockManager.addTodayStockPrice(stockPriceList, stockId);
+                                Log.d("lwd", String.format("%s 今日数据添加完毕", stockId));
                                 // 在收到股票分时数据并建立股票实例以后在请求股票的五日数据，计算五日均价
                                 queryStocksFiveDayAvgPrice(stockId);
                                 queryStocksMAPrice(stockId);

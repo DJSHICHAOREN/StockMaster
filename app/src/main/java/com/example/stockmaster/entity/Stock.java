@@ -75,15 +75,18 @@ public class Stock implements Serializable {
         if(previousDealType == DealType.SALE && dealType == DealType.BUY){
             buyStockPriceList.add(stockPrice);
             previousDealType = DealType.BUY;
-            Log.d("lwd", "上一个是买点");
+//            Log.d("lwd", "上一个是买点");
             stockPrice.setDealType(DealType.BUY);
             dealPriceList.add(stockPrice);
+//            if(id.equals("00038")){
+//                Log.d("lwd", "00038买点");
+//            }
             return true;
         }
         else if(previousDealType == DealType.BUY && dealType == DealType.SALE){
             saleStockPriceList.add(stockPrice);
             previousDealType = DealType.SALE;
-            Log.d("lwd", "上一个是卖点");
+//            Log.d("lwd", "上一个是卖点");
             stockPrice.setDealType(DealType.SALE);
             dealPriceList.add(stockPrice);
             return true;

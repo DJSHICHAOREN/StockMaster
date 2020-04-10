@@ -69,7 +69,7 @@ public class StockManager {
             }
             // 设置获取开盘到当前数据完毕
             stock.receiveTodayData();
-            Log.d("lwd", String.format("%s 开盘到当前数据加载完毕", stockId));
+//            Log.d("lwd", String.format("%s 开盘到当前数据加载完毕", stockId));
         }
 
     }
@@ -119,7 +119,7 @@ public class StockManager {
         Stock stock = mStockList.get(stockIndex);
         if(stock != null){
             stock.setMAPrice(ma10, ma30, ma50, ma100, ma250);
-            Log.d("lwd", String.format("%s 加载前四日收盘数据", stockId));
+            Log.d("lwd", String.format("%s 加载均线数据数据", stockId));
         }
     }
 }

@@ -49,7 +49,7 @@ public class StockPrice implements Serializable {
 
     public void setDealType(Stock.DealType dealType) {
         this.dealType = dealType;
-        Log.d("lwd", String.format("set id:%s, price:%s, dealType:%s, time:%s", id, price, dealType, time));
+//        Log.d("lwd", String.format("set id:%s, price:%s, dealType:%s, time:%s", id, price, dealType, time));
     }
 
     public Stock.DealType getDealType() {
