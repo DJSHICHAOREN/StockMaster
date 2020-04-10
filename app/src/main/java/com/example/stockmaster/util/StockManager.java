@@ -17,13 +17,12 @@ public class StockManager {
     private static List<String> mStockIdList = new ArrayList<String>();
     private static StockAnalyser mStockAnalyser = new StockAnalyser();
     private MainActivity.MainActivityUIManager mMainActivityUIManager;
-    private float ma5;
     public StockManager(){
     }
 
     public void setMainActivityUIManager(MainActivity.MainActivityUIManager mainActivityUIManager) {
         this.mMainActivityUIManager = mainActivityUIManager;
-        mStockAnalyser.setMainActivityUIManager(mainActivityUIManager);
+        mStockAnalyser.setMainActivityUIManager(this);
     }
 
     /**
@@ -34,6 +33,9 @@ public class StockManager {
         mStockList.clear();
         mStockIdList.clear();
         for(String stockId : stockIdList){
+            if(stockId.length() > 2 && !stockId.substring(0,2).equals("hk")){
+                stockId = "hk" + stockId;
+            }
             Stock stock = new Stock(mStockAnalyser, stockId, "");
             mStockList.add(stock);
             mStockIdList.add(stockId);
@@ -71,12 +73,6 @@ public class StockManager {
             stock.receiveTodayData();
 //            Log.d("lwd", String.format("%s 开盘到当前数据加载完毕", stockId));
         }
-
-    }
-
-    public float getMa5() {
-
-        return ma5;
     }
 
     /**
@@ -87,10 +83,13 @@ public class StockManager {
     public void addMinuteStockPrice(List<StockPrice> stockPriceList){
         for(StockPrice stockPrice : stockPriceList){
             int stockIndex = mStockIdList.indexOf(stockPrice.id);
+            if(stockIndex == -1){
+                Log.e("lwd", String.format("没有找到价格对应的股票id：%s", stockPrice.id));
+            }
             Stock stock = mStockList.get(stockIndex);
             if(stock != null && stock.isReceivedTodayData){
                 add(stock, stockPrice);
-                Log.d("lwd", String.format("加载分钟数据:%s", stock.id));
+//                Log.d("lwd", String.format("加载分钟数据:%s", stock.id));
             }
         }
 
@@ -120,6 +119,16 @@ public class StockManager {
         if(stock != null){
             stock.setMAPrice(ma10, ma30, ma50, ma100, ma250);
             Log.d("lwd", String.format("%s 加载均线数据数据", stockId));
+        }
+    }
+
+    public void addBuyAndSaleStockPrice(Stock stock, StockPrice stockPrice, Stock.DealType dealType){
+        if(stock.addBuyAndSaleStockPrice(stockPrice, dealType)){
+            if(mMainActivityUIManager != null){
+                mMainActivityUIManager.refreshUIWhenGetNewDealPoint(stockPrice.toStringWithId(),
+                        stockPrice.getNotificationId(), stockPrice.getNotificationContent());
+                mMainActivityUIManager.notifyStockListItemChanged(mStockIdList.indexOf(stock.id));
+            }
         }
     }
 }

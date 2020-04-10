@@ -13,13 +13,13 @@ import java.util.List;
  * 分析股票的买卖点
  */
 public class StockAnalyser implements Serializable {
-    private static MainActivity.MainActivityUIManager mMainActivityUIManager;
+    private static StockManager mStockManager;
 
     public StockAnalyser() {
     }
 
-    public void setMainActivityUIManager(MainActivity.MainActivityUIManager mainActivityUIManager) {
-        this.mMainActivityUIManager = mainActivityUIManager;
+    public void setMainActivityUIManager(StockManager mStockManager) {
+        this.mStockManager = mStockManager;
     }
 
     public static void analyse(Stock stock){
@@ -49,13 +49,7 @@ public class StockAnalyser implements Serializable {
 //                        Log.d("lwd", String.format("上一个低点价格： %s", stock.lowerStockPriceList.get(lowerStockPriceListSize-2).price));
                         // 添加买点
                         StockPrice stockPrice = stock.lowerStockPriceList.get(lowerStockPriceListSize-1);
-                        // 如果是买点，即前一个是卖点
-                        if(stock.addBuyAndSaleStockPrice(stockPrice, Stock.DealType.BUY)){
-                            if(mMainActivityUIManager != null){
-                                mMainActivityUIManager.refreshUIWhenGetNewDealPoint(stockPrice.toStringWithId(),
-                                        stockPrice.getNotificationId(), stockPrice.getNotificationContent());
-                            }
-                        }
+                        mStockManager.addBuyAndSaleStockPrice(stock, stockPrice, Stock.DealType.BUY);
                     }
                 }
             }
@@ -72,13 +66,7 @@ public class StockAnalyser implements Serializable {
                             stock.higherStockPriceList.get(higherStockPriceListSize-2).price){
                         // 添加卖点
                         StockPrice stockPrice = stock.higherStockPriceList.get(higherStockPriceListSize-1);
-                        if(stock.addBuyAndSaleStockPrice(stockPrice, Stock.DealType.SALE)){
-                            if(mMainActivityUIManager != null){
-                                mMainActivityUIManager.refreshUIWhenGetNewDealPoint(stockPrice.toStringWithId(),
-                                        stockPrice.getNotificationId(),
-                                        stockPrice.getNotificationContent());
-                            }
-                        }
+                        mStockManager.addBuyAndSaleStockPrice(stock, stockPrice, Stock.DealType.SALE);
                     }
                 }
             }

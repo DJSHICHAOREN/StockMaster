@@ -89,10 +89,6 @@ public class MainActivity extends AppCompatActivity {
 //        v.vibrate(500);
     }
 
-    public void notifyStockListDataSetChanged(){
-        mStockListAdapter.notifyDataSetChanged();
-    }
-
     @OnClick(R.id.btn_goto_command_stocks)
     public void onGotoCommandStocksClick(View view){
         Intent intent = new Intent(this, RecommandActivity.class);
@@ -110,9 +106,6 @@ public class MainActivity extends AppCompatActivity {
         public MainActivityUIManager(){
             NotificationManager manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
             createNotificationChannel();
-        }
-
-        public void refreshUIWhenReceiveNewPrice(Stock stock){
         }
 
         /**
@@ -160,12 +153,19 @@ public class MainActivity extends AppCompatActivity {
         }
 
         /**
-         * 处理买卖点
+         * 更新最上方的买卖点，并发出通知
          * @param dealString
          */
         public void refreshUIWhenGetNewDealPoint(String dealString, int notificationId, String notificationContent) {
             tv_deal_point.setText(dealString);
             sendNotification(notificationId, notificationContent);
+        }
+
+        /**
+         * 刷新首页买卖点列表
+         */
+        public void notifyStockListItemChanged(int itemIndex){
+            mStockListAdapter.notifyItemChanged(itemIndex);
         }
     }
 
