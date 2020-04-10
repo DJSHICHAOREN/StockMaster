@@ -49,6 +49,11 @@ public class BrainService extends Service {
     }
 
     public String getHello(){
+//        try {
+//            Thread.sleep(20000);
+//        } catch (InterruptedException e) {
+//            e.printStackTrace();
+//        }
         return "hello";
     }
 

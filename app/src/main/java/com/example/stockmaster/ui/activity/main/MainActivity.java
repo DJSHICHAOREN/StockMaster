@@ -101,8 +101,8 @@ public class MainActivity extends AppCompatActivity {
         rv_stock_list.setAdapter(mStockListAdapter);
 
         // 开启service
-//        Intent intent = new Intent(this, BrainService.class);
-//        bindService(intent, serviceConnection, BIND_AUTO_CREATE);
+        Intent intent = new Intent(this, BrainService.class);
+        bindService(intent, serviceConnection, BIND_AUTO_CREATE);
 
         mMainPresent.beginQueryAndAnalyse();
 
