@@ -40,7 +40,6 @@ public class StockManager {
             mStockList.add(stock);
             mStockIdList.add(stockId);
         }
-        mStockIdList = stockIdList;
     }
 
     public List<String> getStockIdList(){

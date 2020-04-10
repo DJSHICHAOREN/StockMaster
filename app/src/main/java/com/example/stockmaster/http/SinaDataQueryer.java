@@ -91,17 +91,18 @@ public class SinaDataQueryer {
     /**
      * 查询股票N天的价格
      * https://quotes.sina.cn/hk/api/openapi.php/HK_MinlineService.getMinline?symbol=02400&day=1&callback=var%20hkT1=
-     * @param stockId
+     * @param stockIdCode
      */
-    public void queryStocksNDayPrice(final String stockId, final int dayCount){
+    public void queryStocksNDayPrice(String stockIdCode, final int dayCount){
         if(mQueue ==null)
             mQueue = Volley.newRequestQueue(mContext);
-
-        String noHkStockId = stockId;
-        if(stockId.contains("hk")){
-            noHkStockId = stockId.replace("hk", "");
+        // 为stockId添加hk
+        if(!stockIdCode.contains("hk")){
+            stockIdCode = "hk" + stockIdCode;
         }
-        String url ="https://quotes.sina.cn/hk/api/openapi.php/HK_MinlineService.getMinline?symbol=" + noHkStockId + "&day="+ dayCount +"&callback=:::hk" + noHkStockId + ":::";
+        final String stockId = stockIdCode;
+
+        String url ="https://quotes.sina.cn/hk/api/openapi.php/HK_MinlineService.getMinline?symbol=" + stockId.replace("hk", "") + "&day="+ dayCount +"&callback=:::" + stockId + ":::";
 
         // Request a string response from the provided URL.
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
@@ -156,17 +157,18 @@ public class SinaDataQueryer {
     /**
      * 请求10日、30日、50日、100日、250日均价
      * http://web.ifzq.gtimg.cn/appstock/hk/Hkinchot/averageVolatility?code=02400&_callback=jQuery112
-     * @param stockId
+     * @param stockIdCode
      */
-    public void queryStocksMAPrice(final String stockId){
+    public void queryStocksMAPrice(String stockIdCode){
         if(mQueue ==null)
             mQueue = Volley.newRequestQueue(mContext);
 
-        String noHkStockId = stockId;
-        if(stockId.contains("hk")){
-            noHkStockId = stockId.replace("hk", "");
+        // 为stockId添加hk
+        if(!stockIdCode.contains("hk")){
+            stockIdCode = "hk" + stockIdCode;
         }
-        String url = "http://web.ifzq.gtimg.cn/appstock/hk/Hkinchot/averageVolatility?code="+ noHkStockId + "&callback=:::hk" + noHkStockId + ":::";
+        final String stockId = stockIdCode;
+        String url = "http://web.ifzq.gtimg.cn/appstock/hk/Hkinchot/averageVolatility?code="+ stockId.replace("hk", "") + "&callback=:::" + stockId + ":::";
 
         // Request a string response from the provided URL.
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url,

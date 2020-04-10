@@ -16,7 +16,9 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.IBinder;
+import android.os.Message;
 import android.os.Vibrator;
 import android.util.Log;
 import android.view.View;
@@ -48,6 +50,27 @@ public class MainActivity extends AppCompatActivity {
     private RecyclerView.Adapter mStockListAdapter;
     private BrainService mBrainService;
     private MainPresent mMainPresent;
+
+    private Handler handler = new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            switch (msg.what) {
+                case 1:{
+                    Bundle bundle = msg.getData();
+                    String dealString = bundle.getString("dealString");
+                    tv_deal_point.setText(dealString);
+                    break;
+                }
+                case 2:{
+                    Bundle bundle = msg.getData();
+                    int itemIndex = bundle.getInt("itemIndex");
+                    mStockListAdapter.notifyItemChanged(itemIndex);
+                    break;
+                }
+            }
+        }
+    };
 
     private ServiceConnection serviceConnection = new ServiceConnection() {
         @Override
@@ -157,7 +180,13 @@ public class MainActivity extends AppCompatActivity {
          * @param dealString
          */
         public void refreshUIWhenGetNewDealPoint(String dealString, int notificationId, String notificationContent) {
-            tv_deal_point.setText(dealString);
+            Message changeTopTip = Message.obtain();
+            changeTopTip.what = 1;
+            Bundle bundle = new Bundle();
+            bundle.putString("dealString", dealString);
+            changeTopTip.setData(bundle);
+            handler.sendMessage(changeTopTip);
+
             sendNotification(notificationId, notificationContent);
         }
 
@@ -165,7 +194,15 @@ public class MainActivity extends AppCompatActivity {
          * 刷新首页买卖点列表
          */
         public void notifyStockListItemChanged(int itemIndex){
-            mStockListAdapter.notifyItemChanged(itemIndex);
+            Message notifyListUpdateMsg = Message.obtain();
+            notifyListUpdateMsg.what = 2;
+
+            Bundle bundle = new Bundle();
+            bundle.putInt("itemIndex", itemIndex);
+            notifyListUpdateMsg.setData(bundle);
+
+            handler.sendMessage(notifyListUpdateMsg);
+
         }
     }
 
