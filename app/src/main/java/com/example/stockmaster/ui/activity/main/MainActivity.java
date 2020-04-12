@@ -102,7 +102,8 @@ public class MainActivity extends AppCompatActivity {
 
         // 开启service
         Intent intent = new Intent(this, BrainService.class);
-        bindService(intent, serviceConnection, BIND_AUTO_CREATE);
+//        bindService(intent, serviceConnection, BIND_AUTO_CREATE);
+        startService(intent);
 
         mMainPresent.beginQueryAndAnalyse();
 
@@ -127,7 +128,6 @@ public class MainActivity extends AppCompatActivity {
         private String CHANNEL_ID = "STOCK_MASTER_CHANNEL";
 //        private int notificationId = 0;
         public MainActivityUIManager(){
-            NotificationManager manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
             createNotificationChannel();
         }
 

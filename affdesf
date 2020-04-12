@@ -1,0 +1,83 @@
+[33mcommit 03002c9cb580bedc44a34080abb3e86ad5570d9a[m[33m ([m[1;36mHEAD -> [m[1;32mmaster[m[33m, [m[1;31morigin/master[m[33m, [m[1;31morigin/HEAD[m[33m)[m
+Author: djshichaoren <djshichaoren@163.com>
+Date:   Mon Apr 6 23:03:17 2020 +0800
+
+    得到港股通代码，建立新页面，分析K线
+
+[33mcommit 8b012c5cb68767c575fcdcdb64ad0e874edd4f68[m
+Author: djshichaoren <djshichaoren@163.com>
+Date:   Mon Apr 6 12:56:24 2020 +0800
+
+    获取股票均价
+
+[33mcommit b33d4e971c59929ed18651b63137779d726e717c[m
+Author: lvwuda <lvwuda@dj.com>
+Date:   Fri Apr 3 19:15:54 2020 +0800
+
+    添加请求5日数据
+
+[33mcommit 6faa933b3029a31d0c0d5b9e616fea7d4d485069[m
+Author: lvwuda <lvwuda@dj.com>
+Date:   Fri Apr 3 15:13:41 2020 +0800
+
+    更改为相同股票的通知在一个通知中
+
+[33mcommit 675f53747a3719a54a02e1fe0d331dc70cb28f2b[m
+Author: lvwuda <lvwuda@dj.com>
+Date:   Thu Apr 2 16:55:48 2020 +0800
+
+    添加手机通知功能
+
+[33mcommit e8b2a4eeead4cde38015e3f6db2033672683ac00[m
+Author: lvwuda <lvwuda@dj.com>
+Date:   Thu Apr 2 14:46:36 2020 +0800
+
+    添加首页第一行显示最新买卖点
+
+[33mcommit fac60995699b169488ca8d3169a182c5b018fc22[m
+Author: djshichaoren <djshichaoren@163.com>
+Date:   Tue Mar 31 00:28:51 2020 +0800
+
+    删除无用类
+
+[33mcommit 55ed449c932c815365e107f117cc1f24698f19a3[m
+Author: djshichaoren <djshichaoren@163.com>
+Date:   Tue Mar 31 00:25:07 2020 +0800
+
+    将stockManager中的属性改为静态的
+
+[33mcommit 65f2f69c812d602ea8de1467e51bdc5b762aa8f2[m
+Author: djshichaoren <djshichaoren@163.com>
+Date:   Mon Mar 30 00:35:56 2020 +0800
+
+    添加新的建议详情页面
+
+[33mcommit e3907107b20129f28a14910af8caf4334a144c02[m
+Author: djshichaoren <djshichaoren@163.com>
+Date:   Sun Mar 29 16:13:59 2020 +0800
+
+    将架构改为MVP模式
+
+[33mcommit f829103866fb468ad5958501aabc7fdb9d7d9be4[m
+Author: lvwuda <lvwuda@dj.com>
+Date:   Fri Mar 27 14:49:57 2020 +0800
+
+    修复RecyclerView只显示一个的问题
+
+[33mcommit e4c145c9902759df3d8805b13867d998fcf5304e[m
+Author: djshichaoren <djshichaoren@163.com>
+Date:   Fri Mar 27 00:23:26 2020 +0800
+
+    完善recyclerview的adapter
+
+[33mcommit 58c0b6bd95a2ae7f0a2f55275d8211ed555cf6d0[m
+Author: lvwuda <lvwuda@dj.com>
+Date:   Thu Mar 26 18:57:51 2020 +0800
+
+    添加股票列表RecyclerView
+
+[33mcommit e5f8cc44d62aa3b2848efdd0bb685cefe5d58914[m
+Author: lvwuda <lvwuda@dj.com>
+Date:   Thu Mar 26 17:03:01 2020 +0800
+
+    修复接收数据bug
