@@ -49,4 +49,6 @@ dependencies {
     def recyclerview_version = "1.0.0"
     implementation "androidx.recyclerview:recyclerview:$recyclerview_version"
     implementation "androidx.recyclerview:recyclerview-selection:$recyclerview_version"
+
+    implementation 'org.xutils:xutils:3.8.8'
 }

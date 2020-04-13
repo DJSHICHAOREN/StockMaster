@@ -105,7 +105,7 @@ public class MainActivity extends AppCompatActivity {
 //        bindService(intent, serviceConnection, BIND_AUTO_CREATE);
         startService(intent);
 
-        mMainPresent.beginQueryAndAnalyse();
+//        mMainPresent.beginQueryAndAnalyse();
 
         // 设置手机震动
 //        Vibrator v = (Vibrator) MainActivity.this.getSystemService(Context.VIBRATOR_SERVICE);
@@ -187,7 +187,7 @@ public class MainActivity extends AppCompatActivity {
             changeTopTip.setData(bundle);
             handler.sendMessage(changeTopTip);
 
-            sendNotification(notificationId, notificationContent);
+//            sendNotification(notificationId, notificationContent);
         }
 
         /**

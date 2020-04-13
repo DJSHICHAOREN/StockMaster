@@ -6,22 +6,41 @@ import androidx.annotation.NonNull;
 
 import com.example.stockmaster.util.StockAnalyser;
 
+import org.xutils.db.annotation.Column;
+import org.xutils.db.annotation.Table;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-
+@Table(name = "child")
 public class Stock implements Serializable {
-    public String id, name;
-    public boolean isReceivedTodayData = false; //在为true时，才可以接收分钟的数据
+    @Column(name = "id", isId = true)
+    public String id;
+    @Column(name = "name")
+    public String name;
+    @Column(name = "currentPrice")
     public StockPrice currentPrice;
+    @Column(name = "ma10")
+    public float ma10;
+    @Column(name = "ma30")
+    public float ma30;
+    @Column(name = "ma50")
+    public float ma50;
+    @Column(name = "ma100")
+    public float ma100;
+    @Column(name = "ma250")
+    public float ma250;
+
+
+    public boolean isReceivedTodayData = false; //在为true时，才可以接收分钟的数据
     public List<StockPrice> todayStockPriceList = new ArrayList<>();
     public List<StockPrice> lowerStockPriceList = new ArrayList<>();
     public List<StockPrice> higherStockPriceList = new ArrayList<>();
     public List<StockPrice> buyStockPriceList = new ArrayList<>();
     public List<StockPrice> saleStockPriceList = new ArrayList<>();
     public List<StockPrice> dealPriceList = new ArrayList<>(); // 用来在detail页面显示全部交易列表
-    float ma10, ma30, ma50, ma100, ma250;
+
 
 
 
@@ -170,5 +189,73 @@ public class Stock implements Serializable {
         if(!ma250.equals("NA")){
             this.ma250 = Float.parseFloat(ma250);
         }
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setCurrentPrice(StockPrice currentPrice) {
+        this.currentPrice = currentPrice;
+    }
+
+    public float getMa10() {
+        return ma10;
+    }
+
+    public void setMa10(float ma10) {
+        this.ma10 = ma10;
+    }
+
+    public float getMa30() {
+        return ma30;
+    }
+
+    public void setMa30(float ma30) {
+        this.ma30 = ma30;
+    }
+
+    public float getMa50() {
+        return ma50;
+    }
+
+    public void setMa50(float ma50) {
+        this.ma50 = ma50;
+    }
+
+    public float getMa100() {
+        return ma100;
+    }
+
+    public void setMa100(float ma100) {
+        this.ma100 = ma100;
+    }
+
+    public float getMa250() {
+        return ma250;
+    }
+
+    public void setMa250(float ma250) {
+        this.ma250 = ma250;
+    }
+
+    public boolean isReceivedTodayData() {
+        return isReceivedTodayData;
+    }
+
+    public void setReceivedTodayData(boolean receivedTodayData) {
+        isReceivedTodayData = receivedTodayData;
     }
 }

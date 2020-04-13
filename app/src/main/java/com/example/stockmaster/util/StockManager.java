@@ -4,6 +4,7 @@ import android.util.Log;
 
 import com.example.stockmaster.entity.Stock;
 import com.example.stockmaster.entity.StockPrice;
+import com.example.stockmaster.service.BrainService;
 import com.example.stockmaster.ui.activity.main.MainActivity;
 
 import java.util.ArrayList;
@@ -17,12 +18,17 @@ public class StockManager {
     private static List<String> mStockIdList = new ArrayList<String>();
     private static StockAnalyser mStockAnalyser = new StockAnalyser();
     private MainActivity.MainActivityUIManager mMainActivityUIManager;
+    private static BrainService mBrainService;
     public StockManager(){
+        mStockAnalyser.setStockManager(this);
+    }
+
+    public void setBrainService(BrainService brainService){
+        mBrainService = brainService;
     }
 
     public void setMainActivityUIManager(MainActivity.MainActivityUIManager mainActivityUIManager) {
         this.mMainActivityUIManager = mainActivityUIManager;
-        mStockAnalyser.setMainActivityUIManager(this);
     }
 
     /**
@@ -127,6 +133,9 @@ public class StockManager {
                 mMainActivityUIManager.refreshUIWhenGetNewDealPoint(stockPrice.toStringWithId(),
                         stockPrice.getNotificationId(), stockPrice.getNotificationContent());
                 mMainActivityUIManager.notifyStockListItemChanged(mStockIdList.indexOf(stock.id));
+            }
+            if(mBrainService != null){
+//                mBrainService.sendNotification(stockPrice.getNotificationId(), stockPrice.getNotificationContent());
             }
         }
     }

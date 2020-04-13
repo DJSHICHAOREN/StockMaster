@@ -18,7 +18,7 @@ public class StockAnalyser implements Serializable {
     public StockAnalyser() {
     }
 
-    public void setMainActivityUIManager(StockManager mStockManager) {
+    public void setStockManager(StockManager mStockManager) {
         this.mStockManager = mStockManager;
     }
 

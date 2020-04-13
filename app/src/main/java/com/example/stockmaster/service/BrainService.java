@@ -15,21 +15,22 @@ import androidx.core.app.NotificationManagerCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.stockmaster.R;
+import com.example.stockmaster.http.DataQueryerManager;
 import com.example.stockmaster.http.SinaDataQueryer;
 import com.example.stockmaster.ui.activity.main.MainActivity;
 import com.example.stockmaster.util.StockAnalyser;
 import com.example.stockmaster.util.StockManager;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Timer;
+import java.util.TimerTask;
 
 public class BrainService extends Service {
-    private Timer timer;
-    private StockManager mStockManager;
-    private SinaDataQueryer mSinaDataQueryer;
-    private StockAnalyser mStockAnalyser;
-    private RecyclerView.Adapter stockListAdapter;
-    private BrainService mBrainService;
     private String CHANNEL_ID = "BRAIN_SERVICE_NOTIFICATION";
+    private DataQueryerManager mDataQueryerManager;
+    private StockManager mStockManager;
+    private int i=1;
 
     public class MyBinder extends Binder {
         public BrainService getService(){
@@ -39,7 +40,9 @@ public class BrainService extends Service {
     private MyBinder serviceBinder = new MyBinder();
 
     public BrainService() {
-
+        mStockManager = new StockManager();
+        mStockManager.setBrainService(this);
+        mDataQueryerManager = new DataQueryerManager(this, mStockManager);
     }
 
     @Override
@@ -47,18 +50,26 @@ public class BrainService extends Service {
         super.onCreate();
         Log.d("lwd", "创建brainService");
 
+
         new Thread(new Runnable() {
             @Override
             public void run() {
-                //fetching notifications from server
-                //if there is notifications then call this method
-//                createNotificationChannel();
-                sendNotification(1, "from Brain Service");
+                createNotificationChannel();
+//                sendNotification(1, "from Brain Service");
+                Timer timer = new Timer("RefreshStocks");
+                timer.schedule(new TimerTask() {
+                    @Override
+                    public void run() {
+                        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm:ss");// HH:mm:ss
+                        Date date = new Date(System.currentTimeMillis());
+                        sendNotification(i++, String.format("from BrainService: %s", simpleDateFormat.format(date)));
+                    }
+                }, 0, 1800000); // 1 seconds
+
+                mDataQueryerManager.beginQueryTodayPrice();
+                mDataQueryerManager.beginQueryMinutePrice();
             }
         }).start();
-
-
-
     }
 
     @Override
@@ -73,11 +84,6 @@ public class BrainService extends Service {
     }
 
     public String getHello(){
-//        try {
-//            Thread.sleep(20000);
-//        } catch (InterruptedException e) {
-//            e.printStackTrace();
-//        }
         return "hello";
     }
 
