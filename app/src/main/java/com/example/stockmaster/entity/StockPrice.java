@@ -2,17 +2,26 @@ package com.example.stockmaster.entity;
 
 import android.util.Log;
 
+import org.xutils.db.annotation.Column;
+import org.xutils.db.annotation.Table;
+
 import java.io.Serializable;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+@Table(name = "StockPrice")
 public class StockPrice implements Serializable {
-    public String id, name="";
+    @Column(name = "id", isId = true)
+    public String id;
+    @Column(name = "stockId")
+    public String stockId;
+    @Column(name="time")
     public Date time;
+    @Column(name="price")
     public float price;
-    public Stock.DealType dealType = Stock.DealType.NULL;
 
+    public Stock.DealType dealType = Stock.DealType.NULL;
     private static SimpleDateFormat mSimpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
     public StockPrice(){
@@ -26,10 +35,6 @@ public class StockPrice implements Serializable {
 
     public void setId(String id) {
         this.id = id;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     public void setPrice(String price){

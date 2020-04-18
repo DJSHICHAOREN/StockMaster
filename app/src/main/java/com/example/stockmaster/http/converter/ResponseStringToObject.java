@@ -47,7 +47,6 @@ public class ResponseStringToObject {
 
             String[] values = right.split(",");
             try{
-                stockPriceNow.setName(values[1]);
                 stockPriceNow.setPrice(values[6]);
                 stockPriceNow.setTime(values[17] + " " + values[18]);
 
