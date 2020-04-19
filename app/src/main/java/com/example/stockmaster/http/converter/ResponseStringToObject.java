@@ -43,7 +43,7 @@ public class ResponseStringToObject {
 
             StockPrice stockPriceNow = new StockPrice();
             String[] lefts = left.split("_");
-            stockPriceNow.setId(lefts[3]);
+            stockPriceNow.setStockId(lefts[3]);
 
             String[] values = right.split(",");
             try{

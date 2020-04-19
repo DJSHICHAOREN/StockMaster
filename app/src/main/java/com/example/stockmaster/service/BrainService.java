@@ -56,15 +56,15 @@ public class BrainService extends Service {
             public void run() {
                 createNotificationChannel();
 //                sendNotification(1, "from Brain Service");
-                Timer timer = new Timer("RefreshStocks");
-                timer.schedule(new TimerTask() {
-                    @Override
-                    public void run() {
-                        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm:ss");// HH:mm:ss
-                        Date date = new Date(System.currentTimeMillis());
-                        sendNotification(i++, String.format("from BrainService: %s", simpleDateFormat.format(date)));
-                    }
-                }, 0, 1800000); // 1 seconds
+//                Timer timer = new Timer("RefreshStocks");
+//                timer.schedule(new TimerTask() {
+//                    @Override
+//                    public void run() {
+//                        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm:ss");// HH:mm:ss
+//                        Date date = new Date(System.currentTimeMillis());
+//                        sendNotification(i++, String.format("from BrainService: %s", simpleDateFormat.format(date)));
+//                    }
+//                }, 0, 1800000); // 1 seconds
 
                 mDataQueryerManager.beginQueryTodayPrice();
                 mDataQueryerManager.beginQueryMinutePrice();

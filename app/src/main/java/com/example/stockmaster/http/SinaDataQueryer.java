@@ -120,6 +120,7 @@ public class SinaDataQueryer {
                             }
                             else if(dayCount == 5){
                                 // 得到收盘价列表
+                                // 为了求五日均线
                                 List<String> closedPriceList = mTextUtil.getAllSatisfyStrings(response,
                                         "\"prevclose\":\"\\d*\\.\\d*\"");
 

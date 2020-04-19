@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Table(name = "child")
-public class Stock implements Serializable {
+public class Stock {
     @Column(name = "id", isId = true)
     public String id;
     @Column(name = "name")
@@ -44,7 +44,7 @@ public class Stock implements Serializable {
 
 
 
-    public enum DealType implements Serializable{SALE, BUY, NULL}
+    public enum DealType{SALE, BUY, NULL}
     private DealType previousDealType = DealType.SALE;
     StockAnalyser mStockAnalyser;
     private List<Float> previousFourDayPriceList;

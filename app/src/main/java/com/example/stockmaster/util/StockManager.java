@@ -17,7 +17,7 @@ public class StockManager {
     private static List<Stock> mStockList = new ArrayList<Stock>();
     private static List<String> mStockIdList = new ArrayList<String>();
     private static StockAnalyser mStockAnalyser = new StockAnalyser();
-    private MainActivity.MainActivityUIManager mMainActivityUIManager;
+    private static MainActivity.MainActivityUIManager mMainActivityUIManager;
     private static BrainService mBrainService;
     public StockManager(){
         mStockAnalyser.setStockManager(this);
@@ -45,6 +45,9 @@ public class StockManager {
             Stock stock = new Stock(mStockAnalyser, stockId, "");
             mStockList.add(stock);
             mStockIdList.add(stockId);
+
+            // 将股票实例存入数据库
+            DBUtil.saveStock(stock);
         }
     }
 
@@ -57,6 +60,7 @@ public class StockManager {
      * @param stockPrice
      */
     public void add(Stock stock, StockPrice stockPrice){
+        DBUtil.saveStockPrice(stockPrice);
         if(stock.addStockPrice(stockPrice)){
             mStockAnalyser.analyse(stock);
         }
@@ -87,9 +91,9 @@ public class StockManager {
      */
     public void addMinuteStockPrice(List<StockPrice> stockPriceList){
         for(StockPrice stockPrice : stockPriceList){
-            int stockIndex = mStockIdList.indexOf(stockPrice.id);
+            int stockIndex = mStockIdList.indexOf(stockPrice.stockId);
             if(stockIndex == -1){
-                Log.e("lwd", String.format("没有找到价格对应的股票id：%s", stockPrice.id));
+                Log.e("lwd", String.format("没有找到价格对应的股票id：%s", stockPrice.stockId));
             }
             Stock stock = mStockList.get(stockIndex);
             if(stock != null && stock.isReceivedTodayData){

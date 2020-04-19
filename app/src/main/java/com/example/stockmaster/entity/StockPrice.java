@@ -1,7 +1,5 @@
 package com.example.stockmaster.entity;
 
-import android.util.Log;
-
 import org.xutils.db.annotation.Column;
 import org.xutils.db.annotation.Table;
 
@@ -11,7 +9,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 @Table(name = "StockPrice")
-public class StockPrice implements Serializable {
+public class StockPrice {
     @Column(name = "id", isId = true)
     public String id;
     @Column(name = "stockId")
@@ -27,14 +25,14 @@ public class StockPrice implements Serializable {
     public StockPrice(){
     }
 
-    public StockPrice(String id, String time, String price){
-        setId(id);
+    public StockPrice(String stockId, String time, String price){
+        setStockId(stockId);
         setTime(time);
         setPrice(price);
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void setStockId(String stockId) {
+        this.stockId = stockId;
     }
 
     public void setPrice(String price){
@@ -65,12 +63,20 @@ public class StockPrice implements Serializable {
         return String.format("%.3f", price);
     }
 
+    public String getStockId() {
+        return stockId;
+    }
+
     public String getNotificationContent(){
-        return id + " " + toString();
+        return stockId + " " + toString();
+    }
+
+    public Date getTime() {
+        return time;
     }
 
     public int getNotificationId(){
-        return Integer.parseInt(this.id.substring(2));
+        return Integer.parseInt(this.stockId.substring(2));
     }
 
     @Override
@@ -86,6 +92,6 @@ public class StockPrice implements Serializable {
     }
 
     public String toStringWithId(){
-        return String.format("%s, %s", id, toString());
+        return String.format("%s, %s", stockId, toString());
     }
 }

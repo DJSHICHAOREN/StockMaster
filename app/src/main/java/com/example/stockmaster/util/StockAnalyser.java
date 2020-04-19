@@ -12,7 +12,7 @@ import java.util.List;
 /**
  * 分析股票的买卖点
  */
-public class StockAnalyser implements Serializable {
+public class StockAnalyser {
     private static StockManager mStockManager;
 
     public StockAnalyser() {
