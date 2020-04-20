@@ -8,7 +8,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-@Table(name = "StockPrice")
+@Table(name = "stockPrice")
 public class StockPrice {
     @Column(name = "id", isId = true)
     public String id;

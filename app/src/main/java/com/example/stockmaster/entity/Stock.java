@@ -13,7 +13,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-@Table(name = "child")
+@Table(name = "stock")
 public class Stock {
     @Column(name = "id", isId = true)
     public String id;
@@ -48,6 +48,10 @@ public class Stock {
     private DealType previousDealType = DealType.SALE;
     StockAnalyser mStockAnalyser;
     private List<Float> previousFourDayPriceList;
+
+    public Stock(){
+
+    }
 
     public Stock(StockAnalyser stockAnalyser, String id, String name){
         this.id = id;
