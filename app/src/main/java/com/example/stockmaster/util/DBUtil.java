@@ -56,7 +56,7 @@ public class DBUtil {
                     .where("stockId", "=", stockPrice.getStockId())
                     .and("time", "=", stockPrice.getTime())
                     .findFirst();
-            if(oldStockPrice == null){
+            if(oldStockPrice == null || oldStockPrice.getTime() == stockPrice.getTime()){
                 db.saveBindingId(stockPrice);
             }
 
@@ -64,6 +64,5 @@ public class DBUtil {
             e.printStackTrace();
         }
     }
-
 
 }

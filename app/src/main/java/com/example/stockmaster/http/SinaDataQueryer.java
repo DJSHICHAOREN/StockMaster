@@ -119,19 +119,27 @@ public class SinaDataQueryer {
                                 queryStocksMAPrice(stockId);
                             }
                             else if(dayCount == 5){
+                                List<StockPrice> stockPriceList = mResponseStringToObject.sinaTodayPriceResponseToObjectList(response);
+                                mStockManager.addTodayStockPrice(stockPriceList, stockId);
+                                Log.d("lwd", String.format("%s 今日数据添加完毕", stockId));
+                                // 在收到股票分时数据并建立股票实例以后在请求股票的五日数据，计算五日均价
+                                queryStocksFiveDayAvgPrice(stockId);
+                                queryStocksMAPrice(stockId);
+
+
                                 // 得到收盘价列表
                                 // 为了求五日均线
-                                List<String> closedPriceList = mTextUtil.getAllSatisfyStrings(response,
-                                        "\"prevclose\":\"\\d*\\.\\d*\"");
-
-                                List<Float> fiveDayPriceList = new ArrayList<>();
-                                for(String closedPrice : closedPriceList){
-                                    String stringPrice = closedPrice.split(":")[1].replaceAll("\"", "");
-                                    fiveDayPriceList.add(Float.parseFloat(stringPrice));
-                                }
-                                if(fiveDayPriceList.size() == 5){
-                                    mStockManager.setPreviousFourDayPriceList(fiveDayPriceList.subList(1, fiveDayPriceList.size()), stockId);
-                                }
+//                                List<String> closedPriceList = mTextUtil.getAllSatisfyStrings(response,
+//                                        "\"prevclose\":\"\\d*\\.\\d*\"");
+//
+//                                List<Float> fiveDayPriceList = new ArrayList<>();
+//                                for(String closedPrice : closedPriceList){
+//                                    String stringPrice = closedPrice.split(":")[1].replaceAll("\"", "");
+//                                    fiveDayPriceList.add(Float.parseFloat(stringPrice));
+//                                }
+//                                if(fiveDayPriceList.size() == 5){
+//                                    mStockManager.setPreviousFourDayPriceList(fiveDayPriceList.subList(1, fiveDayPriceList.size()), stockId);
+//                                }
                             }
                         }
                         // 得到的时间为空字符串，则抛出异常

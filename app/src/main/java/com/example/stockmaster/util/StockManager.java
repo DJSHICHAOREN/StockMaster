@@ -60,7 +60,7 @@ public class StockManager {
      * @param stockPrice
      */
     public void add(Stock stock, StockPrice stockPrice){
-        DBUtil.saveStockPrice(stockPrice);
+//        DBUtil.saveStockPrice(stockPrice);
         if(stock.addStockPrice(stockPrice)){
             mStockAnalyser.analyse(stock);
         }
