@@ -14,6 +14,7 @@ import com.example.stockmaster.entity.StockPrice;
 import com.example.stockmaster.entity.masina.MAResponseResult;
 import com.example.stockmaster.entity.sina.SinaResponse;
 import com.example.stockmaster.http.converter.ResponseStringToObject;
+import com.example.stockmaster.util.MAGenerator;
 import com.example.stockmaster.util.StockManager;
 import com.example.stockmaster.util.TextUtil;
 import com.google.gson.Gson;
@@ -30,7 +31,8 @@ public class SinaDataQueryer {
     private StockManager mStockManager;
     private RequestQueue mQueue;
     private ResponseStringToObject mResponseStringToObject = new ResponseStringToObject();
-    private TextUtil mTextUtil = new TextUtil();
+    MAGenerator mMaGenerator = new MAGenerator();
+
 
     public SinaDataQueryer (Context context, StockManager stockManager){
         mContext = context;
@@ -110,36 +112,14 @@ public class SinaDataQueryer {
                     @Override
                     public void onResponse(String response) {
                         try{
-                            if(dayCount == 1){
-                                List<StockPrice> stockPriceList = mResponseStringToObject.sinaTodayPriceResponseToObjectList(response);
-                                mStockManager.addTodayStockPrice(stockPriceList, stockId);
-                                Log.d("lwd", String.format("%s 今日数据添加完毕", stockId));
-                                // 在收到股票分时数据并建立股票实例以后在请求股票的五日数据，计算五日均价
-                                queryStocksFiveDayAvgPrice(stockId);
-                                queryStocksMAPrice(stockId);
-                            }
-                            else if(dayCount == 5){
-                                List<StockPrice> stockPriceList = mResponseStringToObject.sinaTodayPriceResponseToObjectList(response);
-                                mStockManager.addTodayStockPrice(stockPriceList, stockId);
-                                Log.d("lwd", String.format("%s 今日数据添加完毕", stockId));
-                                // 在收到股票分时数据并建立股票实例以后在请求股票的五日数据，计算五日均价
-                                queryStocksFiveDayAvgPrice(stockId);
-                                queryStocksMAPrice(stockId);
-
-
-                                // 得到收盘价列表
-                                // 为了求五日均线
-//                                List<String> closedPriceList = mTextUtil.getAllSatisfyStrings(response,
-//                                        "\"prevclose\":\"\\d*\\.\\d*\"");
-//
-//                                List<Float> fiveDayPriceList = new ArrayList<>();
-//                                for(String closedPrice : closedPriceList){
-//                                    String stringPrice = closedPrice.split(":")[1].replaceAll("\"", "");
-//                                    fiveDayPriceList.add(Float.parseFloat(stringPrice));
-//                                }
-//                                if(fiveDayPriceList.size() == 5){
-//                                    mStockManager.setPreviousFourDayPriceList(fiveDayPriceList.subList(1, fiveDayPriceList.size()), stockId);
-//                                }
+                            List<StockPrice> stockPriceList = mResponseStringToObject.sinaTodayPriceResponseToObjectList(response);
+                            mStockManager.addTodayStockPrice(stockPriceList, stockId);
+                            Log.d("lwd", String.format("%s %d日数据添加完毕", stockId, dayCount));
+                            queryStocksMAPrice(stockId);
+                            // 为了求五日均线,得到收盘价列表
+                            if(dayCount == 5){
+                                List<Float> fiveDayPriceList = mMaGenerator.generateDayMA5(response);
+                                mStockManager.setPreviousFourDayPriceList(fiveDayPriceList.subList(1, fiveDayPriceList.size()), stockId);
                             }
                         }
                         // 得到的时间为空字符串，则抛出异常

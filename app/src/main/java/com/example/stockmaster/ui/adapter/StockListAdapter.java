@@ -40,7 +40,8 @@ public class StockListAdapter extends RecyclerView.Adapter<StockListAdapter.Stoc
 
     @Override
     public void onBindViewHolder(@NonNull StockListAdapter.StockListViewHolder holder, int position) {
-        holder.tv_stock_id.setText(mStockList.get(position).id);
+        holder.tv_stock_id.setText(mStockList.get(position).getId());
+        holder.tv_stock_name.setText(mStockList.get(position).getName());
         holder.tv_deal_tip.setText(mStockList.get(position).getRecentDealTips());
         holder.ll_stock_item.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -61,6 +62,9 @@ public class StockListAdapter extends RecyclerView.Adapter<StockListAdapter.Stoc
         // each data item is just a string in this case
         @BindView(R.id.tv_stock_id)
         public TextView tv_stock_id;
+
+        @BindView(R.id.tv_stock_name)
+        public TextView tv_stock_name;
 
         @BindView(R.id.tv_deal_tip)
         public TextView tv_deal_tip;

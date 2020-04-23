@@ -66,8 +66,9 @@ public class BrainService extends Service {
 //                    }
 //                }, 0, 1800000); // 1 seconds
 
-                mDataQueryerManager.beginQueryTodayPrice();
                 mDataQueryerManager.beginQueryMinutePrice();
+                mDataQueryerManager.beginQueryTodayPrice();
+
             }
         }).start();
     }

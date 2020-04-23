@@ -41,7 +41,7 @@ public class DataQueryerManager {
             Runnable runnable = new Runnable() {
                 @Override
                 public void run() {
-                    mSinaDataQueryer.queryStocksTodayPrice(stockId);
+                    mSinaDataQueryer.queryStocksFiveDayAvgPrice(stockId);
                 }
             };
             mCachedThreadPool.execute(runnable);
@@ -67,6 +67,4 @@ public class DataQueryerManager {
             }
         }, 0, 2000); // 1 seconds
     }
-
-
 }

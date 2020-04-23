@@ -18,6 +18,9 @@ public class StockPrice {
     public Date time;
     @Column(name="price")
     public float price;
+    @Column(name="oneHourMA5")
+    public float oneHourMA5;
+    public String name;
 
     public Stock.DealType dealType = Stock.DealType.NULL;
     private static SimpleDateFormat mSimpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -73,6 +76,14 @@ public class StockPrice {
 
     public Date getTime() {
         return time;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public int getNotificationId(){

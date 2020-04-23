@@ -96,6 +96,10 @@ public class StockManager {
                 Log.e("lwd", String.format("没有找到价格对应的股票id：%s", stockPrice.stockId));
             }
             Stock stock = mStockList.get(stockIndex);
+            // 设置股票名称
+            if(stockPrice.getName() != null && stock.getName().equals("")){
+                stock.setName(stockPrice.getName());
+            }
             if(stock != null && stock.isReceivedTodayData){
                 add(stock, stockPrice);
 //                Log.d("lwd", String.format("加载分钟数据:%s", stock.id));
@@ -134,7 +138,7 @@ public class StockManager {
     public void addBuyAndSaleStockPrice(Stock stock, StockPrice stockPrice, Stock.DealType dealType){
         if(stock.addBuyAndSaleStockPrice(stockPrice, dealType)){
             if(mMainActivityUIManager != null){
-                mMainActivityUIManager.refreshUIWhenGetNewDealPoint(stockPrice.toStringWithId(),
+                mMainActivityUIManager.refreshUIWhenGetNewDealPoint(stock.getName() + " " +stockPrice.toStringWithId(),
                         stockPrice.getNotificationId(), stockPrice.getNotificationContent());
                 mMainActivityUIManager.notifyStockListItemChanged(mStockIdList.indexOf(stock.id));
             }
