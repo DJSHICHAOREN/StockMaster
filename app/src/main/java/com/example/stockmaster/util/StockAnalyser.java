@@ -75,4 +75,8 @@ public class StockAnalyser {
 //            Log.d("lwd", String.format("stockId:%s, ma5:%f", stock.id, stock.getMa5()));
         }
     }
+
+    public static boolean isFiveDayLineUp(Stock stock){
+
+    }
 }

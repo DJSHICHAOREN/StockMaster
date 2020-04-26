@@ -7,43 +7,24 @@ import android.util.Log;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.stockmaster.entity.Stock;
 import com.example.stockmaster.http.SinaDataQueryer;
 import com.example.stockmaster.ui.activity.base.BasePresent;
+import com.example.stockmaster.util.StockManager;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class RecommandPresent extends BasePresent {
-    private SinaDataQueryer mSinaDataQueryer;
 
-    private Handler handler = new Handler() {
-        @Override
-        public void handleMessage(Message msg) {
-            super.handleMessage(msg);
-            switch (msg.what) {
-                case 1: {
-                    Log.d("lwd", "获取今天股票数据");
-                    Bundle bundle = msg.getData();
-                    ArrayList<String> stockIdList = bundle.getStringArrayList("stockIdList");
-                    for (final String stockId : stockIdList) {
-                        new Thread() {
-                            @Override
-                            public void run() {
-                                mSinaDataQueryer.queryStocksTodayPrice(stockId);
-//                                mSinaDataQueryer.queryStocksFiveDayAvgPrice(stockId);
-                            }
-                        }.start();
-                    }
-                    break;
-                }
-            }
-        }
-    };
-
-
+    private StockManager mStockManager = new StockManager();
 
     public RecommandPresent(AppCompatActivity view) {
         super(view);
     }
 
+    public List<Stock> getLineUpStocks(){
+        return StockManager.getLineUpStocks();
+    }
 
 }

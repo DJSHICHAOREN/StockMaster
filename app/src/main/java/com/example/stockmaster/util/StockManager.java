@@ -147,4 +147,14 @@ public class StockManager {
             }
         }
     }
+
+    public static List<Stock> getLineUpStocks(){
+        List<Stock> lineUpStockList = new ArrayList<>();
+        for(Stock stock : mStockList){
+            if(StockAnalyser.isFiveDayLineUp(stock)){
+                lineUpStockList.add(stock);
+            }
+        }
+        return lineUpStockList;
+    }
 }
