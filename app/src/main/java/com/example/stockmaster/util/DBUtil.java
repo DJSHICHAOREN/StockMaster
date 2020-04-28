@@ -7,8 +7,6 @@ import org.xutils.DbManager;
 import org.xutils.ex.DbException;
 import org.xutils.x;
 
-import java.io.File;
-
 public class DBUtil {
     public static DbManager db;
     public static DbManager.DaoConfig daoConfig = new DbManager.DaoConfig()
@@ -56,7 +54,8 @@ public class DBUtil {
                     .where("stockId", "=", stockPrice.getStockId())
                     .and("time", "=", stockPrice.getTime())
                     .findFirst();
-            if(oldStockPrice == null || oldStockPrice.getTime() == stockPrice.getTime()){
+            // 之前没有存储价格，或价格有更新时，存储价格
+            if(oldStockPrice == null || oldStockPrice.getPrice() != stockPrice.getPrice()){
                 db.saveBindingId(stockPrice);
             }
 

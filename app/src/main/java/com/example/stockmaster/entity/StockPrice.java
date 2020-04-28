@@ -3,7 +3,6 @@ package com.example.stockmaster.entity;
 import org.xutils.db.annotation.Column;
 import org.xutils.db.annotation.Table;
 
-import java.io.Serializable;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -62,8 +61,12 @@ public class StockPrice {
         return dealType;
     }
 
-    public String getPrice() {
+    public String getPriceString() {
         return String.format("%.3f", price);
+    }
+
+    public float getPrice() {
+        return price;
     }
 
     public String getStockId() {
@@ -94,10 +97,10 @@ public class StockPrice {
     public String toString() {
         String dealTime = time.getHours()+":"+time.getMinutes()+":"+time.getSeconds();
         if(dealType == Stock.DealType.BUY){
-            return String.format("买点，时间：%s，价格：%s", dealTime, getPrice());
+            return String.format("买点，时间：%s，价格：%s", dealTime, getPriceString());
         }
         else if(dealType == Stock.DealType.SALE){
-            return String.format("卖点，时间：%s，价格：%s", dealTime , getPrice());
+            return String.format("卖点，时间：%s，价格：%s", dealTime , getPriceString());
         }
         return "非买卖点";
     }
