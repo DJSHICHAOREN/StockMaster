@@ -87,13 +87,22 @@ public class ResponseStringToObject {
                 if(oneDaySinaStockPrice.get(0) != null && oneDaySinaStockPrice.get(0).getDate() != null){
                     date = oneDaySinaStockPrice.get(0).getDate();
                 }
+                // 添加这一天特定时间的股票价格
                 for(SinaStockPrice sinaStockPrice : oneDaySinaStockPrice){
-                    if(date == ""){
-                        Log.d("lwd", "sinaTodayPriceResponseToObjectList not get date");
+                    if(date == null || date.equals("")){
+                        Log.e("lwd", "sinaTodayPriceResponseToObjectList not get date");
+                        return null;
                     }
-                    // 生成StockPrice
-                    StockPrice stockPrice = new StockPrice(stockId, date+ " " +sinaStockPrice.getM(), sinaStockPrice.getPrice());
-                    stockPriceList.add(stockPrice);
+                    if(sinaStockPrice.getM() == null || sinaStockPrice.getM().equals("")){
+                        return null;
+                    }
+                    String timePointString = "10:00:00, 10:30:00, 11:00:00, 11:30:00, 12:00:00," +
+                            "13:30:00, 14:00:00, 14:30:00, 15:00:00, 16:00:00, 16:10:00";
+                    if(timePointString.indexOf(sinaStockPrice.getM()) != -1){
+                        // 生成StockPrice
+                        StockPrice stockPrice = new StockPrice(stockId, date+ " " +sinaStockPrice.getM(), sinaStockPrice.getPrice());
+                        stockPriceList.add(stockPrice);
+                    }
                 }
             }
         }

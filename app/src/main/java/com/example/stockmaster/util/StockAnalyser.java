@@ -77,6 +77,6 @@ public class StockAnalyser {
     }
 
     public static boolean isFiveDayLineUp(Stock stock){
-
+        return false;
     }
 }
