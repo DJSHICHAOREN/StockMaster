@@ -1,10 +1,5 @@
 package com.example.stockmaster.ui.activity.main;
 
-import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
-import android.util.Log;
-
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.stockmaster.entity.Stock;
@@ -18,7 +13,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Timer;
-import java.util.TimerTask;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -54,7 +48,7 @@ public class MainPresent extends BasePresent {
 
 
     public void beginQueryAndAnalyse(){
-        mDataQueryerManager.beginQueryTodayPrice();
+        mDataQueryerManager.queryFiveDayPrice();
         mDataQueryerManager.beginQueryMinutePrice();
     }
 

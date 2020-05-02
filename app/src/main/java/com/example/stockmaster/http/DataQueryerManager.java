@@ -3,7 +3,6 @@ package com.example.stockmaster.http;
 import android.content.Context;
 import android.util.Log;
 
-import com.example.stockmaster.entity.Stock;
 import com.example.stockmaster.util.StockManager;
 
 import java.util.ArrayList;
@@ -33,19 +32,45 @@ public class DataQueryerManager {
     }
 
     /**
-     * 请求股票全天的价格
+     * 请求股票五天的价格
      */
-    public void beginQueryTodayPrice(){
-        Log.d("lwd","获取今天股票数据");
+    public void queryFiveDayPrice(){
+        // 每天只请求一次五日的价格
         for(final String stockId : mStockManager.getStockIdList()) {
             Runnable runnable = new Runnable() {
                 @Override
                 public void run() {
-                    mSinaDataQueryer.queryStocksFiveDayAvgPrice(stockId);
+                    mSinaDataQueryer.queryStocksFiveDayPrice(stockId);
                 }
             };
             mCachedThreadPool.execute(runnable);
         }
+
+    }
+
+    /**
+     * 请求股票今天的价格
+     * 每半个小时请求一次今日价格和均价
+     */
+    public void queryTodayPrice(){
+        Log.d("lwd","获取今天股票数据");
+        // 设置计时器进行请求
+        Timer timer = new Timer("TodayStocks");
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                for(final String stockId : mStockManager.getStockIdList()) {
+                    Runnable runnable = new Runnable() {
+                        @Override
+                        public void run() {
+                            mSinaDataQueryer.queryStocksTodayPrice(stockId);
+                        }
+                    };
+                    mCachedThreadPool.execute(runnable);
+                }
+            }
+        }, 0, 1000*60*30); // 1 seconds
+
     }
 
     /**
@@ -59,7 +84,7 @@ public class DataQueryerManager {
         }
         final String stockIdString = stockIdStr;
         // 设置计时器进行请求
-        Timer timer = new Timer("RefreshStocks");
+        Timer timer = new Timer("MinuteStocks");
         timer.schedule(new TimerTask() {
             @Override
             public void run() {

@@ -7,6 +7,8 @@ import org.xutils.DbManager;
 import org.xutils.ex.DbException;
 import org.xutils.x;
 
+import java.util.List;
+
 public class DBUtil {
     public static DbManager db;
     public static DbManager.DaoConfig daoConfig = new DbManager.DaoConfig()
@@ -62,6 +64,22 @@ public class DBUtil {
         } catch (DbException e) {
             e.printStackTrace();
         }
+    }
+
+    public static void clearStockPrice(){
+        try {
+            if(db == null){
+                db = x.getDb(daoConfig);
+            }
+            List<StockPrice> stockPriceList = db.selector(StockPrice.class).findAll();
+            for(StockPrice stockPrice : stockPriceList){
+
+            }
+
+        } catch (DbException e) {
+            e.printStackTrace();
+        }
+
     }
 
 }

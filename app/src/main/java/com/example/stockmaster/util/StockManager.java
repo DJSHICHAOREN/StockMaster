@@ -60,18 +60,17 @@ public class StockManager {
      * @param stockPrice
      */
     public void add(Stock stock, StockPrice stockPrice){
-//        DBUtil.saveStockPrice(stockPrice);
         if(stock.addStockPrice(stockPrice)){
             mStockAnalyser.analyse(stock);
         }
     }
 
     /**
-     * 添加从开盘到现在的股票价格
+     * 添加股票价格到股票对象
      * @param stockPriceList
      * @return stockId 获取成功的股票Id
      */
-    public void addTodayStockPrice(List<StockPrice> stockPriceList, String stockId){
+    public void addStockPriceList(List<StockPrice> stockPriceList, String stockId){
         int stockIndex = mStockIdList.indexOf(stockId);
         Stock stock = mStockList.get(stockIndex);
         if(stock != null){
@@ -80,12 +79,29 @@ public class StockManager {
             }
             // 设置获取开盘到当前数据完毕
             stock.receiveTodayData();
-//            Log.d("lwd", String.format("%s 开盘到当前数据加载完毕", stockId));
+            Log.d("lwd", String.format("%s 开盘到当前数据加载完毕", stockId));
         }
     }
 
     /**
-     * 添加当前股票价格
+     * 保存股票价格到数据库
+     * @param stockPriceList
+     * @param stockId
+     */
+    public void saveStockPriceList(List<StockPrice> stockPriceList, String stockId){
+        int stockIndex = mStockIdList.indexOf(stockId);
+        Stock stock = mStockList.get(stockIndex);
+        if(stock != null){
+            for(StockPrice stockPrice : stockPriceList){
+                // 保存价格到数据库
+                DBUtil.saveStockPrice(stockPrice);
+            }
+            Log.d("lwd", String.format("%s 五日关键数据加载完毕", stockId));
+        }
+    }
+
+    /**
+     * 添加实时股票价格
      * 在添加了从开盘到现在的数据之后，再添加实时的每分钟的数据
      * @param stockPriceList
      */

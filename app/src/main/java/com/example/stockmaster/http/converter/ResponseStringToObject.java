@@ -66,7 +66,7 @@ public class ResponseStringToObject {
      * @param response
      * @return
      */
-    public List<StockPrice> sinaTodayPriceResponseToObjectList(String response){
+    public List<StockPrice> sinaTodayPriceResponseToObjectList(String response, boolean isUseTimePoint){
         response = response.replaceAll("\n", "");
         String[] stockStr = response.split(":::");
 
@@ -96,13 +96,21 @@ public class ResponseStringToObject {
                     if(sinaStockPrice.getM() == null || sinaStockPrice.getM().equals("")){
                         return null;
                     }
-                    String timePointString = "10:00:00, 10:30:00, 11:00:00, 11:30:00, 12:00:00," +
-                            "13:30:00, 14:00:00, 14:30:00, 15:00:00, 16:00:00, 16:10:00";
-                    if(timePointString.indexOf(sinaStockPrice.getM()) != -1){
-                        // 生成StockPrice
+                    // 过滤特殊时间点
+                    if(isUseTimePoint){
+                        String timePointString = "10:00:00, 10:30:00, 11:00:00, 11:30:00, 12:00:00," +
+                                "13:30:00, 14:00:00, 14:30:00, 15:00:00, 16:00:00, 16:10:00";
+                        if(timePointString.indexOf(sinaStockPrice.getM()) != -1){
+                            // 生成StockPrice
+                            StockPrice stockPrice = new StockPrice(stockId, date+ " " +sinaStockPrice.getM(), sinaStockPrice.getPrice());
+                            stockPriceList.add(stockPrice);
+                        }
+                    }
+                    else{
                         StockPrice stockPrice = new StockPrice(stockId, date+ " " +sinaStockPrice.getM(), sinaStockPrice.getPrice());
                         stockPriceList.add(stockPrice);
                     }
+
                 }
             }
         }

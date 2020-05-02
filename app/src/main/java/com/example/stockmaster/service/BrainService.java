@@ -2,7 +2,6 @@ package com.example.stockmaster.service;
 
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
 import android.os.Binder;
@@ -12,19 +11,10 @@ import android.util.Log;
 
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.stockmaster.R;
 import com.example.stockmaster.http.DataQueryerManager;
-import com.example.stockmaster.http.SinaDataQueryer;
-import com.example.stockmaster.ui.activity.main.MainActivity;
-import com.example.stockmaster.util.StockAnalyser;
 import com.example.stockmaster.util.StockManager;
-
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Timer;
-import java.util.TimerTask;
 
 public class BrainService extends Service {
     private String CHANNEL_ID = "BRAIN_SERVICE_NOTIFICATION";
@@ -67,7 +57,9 @@ public class BrainService extends Service {
 //                }, 0, 1800000); // 1 seconds
 
                 mDataQueryerManager.beginQueryMinutePrice();
-                mDataQueryerManager.beginQueryTodayPrice();
+                mDataQueryerManager.queryFiveDayPrice();
+
+
 
             }
         }).start();

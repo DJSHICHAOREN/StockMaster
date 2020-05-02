@@ -2,7 +2,6 @@ package com.example.stockmaster.http;
 
 import android.content.Context;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -12,17 +11,14 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.stockmaster.entity.StockPrice;
 import com.example.stockmaster.entity.masina.MAResponseResult;
-import com.example.stockmaster.entity.sina.SinaResponse;
 import com.example.stockmaster.http.converter.ResponseStringToObject;
 import com.example.stockmaster.util.MAGenerator;
 import com.example.stockmaster.util.StockManager;
-import com.example.stockmaster.util.TextUtil;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.reflect.TypeToken;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class SinaDataQueryer {
@@ -85,7 +81,7 @@ public class SinaDataQueryer {
      * 查询股票的五日均价
      * @param stockId
      */
-    public void queryStocksFiveDayAvgPrice(String stockId){
+    public void queryStocksFiveDayPrice(String stockId){
         queryStocksNDayPrice(stockId, 5);
     }
 
@@ -112,22 +108,25 @@ public class SinaDataQueryer {
                     @Override
                     public void onResponse(String response) {
                         try{
-                            List<StockPrice> stockPriceList = mResponseStringToObject.sinaTodayPriceResponseToObjectList(response);
-                            mStockManager.addTodayStockPrice(stockPriceList, stockId);
-                            Log.d("lwd", String.format("%s %d日数据添加完毕", stockId, dayCount));
-                            queryStocksMAPrice(stockId);
-                            // 为了求五日均线,得到收盘价列表
+                            if(dayCount == 1){
+                                List<StockPrice> stockPriceList = mResponseStringToObject.sinaTodayPriceResponseToObjectList(response, false);
+                                mStockManager.addStockPriceList(stockPriceList, stockId);
+                                queryStocksMAPrice(stockId);
+                            }
                             if(dayCount == 5){
+                                List<StockPrice> stockPriceList = mResponseStringToObject.sinaTodayPriceResponseToObjectList(response, true);
+                                mStockManager.saveStockPriceList(stockPriceList, stockId);
+                                // 为了求五日均线,得到收盘价列表
                                 List<Float> fiveDayPriceList = mMaGenerator.generateDayMA5(response);
                                 mStockManager.setPreviousFourDayPriceList(fiveDayPriceList.subList(1, fiveDayPriceList.size()), stockId);
                             }
+                            Log.d("lwd", String.format("%s %d日数据添加完毕", stockId, dayCount));
                         }
                         // 得到的时间为空字符串，则抛出异常
                         catch (NumberFormatException ex){
                             Log.e("lwd","得到空的时间字符串");
-                            queryStocksTodayPrice(stockId);
+                            queryStocksNDayPrice(stockId, dayCount);
                         }
-
                     }
                 },
                 new Response.ErrorListener() {
