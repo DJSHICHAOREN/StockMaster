@@ -81,6 +81,36 @@ public class DataQueryerManager {
     }
 
     /**
+     * 如果不在交易时间，则只请求一次今天的股票数据和分时股票数据
+     * 请求今天股票数据为了分析今日买卖点
+     * 请求分时股票数据为了得到股票名称
+     */
+    public void queryTodayPriceAndMinutePriceOneTime(){
+        Calendar calendar = Calendar.getInstance();
+        //获取系统时间
+        int hour = calendar.get(Calendar.HOUR_OF_DAY);
+        if(hour < 9 || hour > 16){
+            // 请求分时股票数据
+            String stockIdStr = "";
+            for(String stockId : mStockManager.getStockIdList()) {
+                stockIdStr = stockIdStr + "rt_" + stockId + ",";
+            }
+            final String stockIdString = stockIdStr;
+            mSinaDataQueryer.queryStocksNowPrice(stockIdString);
+            // 请求一天股票数据
+            for(final String stockId : mStockManager.getStockIdList()) {
+                Runnable runnable = new Runnable() {
+                    @Override
+                    public void run() {
+                        mSinaDataQueryer.queryStocksTodayPrice(stockId);
+                    }
+                };
+                mCachedThreadPool.execute(runnable);
+            }
+        }
+    }
+
+    /**
      * 获取全部股票每分钟的数据
      */
     public void beginQueryMinutePrice(){
@@ -105,4 +135,6 @@ public class DataQueryerManager {
             }
         }, 0, 2000); // 1 seconds
     }
+
+
 }

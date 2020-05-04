@@ -54,7 +54,7 @@ public class BrainService extends Service {
 //                        sendNotification(i++, String.format("from BrainService: %s", simpleDateFormat.format(date)));
 //                    }
 //                }, 0, 1800000); // 1 seconds
-
+                mDataQueryerManager.queryTodayPriceAndMinutePriceOneTime();
                 mDataQueryerManager.beginQueryMinutePrice();
                 mDataQueryerManager.queryFiveDayPrice();
                 mDataQueryerManager.beginQueryTodayPrice();
