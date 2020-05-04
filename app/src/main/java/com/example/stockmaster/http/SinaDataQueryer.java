@@ -110,7 +110,7 @@ public class SinaDataQueryer {
                         try{
                             if(dayCount == 1){
                                 List<StockPrice> stockPriceList = mResponseStringToObject.sinaTodayPriceResponseToObjectList(response, false);
-                                mStockManager.addStockPriceList(stockPriceList, stockId);
+                                mStockManager.addStockPriceList(stockPriceList, stockId, true);
                                 queryStocksMAPrice(stockId);
                             }
                             if(dayCount == 5){

@@ -70,10 +70,14 @@ public class StockManager {
      * @param stockPriceList
      * @return stockId 获取成功的股票Id
      */
-    public void addStockPriceList(List<StockPrice> stockPriceList, String stockId){
+    public void addStockPriceList(List<StockPrice> stockPriceList, String stockId, boolean isClearBeforeData){
         int stockIndex = mStockIdList.indexOf(stockId);
         Stock stock = mStockList.get(stockIndex);
-        if(stock != null){
+        if(stock != null && stockPriceList.size() > 0){
+            // 在添加今天的数据之前要清空之前的价格数据
+            if(isClearBeforeData){
+                stock.clearPriceList();
+            }
             for(StockPrice stockPrice : stockPriceList){
                 add(stock, stockPrice);
             }

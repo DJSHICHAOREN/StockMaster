@@ -41,9 +41,6 @@ public class Stock {
     public List<StockPrice> saleStockPriceList = new ArrayList<>();
     public List<StockPrice> dealPriceList = new ArrayList<>(); // 用来在detail页面显示全部交易列表
 
-
-
-
     public enum DealType{SALE, BUY, NULL}
     private DealType previousDealType = DealType.SALE;
     StockAnalyser mStockAnalyser;
@@ -57,6 +54,18 @@ public class Stock {
         this.id = id;
         this.name = name;
         mStockAnalyser = stockAnalyser;
+    }
+
+    /**
+     * 清空价格列表
+     */
+    public void clearPriceList(){
+        todayStockPriceList.clear();
+        lowerStockPriceList.clear();
+        higherStockPriceList.clear();
+        buyStockPriceList.clear();
+        saleStockPriceList.clear();
+        dealPriceList.clear();
     }
 
     /**

@@ -17,8 +17,7 @@ public class StockPrice {
     public Date time;
     @Column(name="price")
     public float price;
-    @Column(name="oneHourMA5")
-    public float oneHourMA5;
+
     public String name;
 
     public Stock.DealType dealType = Stock.DealType.NULL;

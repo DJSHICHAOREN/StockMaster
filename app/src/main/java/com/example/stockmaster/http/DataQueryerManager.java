@@ -5,8 +5,11 @@ import android.util.Log;
 
 import com.example.stockmaster.util.StockManager;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.ExecutorService;
@@ -52,13 +55,19 @@ public class DataQueryerManager {
      * 请求股票今天的价格
      * 每半个小时请求一次今日价格和均价
      */
-    public void queryTodayPrice(){
+    public void beginQueryTodayPrice(){
         Log.d("lwd","获取今天股票数据");
         // 设置计时器进行请求
         Timer timer = new Timer("TodayStocks");
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
+                Calendar calendar = Calendar.getInstance();
+                //获取系统时间
+                int hour = calendar.get(Calendar.HOUR_OF_DAY);
+                if(hour < 9 || hour > 16){
+                    return;
+                }
                 for(final String stockId : mStockManager.getStockIdList()) {
                     Runnable runnable = new Runnable() {
                         @Override
@@ -70,7 +79,6 @@ public class DataQueryerManager {
                 }
             }
         }, 0, 1000*60*30); // 1 seconds
-
     }
 
     /**

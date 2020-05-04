@@ -20,7 +20,6 @@ public class BrainService extends Service {
     private String CHANNEL_ID = "BRAIN_SERVICE_NOTIFICATION";
     private DataQueryerManager mDataQueryerManager;
     private StockManager mStockManager;
-    private int i=1;
 
     public class MyBinder extends Binder {
         public BrainService getService(){
@@ -58,6 +57,7 @@ public class BrainService extends Service {
 
                 mDataQueryerManager.beginQueryMinutePrice();
                 mDataQueryerManager.queryFiveDayPrice();
+                mDataQueryerManager.beginQueryTodayPrice();
 
 
 
