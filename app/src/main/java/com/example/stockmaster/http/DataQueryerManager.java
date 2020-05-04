@@ -17,7 +17,7 @@ import java.util.concurrent.Executors;
 
 /**
  * 网络请求管理类
- * 控制请求的时机、查询数据库中是否已存在数据
+ * 设置请求的计时器
  */
 public class DataQueryerManager {
 
@@ -48,7 +48,6 @@ public class DataQueryerManager {
             };
             mCachedThreadPool.execute(runnable);
         }
-
     }
 
     /**
@@ -91,6 +90,12 @@ public class DataQueryerManager {
             stockIdStr = stockIdStr + "rt_" + stockId + ",";
         }
         final String stockIdString = stockIdStr;
+        Calendar calendar = Calendar.getInstance();
+        //获取系统时间
+        int hour = calendar.get(Calendar.HOUR_OF_DAY);
+        if(hour < 9 || hour > 16){
+            return;
+        }
         // 设置计时器进行请求
         Timer timer = new Timer("MinuteStocks");
         timer.schedule(new TimerTask() {

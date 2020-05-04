@@ -109,12 +109,12 @@ public class SinaDataQueryer {
                     public void onResponse(String response) {
                         try{
                             if(dayCount == 1){
-                                List<StockPrice> stockPriceList = mResponseStringToObject.sinaTodayPriceResponseToObjectList(response, false);
+                                List<StockPrice> stockPriceList = mResponseStringToObject.sinaTodayPriceResponseToObjectList(response, false, StockPrice.QueryType.TODAY);
                                 mStockManager.addStockPriceList(stockPriceList, stockId, true);
                                 queryStocksMAPrice(stockId);
                             }
                             if(dayCount == 5){
-                                List<StockPrice> stockPriceList = mResponseStringToObject.sinaTodayPriceResponseToObjectList(response, true);
+                                List<StockPrice> stockPriceList = mResponseStringToObject.sinaTodayPriceResponseToObjectList(response, true, StockPrice.QueryType.FIVEDAY);
                                 mStockManager.saveStockPriceList(stockPriceList, stockId);
                                 // 为了求五日均线,得到收盘价列表
                                 List<Float> fiveDayPriceList = mMaGenerator.generateDayMA5(response);

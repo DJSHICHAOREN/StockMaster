@@ -155,6 +155,12 @@ public class StockManager {
         }
     }
 
+    /**
+     * 添加买卖点
+     * @param stock
+     * @param stockPrice
+     * @param dealType
+     */
     public void addBuyAndSaleStockPrice(Stock stock, StockPrice stockPrice, Stock.DealType dealType){
         if(stock.addBuyAndSaleStockPrice(stockPrice, dealType)){
             if(mMainActivityUIManager != null){
@@ -162,8 +168,10 @@ public class StockManager {
                         stockPrice.getNotificationId(), stockPrice.getNotificationContent());
                 mMainActivityUIManager.notifyStockListItemChanged(mStockIdList.indexOf(stock.id));
             }
-            if(mBrainService != null){
-//                mBrainService.sendNotification(stockPrice.getNotificationId(), stockPrice.getNotificationContent());
+            // 若为请求的分时价格，则为实时的，则发送通知
+            if(mBrainService != null && stockPrice.getQueryType() == StockPrice.QueryType.MINUTE){
+                mBrainService.sendNotification(stockPrice.getNotificationId(),
+                        stock.getName() + " " + stockPrice.getNotificationContent());
             }
         }
     }

@@ -20,16 +20,20 @@ public class StockPrice {
 
     public String name;
 
+    public enum QueryType{FIVEDAY, TODAY, MINUTE, NULL}
+    private QueryType queryType = QueryType.NULL;
+
     public Stock.DealType dealType = Stock.DealType.NULL;
     private static SimpleDateFormat mSimpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
     public StockPrice(){
     }
 
-    public StockPrice(String stockId, String time, String price){
+    public StockPrice(String stockId, String time, String price, QueryType queryType){
         setStockId(stockId);
         setTime(time);
         setPrice(price);
+        setQueryType(queryType);
     }
 
     public void setStockId(String stockId) {
@@ -86,6 +90,14 @@ public class StockPrice {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public QueryType getQueryType() {
+        return queryType;
+    }
+
+    public void setQueryType(QueryType queryType) {
+        this.queryType = queryType;
     }
 
     public int getNotificationId(){

@@ -1,5 +1,6 @@
 package com.example.stockmaster.http.converter;
 
+import android.app.DownloadManager;
 import android.util.Log;
 
 import com.example.stockmaster.entity.StockPrice;
@@ -50,6 +51,7 @@ public class ResponseStringToObject {
                 stockPriceNow.setName(values[1]);
                 stockPriceNow.setPrice(values[6]);
                 stockPriceNow.setTime(values[17] + " " + values[18]);
+                stockPriceNow.setQueryType(StockPrice.QueryType.MINUTE);
 
             }catch (ArrayIndexOutOfBoundsException e){
                 Log.e("MainActivity",e.toString());
@@ -66,7 +68,7 @@ public class ResponseStringToObject {
      * @param response
      * @return
      */
-    public List<StockPrice> sinaTodayPriceResponseToObjectList(String response, boolean isUseTimePoint){
+    public List<StockPrice> sinaTodayPriceResponseToObjectList(String response, boolean isUseTimePoint, StockPrice.QueryType queryType){
         response = response.replaceAll("\n", "");
         String[] stockStr = response.split(":::");
 
@@ -96,21 +98,16 @@ public class ResponseStringToObject {
                     if(sinaStockPrice.getM() == null || sinaStockPrice.getM().equals("")){
                         return null;
                     }
-                    // 过滤特殊时间点
+                    // 是否过滤特殊时间点
                     if(isUseTimePoint){
                         String timePointString = "10:00:00, 10:30:00, 11:00:00, 11:30:00, 12:00:00," +
                                 "13:30:00, 14:00:00, 14:30:00, 15:00:00, 16:00:00, 16:10:00";
-                        if(timePointString.indexOf(sinaStockPrice.getM()) != -1){
-                            // 生成StockPrice
-                            StockPrice stockPrice = new StockPrice(stockId, date+ " " +sinaStockPrice.getM(), sinaStockPrice.getPrice());
-                            stockPriceList.add(stockPrice);
+                        if(timePointString.indexOf(sinaStockPrice.getM()) == -1){
+                            continue;
                         }
                     }
-                    else{
-                        StockPrice stockPrice = new StockPrice(stockId, date+ " " +sinaStockPrice.getM(), sinaStockPrice.getPrice());
-                        stockPriceList.add(stockPrice);
-                    }
-
+                    StockPrice stockPrice = new StockPrice(stockId, date+ " " +sinaStockPrice.getM(), sinaStockPrice.getPrice(), queryType);
+                    stockPriceList.add(stockPrice);
                 }
             }
         }
