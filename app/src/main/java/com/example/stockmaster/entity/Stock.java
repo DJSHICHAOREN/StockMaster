@@ -21,6 +21,8 @@ public class Stock {
     public String name;
     @Column(name = "currentPrice")
     public StockPrice currentPrice;
+    @Column(name = "monitorType")
+    public StockPrice monitorType; //{0：不监控，1：监控买点，2：监控卖点}
     @Column(name = "ma10")
     public float ma10;
     @Column(name = "ma30")
@@ -42,7 +44,7 @@ public class Stock {
     public List<StockPrice> dealPriceList = new ArrayList<>(); // 用来在detail页面显示全部交易列表
 
     public enum DealType{SALE, BUY, NULL}
-    private DealType previousDealType = DealType.SALE;
+    private DealType previousDealType = DealType.NULL;
     StockAnalyser mStockAnalyser;
     private List<Float> previousFourDayPriceList;
 
@@ -104,21 +106,16 @@ public class Stock {
      * @param dealType 交易类型：是买还是卖
      */
     public boolean addBuyAndSaleStockPrice(StockPrice stockPrice, DealType dealType){
-        if(previousDealType == DealType.SALE && dealType == DealType.BUY){
+        if(previousDealType != DealType.BUY && dealType == DealType.BUY){
             buyStockPriceList.add(stockPrice);
             previousDealType = DealType.BUY;
-//            Log.d("lwd", "上一个是买点");
             stockPrice.setDealType(DealType.BUY);
             dealPriceList.add(stockPrice);
-//            if(id.equals("00038")){
-//                Log.d("lwd", "00038买点");
-//            }
             return true;
         }
-        else if(previousDealType == DealType.BUY && dealType == DealType.SALE){
+        else if(previousDealType != DealType.SALE && dealType == DealType.SALE){
             saleStockPriceList.add(stockPrice);
             previousDealType = DealType.SALE;
-//            Log.d("lwd", "上一个是卖点");
             stockPrice.setDealType(DealType.SALE);
             dealPriceList.add(stockPrice);
             return true;

@@ -7,16 +7,6 @@
     tools:context=".ui.activity.detail.DetailActivity"
     android:orientation="vertical">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="五日均线"/>
-    </LinearLayout>
-
-
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_deal_list"
         android:layout_width="match_parent"

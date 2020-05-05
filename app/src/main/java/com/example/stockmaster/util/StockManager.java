@@ -31,6 +31,10 @@ public class StockManager {
         this.mMainActivityUIManager = mainActivityUIManager;
     }
 
+    public void getStocksFromDB(){
+         DBUtil.getAllStocks();
+    }
+
     /**
      * 根据股票id列表创建股票实例
      * @param stockIdList
@@ -43,8 +47,8 @@ public class StockManager {
                 stockId = "hk" + stockId;
             }
             Stock stock = new Stock(mStockAnalyser, stockId, "");
-            mStockList.add(stock);
-            mStockIdList.add(stockId);
+//            mStockList.add(stock);
+//            mStockIdList.add(stockId);
 
             // 将股票实例存入数据库
             DBUtil.saveStock(stock);

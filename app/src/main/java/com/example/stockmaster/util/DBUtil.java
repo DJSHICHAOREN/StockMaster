@@ -66,6 +66,19 @@ public class DBUtil {
         }
     }
 
+    public static List<Stock> getAllStocks(){
+        try {
+            if(db == null){
+                db = x.getDb(daoConfig);
+            }
+            List<Stock> stockList = db.selector(Stock.class).findAll();
+            return stockList;
+        } catch (DbException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
     public static void clearStockPrice(){
         try {
             if(db == null){
@@ -79,7 +92,6 @@ public class DBUtil {
         } catch (DbException e) {
             e.printStackTrace();
         }
-
     }
 
 }
