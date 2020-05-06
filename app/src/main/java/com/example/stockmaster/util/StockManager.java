@@ -8,6 +8,7 @@ import com.example.stockmaster.service.BrainService;
 import com.example.stockmaster.ui.activity.main.MainActivity;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -19,8 +20,12 @@ public class StockManager {
     private static StockAnalyser mStockAnalyser = new StockAnalyser();
     private static MainActivity.MainActivityUIManager mMainActivityUIManager;
     private static BrainService mBrainService;
+    private static ArrayList<String> STOCK_ID_LIST = new ArrayList<String>(Arrays.asList("hk02400", "hk06060", "hk09969","hk00981","hk00302", "hk01055", "hk06186", "hk01610", "hk00772", "hk06855", "hk03319", "hk09916", "hk01941", "hk01873", "hk02013", "hk03331", "hk00853", "hk00777", "hk00826", "hk09928", "hk02018", "hk06919", "hk01745", "hk06185", "hk09966", "hk03759", "hk01501", "hk01300", "hk01691", "hk09922", "hk00175", "hk00589", "hk01525", "hk01347"));
+
     public StockManager(){
         mStockAnalyser.setStockManager(this);
+//        getStocksFromDB();
+        createStocks(STOCK_ID_LIST);
     }
 
     public void setBrainService(BrainService brainService){
@@ -31,8 +36,21 @@ public class StockManager {
         this.mMainActivityUIManager = mainActivityUIManager;
     }
 
+    /**
+     * 从数据库中读取全部的股票
+     */
     public void getStocksFromDB(){
-         DBUtil.getAllStocks();
+        if(mStockList.size() > 0){
+            return;
+        }
+        mStockList = DBUtil.getAllStocks();
+        for(Stock stock : mStockList){
+            mStockIdList.add(stock.getId());
+        }
+    }
+
+    public void getStocksFromString(){
+
     }
 
     /**
@@ -47,8 +65,8 @@ public class StockManager {
                 stockId = "hk" + stockId;
             }
             Stock stock = new Stock(mStockAnalyser, stockId, "");
-//            mStockList.add(stock);
-//            mStockIdList.add(stockId);
+            mStockList.add(stock);
+            mStockIdList.add(stockId);
 
             // 将股票实例存入数据库
             DBUtil.saveStock(stock);

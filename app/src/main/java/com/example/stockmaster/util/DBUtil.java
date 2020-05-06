@@ -7,6 +7,7 @@ import org.xutils.DbManager;
 import org.xutils.ex.DbException;
 import org.xutils.x;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class DBUtil {
@@ -76,7 +77,7 @@ public class DBUtil {
         } catch (DbException e) {
             e.printStackTrace();
         }
-        return null;
+        return new ArrayList<>();
     }
 
     public static void clearStockPrice(){
