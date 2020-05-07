@@ -29,9 +29,8 @@ public class BrainService extends Service {
     private MyBinder serviceBinder = new MyBinder();
 
     public BrainService() {
-        mStockManager = new StockManager();
-        mStockManager.setBrainService(this);
-        mDataQueryerManager = new DataQueryerManager(this, mStockManager);
+        StockManager.setBrainService(this);
+        mDataQueryerManager = new DataQueryerManager(this);
     }
 
     @Override

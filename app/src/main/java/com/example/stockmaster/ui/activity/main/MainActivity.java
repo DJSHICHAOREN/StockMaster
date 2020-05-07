@@ -69,7 +69,7 @@ public class MainActivity extends AppCompatActivity {
                 case 2:{
                     Bundle bundle = msg.getData();
                     int itemIndex = bundle.getInt("itemIndex");
-//                    mStockListAdapter.notifyItemChanged(itemIndex);
+                    mStockListAdapter.notifyItemChanged(itemIndex);
 
                     break;
                 }

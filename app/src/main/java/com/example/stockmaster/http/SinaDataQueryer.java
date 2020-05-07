@@ -24,15 +24,13 @@ import java.util.List;
 public class SinaDataQueryer {
 
     private Context mContext;
-    private StockManager mStockManager;
     private RequestQueue mQueue;
     private ResponseStringToObject mResponseStringToObject = new ResponseStringToObject();
     MAGenerator mMaGenerator = new MAGenerator();
 
 
-    public SinaDataQueryer (Context context, StockManager stockManager){
+    public SinaDataQueryer (Context context){
         mContext = context;
-        mStockManager = stockManager;
     }
 
     /**
@@ -53,7 +51,7 @@ public class SinaDataQueryer {
                     @Override
                     public void onResponse(String response) {
                         List<StockPrice> stockPriceList = mResponseStringToObject.sinaMinutePriceResponseToObjectList(response);
-                        mStockManager.addMinuteStockPrice(stockPriceList);
+                        StockManager.addMinuteStockPrice(stockPriceList);
                     }
                 },
                 new Response.ErrorListener() {
@@ -110,15 +108,15 @@ public class SinaDataQueryer {
                         try{
                             if(dayCount == 1){
                                 List<StockPrice> stockPriceList = mResponseStringToObject.sinaTodayPriceResponseToObjectList(response, false, StockPrice.QueryType.TODAY);
-                                mStockManager.addStockPriceList(stockPriceList, stockId, true);
+                                StockManager.addStockPriceList(stockPriceList, stockId, true);
                                 queryStocksMAPrice(stockId);
                             }
                             if(dayCount == 5){
                                 List<StockPrice> stockPriceList = mResponseStringToObject.sinaTodayPriceResponseToObjectList(response, true, StockPrice.QueryType.FIVEDAY);
-                                mStockManager.saveStockPriceList(stockPriceList, stockId);
+                                StockManager.saveStockPriceList(stockPriceList, stockId);
                                 // 为了求五日均线,得到收盘价列表
                                 List<Float> fiveDayPriceList = mMaGenerator.generateDayMA5(response);
-                                mStockManager.setPreviousFourDayPriceList(fiveDayPriceList.subList(1, fiveDayPriceList.size()), stockId);
+                                StockManager.setPreviousFourDayPriceList(fiveDayPriceList.subList(1, fiveDayPriceList.size()), stockId);
                             }
                             Log.d("lwd", String.format("%s %d日数据添加完毕", stockId, dayCount));
                         }
@@ -166,7 +164,7 @@ public class SinaDataQueryer {
                         JsonObject jsonObject = new JsonParser().parse(response).getAsJsonObject();
                         MAResponseResult mAResponseResult = new Gson().fromJson(jsonObject, new TypeToken<MAResponseResult>(){}.getType());
                         Log.d("lwd", String.format("stockId:%s, ma10:%s", stockId, mAResponseResult.getData().getMA10()));
-                        mStockManager.addMAPrice(stockId, mAResponseResult.getData().getMA10(), mAResponseResult.getData().getMA30(),
+                        StockManager.addMAPrice(stockId, mAResponseResult.getData().getMA10(), mAResponseResult.getData().getMA30(),
                                 mAResponseResult.getData().getMA50(), mAResponseResult.getData().getMA100(),
                                 mAResponseResult.getData().getMA250());
                     }

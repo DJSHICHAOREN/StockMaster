@@ -13,13 +13,11 @@ import java.util.List;
  * 分析股票的买卖点
  */
 public class StockAnalyser {
-    private static StockManager mStockManager;
 
     public StockAnalyser() {
     }
 
-    public void setStockManager(StockManager mStockManager) {
-        this.mStockManager = mStockManager;
+    public void setStockManager() {
     }
 
     public static void analyse(Stock stock){
@@ -49,7 +47,7 @@ public class StockAnalyser {
 //                        Log.d("lwd", String.format("上一个低点价格： %s", stock.lowerStockPriceList.get(lowerStockPriceListSize-2).price));
                         // 添加买点
                         StockPrice stockPrice = stock.lowerStockPriceList.get(lowerStockPriceListSize-1);
-                        mStockManager.addBuyAndSaleStockPrice(stock, stockPrice, Stock.DealType.BUY);
+                        StockManager.addBuyAndSaleStockPrice(stock, stockPrice, Stock.DealType.BUY);
                     }
                 }
             }
@@ -66,7 +64,7 @@ public class StockAnalyser {
                             stock.higherStockPriceList.get(higherStockPriceListSize-2).price){
                         // 添加卖点
                         StockPrice stockPrice = stock.higherStockPriceList.get(higherStockPriceListSize-1);
-                        mStockManager.addBuyAndSaleStockPrice(stock, stockPrice, Stock.DealType.SALE);
+                        StockManager.addBuyAndSaleStockPrice(stock, stockPrice, Stock.DealType.SALE);
                     }
                 }
             }

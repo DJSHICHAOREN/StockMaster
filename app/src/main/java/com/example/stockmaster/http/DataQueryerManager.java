@@ -23,12 +23,10 @@ public class DataQueryerManager {
 
     private SinaDataQueryer mSinaDataQueryer;
     final ExecutorService mCachedThreadPool = Executors.newCachedThreadPool();
-    private StockManager mStockManager;
 
-    public DataQueryerManager(Context context, StockManager stockManager){
+    public DataQueryerManager(Context context){
         // 创建工具实例
-        mStockManager = stockManager;
-        mSinaDataQueryer = new SinaDataQueryer(context, mStockManager);
+        mSinaDataQueryer = new SinaDataQueryer(context);
     }
 
     /**
@@ -36,7 +34,7 @@ public class DataQueryerManager {
      */
     public void queryFiveDayPrice(){
         // 每天只请求一次五日的价格
-        for(final String stockId : mStockManager.getStockIdList()) {
+        for(final String stockId : StockManager.getStockIdList()) {
             Runnable runnable = new Runnable() {
                 @Override
                 public void run() {
@@ -64,7 +62,7 @@ public class DataQueryerManager {
                 if(hour < 9 || hour > 16){
                     return;
                 }
-                for(final String stockId : mStockManager.getStockIdList()) {
+                for(final String stockId : StockManager.getStockIdList()) {
                     Runnable runnable = new Runnable() {
                         @Override
                         public void run() {
@@ -89,13 +87,13 @@ public class DataQueryerManager {
         if(hour < 9 || hour > 16){
             // 请求分时股票数据
             String stockIdStr = "";
-            for(String stockId : mStockManager.getStockIdList()) {
+            for(String stockId : StockManager.getStockIdList()) {
                 stockIdStr = stockIdStr + "rt_" + stockId + ",";
             }
             final String stockIdString = stockIdStr;
             mSinaDataQueryer.queryStocksNowPrice(stockIdString);
             // 请求一天股票数据
-            for(final String stockId : mStockManager.getStockIdList()) {
+            for(final String stockId : StockManager.getStockIdList()) {
                 Runnable runnable = new Runnable() {
                     @Override
                     public void run() {
@@ -113,7 +111,7 @@ public class DataQueryerManager {
     public void beginQueryMinutePrice(){
         // 拼出股票列表字符串
         String stockIdStr = "";
-        for(String stockId : mStockManager.getStockIdList()) {
+        for(String stockId : StockManager.getStockIdList()) {
             stockIdStr = stockIdStr + "rt_" + stockId + ",";
         }
         final String stockIdString = stockIdStr;

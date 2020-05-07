@@ -20,27 +20,27 @@ public class StockManager {
     private static StockAnalyser mStockAnalyser = new StockAnalyser();
     private static MainActivity.MainActivityUIManager mMainActivityUIManager;
     private static BrainService mBrainService;
-    private static ArrayList<String> STOCK_ID_LIST = new ArrayList<String>(Arrays.asList("09926", "hk02400", "hk06060", "hk09969","hk00981","hk00302", "hk01055", "hk06186", "hk01610", "hk00772", "hk06855", "hk03319", "hk09916", "hk01941", "hk01873", "hk02013", "hk03331", "hk00853", "hk00777", "hk00826", "hk09928", "hk02018", "hk06919", "hk01745", "hk06185", "hk09966", "hk03759", "hk01501", "hk01300", "hk01691", "hk09922", "hk00175", "hk00589", "hk01525", "hk01347"));
-//    private static ArrayList<String> STOCK_ID_LIST = new ArrayList<String>(Arrays.asList("09926"));
+//    private static ArrayList<String> STOCK_ID_LIST = new ArrayList<String>(Arrays.asList("hk09926", "hk02400", "hk06060", "hk09969","hk00981","hk00302", "hk01055", "hk06186", "hk01610", "hk00772", "hk06855", "hk03319", "hk09916", "hk01941", "hk01873", "hk02013", "hk03331", "hk00853", "hk00777", "hk00826", "hk09928", "hk02018", "hk06919", "hk01745", "hk06185", "hk09966", "hk03759", "hk01501", "hk01300", "hk01691", "hk09922", "hk00175", "hk00589", "hk01525", "hk01347"));
+    private static ArrayList<String> STOCK_ID_LIST = new ArrayList<String>(Arrays.asList("hk09926", "hk02400", "hk06060"));
 
-    public StockManager(){
-        mStockAnalyser.setStockManager(this);
-//        getStocksFromDB();
-        createStocks(STOCK_ID_LIST, false);
+    public static void loadStockManager(){
+        mStockAnalyser.setStockManager();
+        getStocksFromDB();
+//        createStocks(STOCK_ID_LIST, false);
     }
 
-    public void setBrainService(BrainService brainService){
+    public static void setBrainService(BrainService brainService){
         mBrainService = brainService;
     }
 
-    public void setMainActivityUIManager(MainActivity.MainActivityUIManager mainActivityUIManager) {
-        this.mMainActivityUIManager = mainActivityUIManager;
+    public static void setMainActivityUIManager(MainActivity.MainActivityUIManager mainActivityUIManager) {
+        mMainActivityUIManager = mainActivityUIManager;
     }
 
     /**
      * 从数据库中读取全部的股票
      */
-    public void getStocksFromDB(){
+    public static void getStocksFromDB(){
         if(mStockList.size() > 0){
             return;
         }
@@ -50,7 +50,7 @@ public class StockManager {
         }
     }
 
-    public void getStocksFromString(){
+    public static void getStocksFromString(){
 
     }
 
@@ -58,7 +58,7 @@ public class StockManager {
      * 根据股票id列表创建股票实例
      * @param stockIdList
      */
-    public void createStocks(ArrayList<String> stockIdList, boolean isMonitorBuyPoint){
+    public static void createStocks(ArrayList<String> stockIdList, boolean isMonitorBuyPoint){
         mStockList.clear();
         mStockIdList.clear();
         for(String stockId : stockIdList){
@@ -81,7 +81,7 @@ public class StockManager {
         }
     }
 
-    public List<String> getStockIdList(){
+    public static List<String> getStockIdList(){
         return mStockIdList;
     }
 
@@ -89,7 +89,7 @@ public class StockManager {
      * 添加单只股票的价格
      * @param stockPrice
      */
-    public void add(Stock stock, StockPrice stockPrice){
+    public static void add(Stock stock, StockPrice stockPrice){
         if(stock.addStockPrice(stockPrice)){
             mStockAnalyser.analyse(stock);
         }
@@ -100,7 +100,7 @@ public class StockManager {
      * @param stockPriceList
      * @return stockId 获取成功的股票Id
      */
-    public void addStockPriceList(List<StockPrice> stockPriceList, String stockId, boolean isClearBeforeData){
+    public static void addStockPriceList(List<StockPrice> stockPriceList, String stockId, boolean isClearBeforeData){
         int stockIndex = mStockIdList.indexOf(stockId);
         Stock stock = mStockList.get(stockIndex);
         if(stock != null && stockPriceList.size() > 0){
@@ -122,7 +122,7 @@ public class StockManager {
      * @param stockPriceList
      * @param stockId
      */
-    public void saveStockPriceList(List<StockPrice> stockPriceList, String stockId){
+    public static void saveStockPriceList(List<StockPrice> stockPriceList, String stockId){
         int stockIndex = mStockIdList.indexOf(stockId);
         Stock stock = mStockList.get(stockIndex);
         if(stock != null){
@@ -139,7 +139,7 @@ public class StockManager {
      * 在添加了从开盘到现在的数据之后，再添加实时的每分钟的数据
      * @param stockPriceList
      */
-    public void addMinuteStockPrice(List<StockPrice> stockPriceList){
+    public static void addMinuteStockPrice(List<StockPrice> stockPriceList){
         for(StockPrice stockPrice : stockPriceList){
             int stockIndex = mStockIdList.indexOf(stockPrice.stockId);
             if(stockIndex == -1){
@@ -158,15 +158,15 @@ public class StockManager {
 
     }
     //todo:将stock从map存储改为用两个list存储
-    public List<Stock> getStockList(){
+    public static List<Stock> getStockList(){
         return mStockList;
     }
 
-    public List<StockPrice> getThisStockDealPriceList(int stockIndex){
+    public static List<StockPrice> getThisStockDealPriceList(int stockIndex){
         return mStockList.get(stockIndex).getDealStockPriceList();
     }
 
-    public void setPreviousFourDayPriceList(List<Float> previousFourDayPriceList, String stockId) {
+    public static void setPreviousFourDayPriceList(List<Float> previousFourDayPriceList, String stockId) {
         int stockIndex = mStockIdList.indexOf(stockId);
         Stock stock = mStockList.get(stockIndex);
         if(stock != null){
@@ -176,7 +176,7 @@ public class StockManager {
         Log.d("lwd", String.format("stockId:%s, ma5:%f", stock.id, stock    .getMa5()));
     }
 
-    public void addMAPrice(String stockId, String ma10, String ma30, String ma50, String ma100, String ma250) {
+    public static void addMAPrice(String stockId, String ma10, String ma30, String ma50, String ma100, String ma250) {
         int stockIndex = mStockIdList.indexOf(stockId);
         Stock stock = mStockList.get(stockIndex);
         if(stock != null){
@@ -191,7 +191,7 @@ public class StockManager {
      * @param stockPrice
      * @param dealType
      */
-    public void addBuyAndSaleStockPrice(Stock stock, StockPrice stockPrice, Stock.DealType dealType){
+    public static void addBuyAndSaleStockPrice(Stock stock, StockPrice stockPrice, Stock.DealType dealType){
         if(stock.addBuyAndSaleStockPrice(stockPrice, dealType)){
             if(mMainActivityUIManager != null){
                 mMainActivityUIManager.refreshUIWhenGetNewDealPoint(stock.getName() + " " +stockPrice.toStringWithId(),
