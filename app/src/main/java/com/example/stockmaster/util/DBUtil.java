@@ -41,7 +41,12 @@ public class DBUtil {
             if(db == null){
                 db = x.getDb(daoConfig);
             }
-            db.saveOrUpdate(stock);
+            Stock oldStock = db.selector(Stock.class)
+                    .where("id", "=", stock.getId())
+                    .findFirst();
+            if(oldStock == null){
+                db.save(stock);
+            }
         } catch (DbException e) {
             e.printStackTrace();
         }

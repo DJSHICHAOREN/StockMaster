@@ -58,9 +58,6 @@ public class BrainService extends Service {
                 mDataQueryerManager.beginQueryMinutePrice();
                 mDataQueryerManager.queryFiveDayPrice();
                 mDataQueryerManager.beginQueryTodayPrice();
-
-
-
             }
         }).start();
     }

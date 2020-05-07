@@ -22,7 +22,7 @@ public class Stock {
     @Column(name = "currentPrice")
     public StockPrice currentPrice;
     @Column(name = "monitorType")
-    public StockPrice monitorType; //{0：不监控，1：监控买点，2：监控卖点}
+    public int monitorType; //{0：不监控，1：监控买点，2：监控卖点}
     @Column(name = "ma10")
     public float ma10;
     @Column(name = "ma30")
@@ -52,10 +52,11 @@ public class Stock {
 
     }
 
-    public Stock(StockAnalyser stockAnalyser, String id, String name){
+    public Stock(StockAnalyser stockAnalyser, String id, String name, int monitorType){
         this.id = id;
         this.name = name;
         mStockAnalyser = stockAnalyser;
+        this.monitorType = monitorType;
     }
 
     /**

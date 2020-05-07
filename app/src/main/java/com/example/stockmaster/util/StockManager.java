@@ -20,12 +20,13 @@ public class StockManager {
     private static StockAnalyser mStockAnalyser = new StockAnalyser();
     private static MainActivity.MainActivityUIManager mMainActivityUIManager;
     private static BrainService mBrainService;
-    private static ArrayList<String> STOCK_ID_LIST = new ArrayList<String>(Arrays.asList("hk02400", "hk06060", "hk09969","hk00981","hk00302", "hk01055", "hk06186", "hk01610", "hk00772", "hk06855", "hk03319", "hk09916", "hk01941", "hk01873", "hk02013", "hk03331", "hk00853", "hk00777", "hk00826", "hk09928", "hk02018", "hk06919", "hk01745", "hk06185", "hk09966", "hk03759", "hk01501", "hk01300", "hk01691", "hk09922", "hk00175", "hk00589", "hk01525", "hk01347"));
+    private static ArrayList<String> STOCK_ID_LIST = new ArrayList<String>(Arrays.asList("09926", "hk02400", "hk06060", "hk09969","hk00981","hk00302", "hk01055", "hk06186", "hk01610", "hk00772", "hk06855", "hk03319", "hk09916", "hk01941", "hk01873", "hk02013", "hk03331", "hk00853", "hk00777", "hk00826", "hk09928", "hk02018", "hk06919", "hk01745", "hk06185", "hk09966", "hk03759", "hk01501", "hk01300", "hk01691", "hk09922", "hk00175", "hk00589", "hk01525", "hk01347"));
+//    private static ArrayList<String> STOCK_ID_LIST = new ArrayList<String>(Arrays.asList("09926"));
 
     public StockManager(){
         mStockAnalyser.setStockManager(this);
 //        getStocksFromDB();
-        createStocks(STOCK_ID_LIST);
+        createStocks(STOCK_ID_LIST, false);
     }
 
     public void setBrainService(BrainService brainService){
@@ -57,14 +58,21 @@ public class StockManager {
      * 根据股票id列表创建股票实例
      * @param stockIdList
      */
-    public void createStocks(ArrayList<String> stockIdList){
+    public void createStocks(ArrayList<String> stockIdList, boolean isMonitorBuyPoint){
         mStockList.clear();
         mStockIdList.clear();
         for(String stockId : stockIdList){
             if(stockId.length() > 2 && !stockId.substring(0,2).equals("hk")){
                 stockId = "hk" + stockId;
             }
-            Stock stock = new Stock(mStockAnalyser, stockId, "");
+            Stock stock;
+            if(isMonitorBuyPoint){
+                stock = new Stock(mStockAnalyser, stockId, "", 1);
+            }
+            else{
+                stock = new Stock(mStockAnalyser, stockId, "", 0);
+            }
+
             mStockList.add(stock);
             mStockIdList.add(stockId);
 
