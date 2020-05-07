@@ -36,6 +36,10 @@ public class DBUtil {
                 }
             });
 
+    /**
+     * 只有在数据库中不存在这只股票时才将其加入数据库
+     * @param stock
+     */
     public static void saveStock(Stock stock){
         try {
             if(db == null){
@@ -47,6 +51,17 @@ public class DBUtil {
             if(oldStock == null){
                 db.save(stock);
             }
+        } catch (DbException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void updateStock(Stock stock){
+        try {
+            if(db == null){
+                db = x.getDb(daoConfig);
+            }
+            db.saveOrUpdate(stock);
         } catch (DbException e) {
             e.printStackTrace();
         }
@@ -77,7 +92,7 @@ public class DBUtil {
             if(db == null){
                 db = x.getDb(daoConfig);
             }
-            List<Stock> stockList = db.selector(Stock.class).findAll();
+            List<Stock> stockList = db.selector(Stock.class).orderBy("id").findAll();
             return stockList;
         } catch (DbException e) {
             e.printStackTrace();

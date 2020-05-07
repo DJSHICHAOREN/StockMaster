@@ -202,6 +202,13 @@ public class Stock {
         }
     }
 
+    /**
+     * 将监控类型轮转：无->买->卖
+     */
+    public void ringMonitorType(){
+        monitorType =  (monitorType + 1) % 3;
+    }
+
     public String getId() {
         return id;
     }
@@ -216,6 +223,14 @@ public class Stock {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public int getMonitorType() {
+        return monitorType;
+    }
+
+    public void setMonitorType(int monitorType) {
+        this.monitorType = monitorType;
     }
 
     public void setCurrentPrice(StockPrice currentPrice) {
