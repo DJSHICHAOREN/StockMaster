@@ -201,8 +201,13 @@ public class StockManager {
             // 若为请求的分时价格，则为实时的，则发送通知
             if(mBrainService != null
                     && stockPrice.getQueryType() == StockPrice.QueryType.MINUTE){
-                mBrainService.sendNotification(stockPrice.getNotificationId(),
-                        stock.getName() + " " + stockPrice.getNotificationContent());
+                // 若为监控卖点则一定通知
+                // 若为监控买点且遇到买点则通知
+                if(stock.getMonitorType() == 2
+                        || (stock.getMonitorType() == 1 && dealType == Stock.DealType.BUY)){
+                    mBrainService.sendNotification(stockPrice.getNotificationId(),
+                            stock.getName() + " " + stockPrice.getNotificationContent());
+                }
             }
         }
     }
