@@ -31,7 +31,6 @@ import android.widget.TextView;
 import com.example.stockmaster.R;
 import com.example.stockmaster.entity.Stock;
 import com.example.stockmaster.service.BrainService;
-import com.example.stockmaster.ui.activity.UIManager;
 import com.example.stockmaster.ui.activity.recommand.RecommandActivity;
 import com.example.stockmaster.ui.adapter.StockListAdapter;
 
