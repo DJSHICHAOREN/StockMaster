@@ -39,10 +39,4 @@ public class MainPresent extends BasePresent {
         return StockManager.getStockList();
     }
 
-
-    public void beginQueryAndAnalyse(){
-        mDataQueryerManager.queryFiveDayPrice();
-        mDataQueryerManager.beginQueryMinutePrice();
-    }
-
 }

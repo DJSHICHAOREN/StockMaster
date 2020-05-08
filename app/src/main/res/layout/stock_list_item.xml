@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
     android:id="@+id/ll_stock_item"
-    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
     android:layout_height="60dp">
 
     <Button
@@ -22,7 +23,7 @@
         android:layout_marginLeft="10dp">
         <LinearLayout
             android:id="@+id/ll_stock_id_and_name"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
@@ -50,10 +51,6 @@
             android:text="买点，时间：9:43:0，价格：13.23"></TextView>
 
     </LinearLayout>
-
-
-
-
 
 
 </RelativeLayout>

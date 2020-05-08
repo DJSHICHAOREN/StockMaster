@@ -34,6 +34,7 @@ public class StockListAdapter extends RecyclerView.Adapter<StockListAdapter.Stoc
     public StockListAdapter(List<Stock> stockList, MainActivity mainActivity){
         mStockList = stockList;
         mMainActivity = mainActivity;
+        Log.d("lwd", mStockList.toString());
     }
 
     @NonNull

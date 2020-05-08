@@ -199,7 +199,8 @@ public class StockManager {
                 mMainActivityUIManager.notifyStockListItemChanged(mStockIdList.indexOf(stock.id));
             }
             // 若为请求的分时价格，则为实时的，则发送通知
-            if(mBrainService != null && stockPrice.getQueryType() == StockPrice.QueryType.MINUTE){
+            if(mBrainService != null
+                    && stockPrice.getQueryType() == StockPrice.QueryType.MINUTE){
                 mBrainService.sendNotification(stockPrice.getNotificationId(),
                         stock.getName() + " " + stockPrice.getNotificationContent());
             }

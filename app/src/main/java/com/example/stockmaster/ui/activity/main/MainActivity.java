@@ -69,7 +69,7 @@ public class MainActivity extends AppCompatActivity {
                 case 2:{
                     Bundle bundle = msg.getData();
                     int itemIndex = bundle.getInt("itemIndex");
-//                    mStockListAdapter.notifyItemChanged(itemIndex);
+                    mStockListAdapter.notifyItemChanged(itemIndex);
 
                     break;
                 }
@@ -106,16 +106,7 @@ public class MainActivity extends AppCompatActivity {
         rv_stock_list.setAdapter(mStockListAdapter);
         // 开启service
         Intent intent = new Intent(this, BrainService.class);
-//        bindService(intent, serviceConnection, BIND_AUTO_CREATE);
         startService(intent);
-
-//        mMainPresent.beginQueryAndAnalyse();
-
-        // 设置手机震动
-//        Vibrator v = (Vibrator) MainActivity.this.getSystemService(Context.VIBRATOR_SERVICE);
-//        // Vibrate for 500 milliseconds
-//        v.vibrate(500);
-
     }
 
     @OnClick(R.id.btn_goto_command_stocks)
