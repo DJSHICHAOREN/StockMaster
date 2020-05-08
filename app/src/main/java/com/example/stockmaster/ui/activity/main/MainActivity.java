@@ -69,7 +69,7 @@ public class MainActivity extends AppCompatActivity {
                 case 2:{
                     Bundle bundle = msg.getData();
                     int itemIndex = bundle.getInt("itemIndex");
-                    mStockListAdapter.notifyItemChanged(itemIndex);
+//                    mStockListAdapter.notifyItemChanged(itemIndex);
 
                     break;
                 }
@@ -104,7 +104,6 @@ public class MainActivity extends AppCompatActivity {
         rv_stock_list.setLayoutManager(linearLayoutManager);
         mStockListAdapter = new StockListAdapter(mMainPresent.getStockList(), this);
         rv_stock_list.setAdapter(mStockListAdapter);
-
         // 开启service
         Intent intent = new Intent(this, BrainService.class);
 //        bindService(intent, serviceConnection, BIND_AUTO_CREATE);
