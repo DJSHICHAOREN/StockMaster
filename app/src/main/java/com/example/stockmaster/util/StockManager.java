@@ -20,8 +20,8 @@ public class StockManager {
     private static StockAnalyser mStockAnalyser = new StockAnalyser();
     private static MainActivity.MainActivityUIManager mMainActivityUIManager;
     private static BrainService mBrainService;
-//    private static ArrayList<String> STOCK_ID_LIST = new ArrayList<String>(Arrays.asList("hk09926", "hk02400", "hk06060", "hk09969","hk00981","hk00302", "hk01055", "hk06186", "hk01610", "hk00772", "hk06855", "hk03319", "hk09916", "hk01941", "hk01873", "hk02013", "hk03331", "hk00853", "hk00777", "hk00826", "hk09928", "hk02018", "hk06919", "hk01745", "hk06185", "hk09966", "hk03759", "hk01501", "hk01300", "hk01691", "hk09922", "hk00175", "hk00589", "hk01525", "hk01347"));
-    private static ArrayList<String> STOCK_ID_LIST = new ArrayList<String>(Arrays.asList("hk09926", "hk02400", "hk06060", "hk00589"));
+    private static ArrayList<String> STOCK_ID_LIST = new ArrayList<String>(Arrays.asList("hk09926", "hk02400", "hk06060", "hk09969","hk00981","hk00302", "hk01055", "hk06186", "hk01610", "hk00772", "hk06855", "hk03319", "hk09916", "hk01941", "hk01873", "hk02013", "hk03331", "hk00853", "hk00777", "hk00826", "hk09928", "hk02018", "hk06919", "hk01745", "hk06185", "hk09966", "hk03759", "hk01501", "hk01300", "hk01691", "hk09922", "hk00175", "hk00589", "hk01525", "hk01347"));
+//    private static ArrayList<String> STOCK_ID_LIST = new ArrayList<String>(Arrays.asList("hk09926", "hk02400", "hk06060", "hk00589"));
 
     public static void loadStockManager(){
         mStockAnalyser.setStockManager();
@@ -65,19 +65,13 @@ public class StockManager {
             if(stockId.length() > 2 && !stockId.substring(0,2).equals("hk")){
                 stockId = "hk" + stockId;
             }
-            Stock stock;
-            if(isMonitorBuyPoint){
-                stock = new Stock(mStockAnalyser, stockId, "", 1);
-            }
-            else{
-                stock = new Stock(mStockAnalyser, stockId, "", 0);
-            }
-
+            Stock stock = new Stock(mStockAnalyser, stockId, "", isMonitorBuyPoint ? 1 : 0);
+            // 将股票实例存入数据库
+            stock = DBUtil.saveStock(stock);
             mStockList.add(stock);
             mStockIdList.add(stockId);
 
-            // 将股票实例存入数据库
-            DBUtil.saveStock(stock);
+
         }
     }
 
@@ -149,6 +143,7 @@ public class StockManager {
             // 设置股票名称
             if(stockPrice.getName() != null && stock.getName().equals("")){
                 stock.setName(stockPrice.getName());
+                DBUtil.updateStock(stock);
             }
             if(stock != null && stock.isReceivedTodayData){
                 add(stock, stockPrice);

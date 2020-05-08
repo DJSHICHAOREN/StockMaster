@@ -38,9 +38,11 @@ public class DBUtil {
 
     /**
      * 只有在数据库中不存在这只股票时才将其加入数据库
+     * 当数据库中存在这只股票时，返回数据库中的这只股票
+     * 如果数据库中不存在，则加入数据库
      * @param stock
      */
-    public static void saveStock(Stock stock){
+    public static Stock saveStock(Stock stock){
         try {
             if(db == null){
                 db = x.getDb(daoConfig);
@@ -48,12 +50,14 @@ public class DBUtil {
             Stock oldStock = db.selector(Stock.class)
                     .where("id", "=", stock.getId())
                     .findFirst();
-            if(oldStock == null){
-                db.save(stock);
+            if(oldStock != null){
+                return oldStock;
             }
+            db.save(stock);
         } catch (DbException e) {
             e.printStackTrace();
         }
+        return stock;
     }
 
     public static void updateStock(Stock stock){
