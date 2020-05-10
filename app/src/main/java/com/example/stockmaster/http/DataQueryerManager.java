@@ -5,11 +5,7 @@ import android.util.Log;
 
 import com.example.stockmaster.util.StockManager;
 
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.ExecutorService;
@@ -34,7 +30,7 @@ public class DataQueryerManager {
      */
     public void queryFiveDayPrice(){
         // 每天只请求一次五日的价格
-        for(final String stockId : StockManager.getStockIdList()) {
+        for(final String stockId : StockManager.getDefaultStockIdList()) {
             Runnable runnable = new Runnable() {
                 @Override
                 public void run() {
@@ -62,7 +58,7 @@ public class DataQueryerManager {
                 if(hour < 9 || hour > 16){
                     return;
                 }
-                for(final String stockId : StockManager.getStockIdList()) {
+                for(final String stockId : StockManager.getDefaultStockIdList()) {
                     Runnable runnable = new Runnable() {
                         @Override
                         public void run() {
@@ -87,13 +83,13 @@ public class DataQueryerManager {
         if(hour < 9 || hour > 16){
             // 请求分时股票数据
             String stockIdStr = "";
-            for(String stockId : StockManager.getStockIdList()) {
+            for(String stockId : StockManager.getDefaultStockIdList()) {
                 stockIdStr = stockIdStr + "rt_" + stockId + ",";
             }
             final String stockIdString = stockIdStr;
             mSinaDataQueryer.queryStocksNowPrice(stockIdString);
             // 请求一天股票数据
-            for(final String stockId : StockManager.getStockIdList()) {
+            for(final String stockId : StockManager.getDefaultStockIdList()) {
                 Runnable runnable = new Runnable() {
                     @Override
                     public void run() {
@@ -111,7 +107,7 @@ public class DataQueryerManager {
     public void beginQueryMinutePrice(){
         // 拼出股票列表字符串
         String stockIdStr = "";
-        for(String stockId : StockManager.getStockIdList()) {
+        for(String stockId : StockManager.getDefaultStockIdList()) {
             stockIdStr = stockIdStr + "rt_" + stockId + ",";
         }
         final String stockIdString = stockIdStr;

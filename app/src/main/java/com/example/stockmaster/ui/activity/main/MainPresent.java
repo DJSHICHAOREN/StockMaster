@@ -35,7 +35,7 @@ public class MainPresent extends BasePresent {
     }
 
     public List<Stock> getStockList(){
-        StockManager.loadStockManager();
+        StockManager.loadStocks();
         return StockManager.getStockList();
     }
 

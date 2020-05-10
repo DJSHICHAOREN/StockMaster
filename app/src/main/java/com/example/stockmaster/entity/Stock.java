@@ -4,6 +4,7 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 
+import com.example.stockmaster.entity.ma.MaBase;
 import com.example.stockmaster.util.StockAnalyser;
 
 import org.xutils.db.annotation.Column;
@@ -34,6 +35,7 @@ public class Stock {
     @Column(name = "ma250")
     public float ma250;
 
+    public MaBase maBase;
 
     public boolean isReceivedTodayData = false; //在为true时，才可以接收分钟的数据
     public List<StockPrice> todayStockPriceList = new ArrayList<>();

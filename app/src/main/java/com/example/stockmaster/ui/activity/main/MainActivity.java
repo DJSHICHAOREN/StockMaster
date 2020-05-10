@@ -69,7 +69,10 @@ public class MainActivity extends AppCompatActivity {
                     Bundle bundle = msg.getData();
                     int itemIndex = bundle.getInt("itemIndex");
                     mStockListAdapter.notifyItemChanged(itemIndex);
-
+                    break;
+                }
+                case 3:{
+                    mStockListAdapter.notifyDataSetChanged();
                     break;
                 }
             }
@@ -198,6 +201,12 @@ public class MainActivity extends AppCompatActivity {
 
             handler.sendMessage(notifyListUpdateMsg);
 
+        }
+
+        public void notifyStockListDateSetChanged(){
+            Message notifyListUpdateMsg = Message.obtain();
+            notifyListUpdateMsg.what = 3;
+            handler.sendMessage(notifyListUpdateMsg);
         }
     }
 

@@ -97,7 +97,28 @@ public class DBUtil {
                 db = x.getDb(daoConfig);
             }
             List<Stock> stockList = db.selector(Stock.class).orderBy("id").findAll();
+            if(stockList == null){
+                return new ArrayList<>();
+            }
             return stockList;
+        } catch (DbException e) {
+            e.printStackTrace();
+        }
+        return new ArrayList<>();
+    }
+
+    public static List<StockPrice> getStockPriceList(String stockId){
+        try {
+            if(db == null){
+                db = x.getDb(daoConfig);
+            }
+            List<StockPrice> stockPriceList = db.selector(StockPrice.class)
+                    .where("stockId", "=", stockId)
+                    .orderBy("time").findAll();
+            if(stockPriceList == null){
+                return new ArrayList<>();
+            }
+            return stockPriceList;
         } catch (DbException e) {
             e.printStackTrace();
         }

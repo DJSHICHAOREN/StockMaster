@@ -43,20 +43,18 @@ public class BrainService extends Service {
             @Override
             public void run() {
                 createNotificationChannel();
-//                sendNotification(1, "from Brain Service");
-//                Timer timer = new Timer("RefreshStocks");
-//                timer.schedule(new TimerTask() {
-//                    @Override
-//                    public void run() {
-//                        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm:ss");// HH:mm:ss
-//                        Date date = new Date(System.currentTimeMillis());
-//                        sendNotification(i++, String.format("from BrainService: %s", simpleDateFormat.format(date)));
-//                    }
-//                }, 0, 1800000); // 1 seconds
+
+
+                // 如果在非交易时间，则请求一次一日价格，为了计算买卖点，请求一次分时价格，为了得到股票名字
                 mDataQueryerManager.queryTodayPriceAndMinutePriceOneTime();
+                // 定时请求分时价格
                 mDataQueryerManager.beginQueryMinutePrice();
+                // 请求一次五日价格
                 mDataQueryerManager.queryFiveDayPrice();
+                // 定时请求今天价格
                 mDataQueryerManager.beginQueryTodayPrice();
+                // 从数据库加载股票价格的均线
+                StockManager.loadStockPrice();
             }
         }).start();
     }

@@ -17,8 +17,6 @@ public class StockAnalyser {
     public StockAnalyser() {
     }
 
-    public void setStockManager() {
-    }
 
     public static void analyse(Stock stock){
         List<StockPrice> todayStockPriceList = stock.todayStockPriceList;

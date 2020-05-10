@@ -20,13 +20,22 @@ public class StockManager {
     private static StockAnalyser mStockAnalyser = new StockAnalyser();
     private static MainActivity.MainActivityUIManager mMainActivityUIManager;
     private static BrainService mBrainService;
-    private static ArrayList<String> STOCK_ID_LIST = new ArrayList<String>(Arrays.asList("hk09926", "hk02400", "hk06060", "hk09969","hk00981","hk00302", "hk01055", "hk06186", "hk01610", "hk00772", "hk06855", "hk03319", "hk09916", "hk01941", "hk01873", "hk02013", "hk03331", "hk00853", "hk00777", "hk00826", "hk09928", "hk02018", "hk06919", "hk01745", "hk06185", "hk09966", "hk03759", "hk01501", "hk01300", "hk01691", "hk09922", "hk00175", "hk00589", "hk01525", "hk01347"));
+    private static ArrayList<String> DEFAULT_STOCK_ID_LIST = new ArrayList<String>(Arrays.asList("hk09926", "hk02400", "hk06060", "hk09969","hk00981","hk00302", "hk01055", "hk06186", "hk01610", "hk00772", "hk06855", "hk03319", "hk09916", "hk01941", "hk01873", "hk02013", "hk03331", "hk00853", "hk00777", "hk00826", "hk09928", "hk02018", "hk06919", "hk01745", "hk06185", "hk09966", "hk03759", "hk01501", "hk01300", "hk01691", "hk09922", "hk00175", "hk00589", "hk01525", "hk01347"));
 //    private static ArrayList<String> STOCK_ID_LIST = new ArrayList<String>(Arrays.asList("hk09926", "hk02400", "hk06060", "hk00589"));
 
-    public static void loadStockManager(){
-        mStockAnalyser.setStockManager();
-//        getStocksFromDB();
-        createStocks(STOCK_ID_LIST, false);
+    public static void loadStocks(){
+        getStocksFromDB();
+//        createStocks(DEFAULT_STOCK_ID_LIST, false);
+//        if(mMainActivityUIManager != null){
+//            mMainActivityUIManager.notifyStockListDateSetChanged();
+//        }
+    }
+
+    public static void loadStockPrice(){
+        for(Stock stock : getStockList()){
+            getKeyStockPriceFromDB(stock);
+        }
+
     }
 
     public static void setBrainService(BrainService brainService){
@@ -45,9 +54,14 @@ public class StockManager {
             return;
         }
         mStockList = DBUtil.getAllStocks();
+        // 如果数据库为空，则添加默认股票
         for(Stock stock : mStockList){
             mStockIdList.add(stock.getId());
         }
+    }
+
+    public static void getKeyStockPriceFromDB(Stock stock){
+        DBUtil.getStockPriceList(stock.getId());
     }
 
     public static void getStocksFromString(){
@@ -59,8 +73,6 @@ public class StockManager {
      * @param stockIdList
      */
     public static void createStocks(ArrayList<String> stockIdList, boolean isMonitorBuyPoint){
-        mStockList.clear();
-        mStockIdList.clear();
         for(String stockId : stockIdList){
             if(stockId.length() > 2 && !stockId.substring(0,2).equals("hk")){
                 stockId = "hk" + stockId;
@@ -71,11 +83,10 @@ public class StockManager {
             mStockList.add(stock);
             mStockIdList.add(stockId);
 
-
         }
     }
 
-    public static List<String> getStockIdList(){
+    public static List<String> getDefaultStockIdList(){
         return mStockIdList;
     }
 
