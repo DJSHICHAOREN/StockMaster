@@ -4,13 +4,12 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 
-import com.example.stockmaster.entity.ma.MaBase;
+import com.example.stockmaster.entity.k.KBase;
 import com.example.stockmaster.util.StockAnalyser;
 
 import org.xutils.db.annotation.Column;
 import org.xutils.db.annotation.Table;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,7 +34,7 @@ public class Stock {
     @Column(name = "ma250")
     public float ma250;
 
-    public MaBase maBase;
+    public KBase mKBase = new KBase();
 
     public boolean isReceivedTodayData = false; //在为true时，才可以接收分钟的数据
     public List<StockPrice> todayStockPriceList = new ArrayList<>();
@@ -233,6 +232,14 @@ public class Stock {
 
     public void setMonitorType(int monitorType) {
         this.monitorType = monitorType;
+    }
+
+    /**
+     * 添加关键价格列表
+     * @param keyStockPriceList
+     */
+    public void setKeyStockPriceList(List<StockPrice> keyStockPriceList) {
+        mKBase.setKeyStockPriceList(keyStockPriceList);
     }
 
     public void setCurrentPrice(StockPrice currentPrice) {

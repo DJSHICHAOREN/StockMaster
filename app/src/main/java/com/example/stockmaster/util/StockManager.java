@@ -35,7 +35,6 @@ public class StockManager {
         for(Stock stock : getStockList()){
             getKeyStockPriceFromDB(stock);
         }
-
     }
 
     public static void setBrainService(BrainService brainService){
@@ -50,18 +49,19 @@ public class StockManager {
      * 从数据库中读取全部的股票
      */
     public static void getStocksFromDB(){
-        if(mStockList.size() > 0){
-            return;
-        }
         mStockList = DBUtil.getAllStocks();
-        // 如果数据库为空，则添加默认股票
         for(Stock stock : mStockList){
             mStockIdList.add(stock.getId());
         }
+        // 如果数据库为空，则添加默认股票
+        if(mStockIdList.size() == 0){
+            createStocks(DEFAULT_STOCK_ID_LIST, false);
+        }
+
     }
 
     public static void getKeyStockPriceFromDB(Stock stock){
-        DBUtil.getStockPriceList(stock.getId());
+        stock.setKeyStockPriceList(DBUtil.getStockPriceList(stock.getId()));
     }
 
     public static void getStocksFromString(){
