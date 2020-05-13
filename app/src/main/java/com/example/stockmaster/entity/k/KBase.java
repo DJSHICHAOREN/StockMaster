@@ -50,11 +50,14 @@ public class KBase {
             }
         }
         // 添加价格列表之后计算均值
-        calMa();
+        for(int i=5; i <= mKeyStockPriceList.size(); i++){
+
+        }
+        calMaPrice();
     }
 
-    public void calMa(){
-
+    public void calMaPrice(){
+        for
     }
 
     private String getDoubleNumString(int num){

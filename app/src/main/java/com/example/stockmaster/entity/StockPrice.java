@@ -20,6 +20,8 @@ public class StockPrice {
 
     public String name;
 
+
+
     public enum QueryType{FIVEDAY, TODAY, MINUTE, NULL}
     private QueryType queryType = QueryType.NULL;
 
@@ -33,6 +35,13 @@ public class StockPrice {
         setStockId(stockId);
         setTime(time);
         setPrice(price);
+        setQueryType(queryType);
+    }
+
+    public StockPrice(String stockId, Date time, float price, QueryType queryType) {
+        setStockId(stockId);
+        this.time = time;
+        this.price = price;
         setQueryType(queryType);
     }
 

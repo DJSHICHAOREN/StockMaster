@@ -242,6 +242,10 @@ public class Stock {
         mKBase.setKeyStockPriceList(keyStockPriceList);
     }
 
+    private void calMaPrice(){
+
+    }
+
     public void setCurrentPrice(StockPrice currentPrice) {
         this.currentPrice = currentPrice;
     }
