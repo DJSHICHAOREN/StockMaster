@@ -26,9 +26,6 @@ public class StockManager {
     public static void loadStocks(){
         getStocksFromDB();
 //        createStocks(DEFAULT_STOCK_ID_LIST, false);
-//        if(mMainActivityUIManager != null){
-//            mMainActivityUIManager.notifyStockListDateSetChanged();
-//        }
     }
 
     public static void loadStockPrice(){
@@ -57,15 +54,10 @@ public class StockManager {
         if(mStockIdList.size() == 0){
             createStocks(DEFAULT_STOCK_ID_LIST, false);
         }
-
     }
 
     public static void getKeyStockPriceFromDB(Stock stock){
         stock.setKeyStockPriceList(DBUtil.getStockPriceList(stock.getId()));
-    }
-
-    public static void getStocksFromString(){
-
     }
 
     /**
@@ -83,6 +75,9 @@ public class StockManager {
             mStockList.add(stock);
             mStockIdList.add(stockId);
 
+        }
+        if(mMainActivityUIManager != null){
+            mMainActivityUIManager.notifyStockListDateSetChanged();
         }
     }
 
@@ -131,10 +126,12 @@ public class StockManager {
         int stockIndex = mStockIdList.indexOf(stockId);
         Stock stock = mStockList.get(stockIndex);
         if(stock != null){
-            for(StockPrice stockPrice : stockPriceList){
-                // 保存价格到数据库
-                DBUtil.saveStockPrice(stockPrice);
-            }
+            stock.setKeyStockPriceList(stockPriceList);
+
+//            for(StockPrice stockPrice : stockPriceList){
+//                // 保存价格到数据库
+//                DBUtil.saveStockPrice(stockPrice);
+//            }
             Log.d("lwd", String.format("%s 五日关键数据加载完毕", stockId));
         }
     }

@@ -4,6 +4,8 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 
+import com.example.stockmaster.entity.k.K15Minutes;
+import com.example.stockmaster.entity.k.K30Minutes;
 import com.example.stockmaster.entity.k.KBase;
 import com.example.stockmaster.util.StockAnalyser;
 
@@ -35,6 +37,8 @@ public class Stock {
     public float ma250;
 
     public KBase mKBase = new KBase();
+    public K15Minutes mK15Minutes = new K15Minutes();
+    public K30Minutes mK30Minutes = new K30Minutes();
 
     public boolean isReceivedTodayData = false; //在为true时，才可以接收分钟的数据
     public List<StockPrice> todayStockPriceList = new ArrayList<>();
@@ -43,7 +47,7 @@ public class Stock {
     public List<StockPrice> buyStockPriceList = new ArrayList<>();
     public List<StockPrice> saleStockPriceList = new ArrayList<>();
     public List<StockPrice> dealPriceList = new ArrayList<>(); // 用来在detail页面显示全部交易列表
-
+    private List<StockPrice> mKeyStockPriceList = new ArrayList<>();
     public enum DealType{SALE, BUY, NULL}
     private DealType previousDealType = DealType.NULL;
     StockAnalyser mStockAnalyser;
@@ -239,8 +243,12 @@ public class Stock {
      * @param keyStockPriceList
      */
     public void setKeyStockPriceList(List<StockPrice> keyStockPriceList) {
-        mKBase.setKeyStockPriceList(keyStockPriceList);
+//        mKBase.setKeyStockPriceList(keyStockPriceList);
+        mK15Minutes.setKeyStockPriceList(keyStockPriceList);
+        Log.d("lwd", "30分钟均线");
+        mK30Minutes.setKeyStockPriceList(keyStockPriceList);
     }
+
 
     private void calMaPrice(){
 
