@@ -176,7 +176,7 @@ public class StockManager {
             stock.setPreviousFourDayPriceList(previousFourDayPriceList);
             Log.d("lwd", String.format("%s 加载前四日收盘数据", stockId));
         }
-        Log.d("lwd", String.format("stockId:%s, ma5:%f", stock.id, stock    .getMa5()));
+//        Log.d("lwd", String.format("stockId:%s, ma5:%f", stock.id, stock.getMa5()));
     }
 
     public static void addMAPrice(String stockId, String ma10, String ma30, String ma50, String ma100, String ma250) {

@@ -6,6 +6,7 @@ import androidx.annotation.NonNull;
 
 import com.example.stockmaster.entity.k.K15Minutes;
 import com.example.stockmaster.entity.k.K30Minutes;
+import com.example.stockmaster.entity.k.K60Minutes;
 import com.example.stockmaster.entity.k.KBase;
 import com.example.stockmaster.util.StockAnalyser;
 
@@ -39,6 +40,7 @@ public class Stock {
     public KBase mKBase = new KBase();
     public K15Minutes mK15Minutes = new K15Minutes();
     public K30Minutes mK30Minutes = new K30Minutes();
+    public K60Minutes mK60Minutes = new K60Minutes();
 
     public boolean isReceivedTodayData = false; //在为true时，才可以接收分钟的数据
     public List<StockPrice> todayStockPriceList = new ArrayList<>();
@@ -244,9 +246,12 @@ public class Stock {
      */
     public void setKeyStockPriceList(List<StockPrice> keyStockPriceList) {
 //        mKBase.setKeyStockPriceList(keyStockPriceList);
+        Log.d("lwd", "15分钟均线");
         mK15Minutes.setKeyStockPriceList(keyStockPriceList);
         Log.d("lwd", "30分钟均线");
         mK30Minutes.setKeyStockPriceList(keyStockPriceList);
+        Log.d("lwd", "60分钟均线");
+        mK60Minutes.setKeyStockPriceList(keyStockPriceList);
     }
 
 
