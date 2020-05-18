@@ -4,6 +4,8 @@ import android.util.Log;
 
 import com.example.stockmaster.entity.StockPrice;
 import com.example.stockmaster.entity.ma.MaBase;
+import com.example.stockmaster.entity.ma.MaState;
+import com.example.stockmaster.util.MaCalculater;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -25,6 +27,7 @@ public class KBase {
     private MaBase ma60PriceList = new MaBase(60);
     private List<MaBase> maBaseList = new ArrayList<>();
     private List<StockPrice> mKeyStockPriceList = new ArrayList<>();
+    private List<MaState> maStateList = new ArrayList<>();
 
     public KBase(){
         maBaseList.add(ma5PriceList);
@@ -59,6 +62,10 @@ public class KBase {
         // 添加价格列表之后计算均值
         for(MaBase maBase : maBaseList){
             maBase.setKeyStockPriceList(this.mKeyStockPriceList);
+        }
+
+        for(int i=0; i<keyStockPriceList.size(); i++){
+            maStateList.add(MaCalculater.calMaState(keyStockPriceList.subList(0, i)));
         }
     }
 

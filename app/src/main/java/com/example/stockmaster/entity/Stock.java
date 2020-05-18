@@ -8,6 +8,8 @@ import com.example.stockmaster.entity.k.K15Minutes;
 import com.example.stockmaster.entity.k.K30Minutes;
 import com.example.stockmaster.entity.k.K60Minutes;
 import com.example.stockmaster.entity.k.KBase;
+import com.example.stockmaster.entity.ma.MaState;
+import com.example.stockmaster.util.MaCalculater;
 import com.example.stockmaster.util.StockAnalyser;
 
 import org.xutils.db.annotation.Column;
@@ -54,7 +56,6 @@ public class Stock {
     private DealType previousDealType = DealType.NULL;
     StockAnalyser mStockAnalyser;
     private List<Float> previousFourDayPriceList;
-
     public Stock(){
 
     }
@@ -252,11 +253,6 @@ public class Stock {
         mK30Minutes.setKeyStockPriceList(keyStockPriceList);
         Log.d("lwd", "60分钟均线");
         mK60Minutes.setKeyStockPriceList(keyStockPriceList);
-    }
-
-
-    private void calMaPrice(){
-
     }
 
     public void setCurrentPrice(StockPrice currentPrice) {
