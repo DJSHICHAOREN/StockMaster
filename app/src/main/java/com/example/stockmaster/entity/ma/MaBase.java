@@ -11,6 +11,7 @@ public class MaBase {
     private int mDayCount = 5;
     private List<StockPrice> maPriceList = new ArrayList<>();
 
+
     public MaBase(int dayCount){
         mDayCount = dayCount;
     }
@@ -23,6 +24,10 @@ public class MaBase {
         for(int i=mDayCount-1; i < keyStockPriceList.size(); i++){
             addStockPriceSection(keyStockPriceList.subList(i-(mDayCount-1), i+1));
         }
+    }
+
+    public void calMaPrice(){
+
     }
 
     /**
