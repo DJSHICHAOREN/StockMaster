@@ -47,7 +47,7 @@ public class MaBase {
                 sum,
                 lastStockPrice.getQueryType());
         maPriceList.add(maStockPrice);
-        Log.d("lwd", maStockPrice.getStockId() + " " + mDayCount
-                + " " + maStockPrice.getTime().toString() + " " + maStockPrice.getPriceString());
+//        Log.d("lwd", maStockPrice.getStockId() + " " + mDayCount
+//                + " " + maStockPrice.getTime().toString() + " " + maStockPrice.getPriceString());
     }
 }
