@@ -247,6 +247,7 @@ public class Stock {
      */
     public void setKeyStockPriceList(List<StockPrice> keyStockPriceList) {
 //        mKBase.setKeyStockPriceList(keyStockPriceList);
+        Log.d("lwd", "stockId:" + getId());
         Log.d("lwd", "15分钟均线");
         mK15Minutes.setKeyStockPriceList(keyStockPriceList);
         Log.d("lwd", "30分钟均线");

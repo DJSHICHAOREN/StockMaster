@@ -11,8 +11,8 @@ public class MaState {
 
     public Date time;
 
-    public MaState(){
-
+    public MaState(Date time){
+        this.time = time;
     }
 
     public MaState(float ma5, float ma10, float ma20, float ma30, float ma60, Date time) {
@@ -70,5 +70,29 @@ public class MaState {
 
     public void setTime(Date time) {
         this.time = time;
+    }
+
+    public void setMaPrice(float price, int countedDay){
+        if(countedDay == 5){
+            setMa5(price);
+        }
+        else if(countedDay == 10){
+            setMa10(price);
+        }
+        else if(countedDay == 20){
+            setMa20(price);
+        }
+        else if(countedDay == 30){
+            setMa30(price);
+        }
+        else if(countedDay == 60){
+            setMa60(price);
+        }
+    }
+
+    @Override
+    public String toString(){
+        return String.format("time:%s ma5:%f, ma10:%f, ma20:%f, ma30:%f, ma60:%f",
+                getTime().toString(), getMa5(), getMa10(), getMa20(), getMa30(), getMa60());
     }
 }

@@ -46,6 +46,7 @@ public class KBase {
             return;
         }
         // 过滤股票价格
+        List<StockPrice> filteredStockPriceList = new ArrayList<>();
         for(StockPrice stockPrice : keyStockPriceList){
             Date time = stockPrice.getTime();
             String minuteTime = "";
@@ -56,16 +57,16 @@ public class KBase {
                 minuteTime = hour + ":" + minute + ":" + second;
             }
             if(TIME_POINT_STRING.indexOf(minuteTime) != -1){
-                this.mKeyStockPriceList.add(stockPrice);
+                filteredStockPriceList.add(stockPrice);
             }
         }
         // 添加价格列表之后计算均值
-        for(MaBase maBase : maBaseList){
-            maBase.setKeyStockPriceList(this.mKeyStockPriceList);
-        }
+//        for(MaBase maBase : maBaseList){
+//            maBase.setKeyStockPriceList(this.mKeyStockPriceList);
+//        }
 
-        for(int i=0; i<keyStockPriceList.size(); i++){
-            maStateList.add(MaCalculater.calMaState(keyStockPriceList.subList(0, i)));
+        for(int i=MaCalculater.getMinCountedDay(); i<filteredStockPriceList.size(); i++){
+            maStateList.add(MaCalculater.calMaState(filteredStockPriceList.subList(0, i)));
         }
     }
 
