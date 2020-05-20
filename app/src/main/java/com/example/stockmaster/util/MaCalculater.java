@@ -19,8 +19,11 @@ public class MaCalculater {
         if(stockPriceList == null || stockPriceList.size() < 1){
             return null;
         }
+        // 创建均价对象
         int priceListLength = stockPriceList.size();
-        MaState maState = new MaState(stockPriceList.get(priceListLength-1).getTime());
+        StockPrice lastStockPrice = stockPriceList.get(priceListLength-1);
+        MaState maState = new MaState(lastStockPrice.getTime(), lastStockPrice.getPrice());
+        // 计算均价
         for(int countedDay : mCountedDayList){
             // 计算均价
             if(priceListLength >= countedDay){

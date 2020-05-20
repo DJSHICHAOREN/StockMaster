@@ -6,6 +6,7 @@ import com.example.stockmaster.entity.StockPrice;
 import com.example.stockmaster.entity.ma.MaBase;
 import com.example.stockmaster.entity.ma.MaState;
 import com.example.stockmaster.util.MaCalculater;
+import com.example.stockmaster.util.MaStateAnalyser;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -21,29 +22,21 @@ public class KBase {
             "14:00:00, 14:15:00, 14:30:00, 14:45:00, " +
             "15:00:00, 15:15:00, 15:30:00, 15:45:00, " +
             "16:00:00, 16:10:00";
-    private MaBase ma5PriceList = new MaBase(5);
-    private MaBase ma10PriceList = new MaBase(10);
-    private MaBase ma30PriceList = new MaBase(30);
-    private MaBase ma60PriceList = new MaBase(60);
-    private List<MaBase> maBaseList = new ArrayList<>();
-    private List<StockPrice> mKeyStockPriceList = new ArrayList<>();
     private List<MaState> maStateList = new ArrayList<>();
-
+    private MaStateAnalyser maStateAnalyser;
+    private List<StockPrice> qualifiedPricePoint = new ArrayList<>();
     public KBase(){
-        maBaseList.add(ma5PriceList);
-        maBaseList.add(ma10PriceList);
-        maBaseList.add(ma30PriceList);
-        maBaseList.add(ma60PriceList);
+        maStateAnalyser = new MaStateAnalyser(maStateList);
     }
 
     /**
      * 添加关键价格列表
      * @param keyStockPriceList
      */
-    public void setKeyStockPriceList(List<StockPrice> keyStockPriceList) {
+    public List<StockPrice> setKeyStockPriceList(List<StockPrice> keyStockPriceList) {
         if(keyStockPriceList == null){
             Log.e("lwd", "keyStockPriceList 为null");
-            return;
+            return null;
         }
         // 过滤股票价格
         List<StockPrice> filteredStockPriceList = new ArrayList<>();
@@ -61,13 +54,13 @@ public class KBase {
             }
         }
         // 添加价格列表之后计算均值
-//        for(MaBase maBase : maBaseList){
-//            maBase.setKeyStockPriceList(this.mKeyStockPriceList);
-//        }
-
         for(int i=MaCalculater.getMinCountedDay(); i<filteredStockPriceList.size(); i++){
             maStateList.add(MaCalculater.calMaState(filteredStockPriceList.subList(0, i)));
+            if(maStateAnalyser.analyse()){
+                qualifiedPricePoint.add(filteredStockPriceList.get(i-1));
+            }
         }
+        return qualifiedPricePoint;
     }
 
     private String getDoubleNumString(int num){
@@ -76,5 +69,9 @@ public class KBase {
 
     public void setTIME_POINT_STRING(String TIME_POINT_STRING) {
         this.TIME_POINT_STRING = TIME_POINT_STRING;
+    }
+
+    public List<StockPrice> getQualifiedPricePoint() {
+        return qualifiedPricePoint;
     }
 }

@@ -248,12 +248,29 @@ public class Stock {
     public void setKeyStockPriceList(List<StockPrice> keyStockPriceList) {
 //        mKBase.setKeyStockPriceList(keyStockPriceList);
         Log.d("lwd", "stockId:" + getId());
-        Log.d("lwd", "15分钟均线");
-        mK15Minutes.setKeyStockPriceList(keyStockPriceList);
-        Log.d("lwd", "30分钟均线");
-        mK30Minutes.setKeyStockPriceList(keyStockPriceList);
-        Log.d("lwd", "60分钟均线");
-        mK60Minutes.setKeyStockPriceList(keyStockPriceList);
+        Log.d("lwd", "15分钟K线");
+        List<StockPrice> qualified15PricePoint = mK15Minutes.setKeyStockPriceList(keyStockPriceList);
+        printQualifiedTimePoint(qualified15PricePoint);
+        Log.d("lwd", "30分钟K线");
+        List<StockPrice> qualified30PricePoint = mK30Minutes.setKeyStockPriceList(keyStockPriceList);
+        printQualifiedTimePoint(qualified30PricePoint);
+        Log.d("lwd", "60分钟K线");
+        List<StockPrice> qualified60PricePoint = mK60Minutes.setKeyStockPriceList(keyStockPriceList);
+        printQualifiedTimePoint(qualified60PricePoint);
+    }
+
+    /**
+     * 打印挑选出的时间点
+     * @param countedDay
+     * @param stockPriceList
+     */
+    public void printQualifiedTimePoint(List<StockPrice> stockPriceList){
+        for(StockPrice stockPrice : stockPriceList){
+            String msg = String.format("合理买入点，时间点:%s，价格:%f",
+                    stockPrice.getTime().toString(),
+                    stockPrice.getPrice());
+            Log.d("lwd", msg);
+        }
     }
 
     public void setCurrentPrice(StockPrice currentPrice) {

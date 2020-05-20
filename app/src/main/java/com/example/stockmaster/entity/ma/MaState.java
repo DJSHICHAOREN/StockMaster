@@ -3,6 +3,7 @@ package com.example.stockmaster.entity.ma;
 import java.util.Date;
 
 public class MaState {
+    public float price;
     public float ma5;
     public float ma10;
     public float ma20;
@@ -11,11 +12,12 @@ public class MaState {
 
     public Date time;
 
-    public MaState(Date time){
+    public MaState(Date time, float price){
         this.time = time;
+        this.price = price;
     }
 
-    public MaState(float ma5, float ma10, float ma20, float ma30, float ma60, Date time) {
+    public MaState(float price, float ma5, float ma10, float ma20, float ma30, float ma60, Date time) {
         this.ma5 = ma5;
         this.ma10 = ma10;
         this.ma20 = ma20;
@@ -88,6 +90,14 @@ public class MaState {
         else if(countedDay == 60){
             setMa60(price);
         }
+    }
+
+    public float getPrice() {
+        return price;
+    }
+
+    public void setPrice(float price) {
+        this.price = price;
     }
 
     @Override
