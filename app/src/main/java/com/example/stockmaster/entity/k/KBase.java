@@ -3,7 +3,6 @@ package com.example.stockmaster.entity.k;
 import android.util.Log;
 
 import com.example.stockmaster.entity.StockPrice;
-import com.example.stockmaster.entity.ma.MaBase;
 import com.example.stockmaster.entity.ma.MaState;
 import com.example.stockmaster.util.MaCalculater;
 import com.example.stockmaster.util.MaStateAnalyser;
