@@ -23,7 +23,7 @@ public class KBase {
             "16:00:00, 16:10:00";
     private List<MaState> maStateList = new ArrayList<>();
     private MaStateAnalyser maStateAnalyser;
-    private List<StockPrice> qualifiedPricePoint = new ArrayList<>();
+    private List<StockPrice> qualifiedPricePointList = new ArrayList<>();
     public KBase(){
         maStateAnalyser = new MaStateAnalyser(maStateList);
     }
@@ -56,10 +56,10 @@ public class KBase {
         for(int i=MaCalculater.getMinCountedDay(); i<filteredStockPriceList.size(); i++){
             maStateList.add(MaCalculater.calMaState(filteredStockPriceList.subList(0, i)));
             if(maStateAnalyser.analyse()){
-                qualifiedPricePoint.add(filteredStockPriceList.get(i-1));
+                qualifiedPricePointList.add(filteredStockPriceList.get(i-1));
             }
         }
-        return qualifiedPricePoint;
+        return qualifiedPricePointList;
     }
 
     private String getDoubleNumString(int num){
@@ -70,7 +70,7 @@ public class KBase {
         this.TIME_POINT_STRING = TIME_POINT_STRING;
     }
 
-    public List<StockPrice> getQualifiedPricePoint() {
-        return qualifiedPricePoint;
+    public List<StockPrice> getQualifiedPricePointList() {
+        return qualifiedPricePointList;
     }
 }
