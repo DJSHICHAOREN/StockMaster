@@ -163,7 +163,7 @@ public class SinaDataQueryer {
                     public void onResponse(String response) {
                         JsonObject jsonObject = new JsonParser().parse(response).getAsJsonObject();
                         MAResponseResult mAResponseResult = new Gson().fromJson(jsonObject, new TypeToken<MAResponseResult>(){}.getType());
-                        Log.d("lwd", String.format("stockId:%s, ma10:%s", stockId, mAResponseResult.getData().getMA10()));
+//                        Log.d("lwd", String.format("stockId:%s, ma10:%s", stockId, mAResponseResult.getData().getMA10()));
                         StockManager.addMAPrice(stockId, mAResponseResult.getData().getMA10(), mAResponseResult.getData().getMA30(),
                                 mAResponseResult.getData().getMA50(), mAResponseResult.getData().getMA100(),
                                 mAResponseResult.getData().getMA250());

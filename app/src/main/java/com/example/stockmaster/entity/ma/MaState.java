@@ -9,7 +9,7 @@ public class MaState {
     public float ma20;
     public float ma30;
     public float ma60;
-
+    private float maPriceDispersion;
     public Date time;
 
     public MaState(Date time, float price){
@@ -98,6 +98,16 @@ public class MaState {
 
     public void setPrice(float price) {
         this.price = price;
+    }
+
+    public float getMaPriceDispersion() {
+        if(maPriceDispersion != 0){
+            return maPriceDispersion;
+        }
+        if(ma5 != 0 && ma10 != 0 && ma20!= 0){
+            maPriceDispersion = (Math.abs(ma5-ma10) + Math.abs(ma10-ma20) + Math.abs(ma5-ma20)) / (3 * ma5);
+        }
+        return maPriceDispersion;
     }
 
     @Override

@@ -6,6 +6,7 @@ import androidx.annotation.NonNull;
 
 import com.example.stockmaster.entity.k.K15Minutes;
 import com.example.stockmaster.entity.k.K30Minutes;
+import com.example.stockmaster.entity.k.K5Minutes;
 import com.example.stockmaster.entity.k.K60Minutes;
 import com.example.stockmaster.entity.k.KBase;
 import com.example.stockmaster.entity.ma.MaState;
@@ -40,6 +41,7 @@ public class Stock {
     public float ma250;
 
     public KBase mKBase = new KBase();
+    public K5Minutes mK5Minutes = new K5Minutes();
     public K15Minutes mK15Minutes = new K15Minutes();
     public K30Minutes mK30Minutes = new K30Minutes();
     public K60Minutes mK60Minutes = new K60Minutes();
@@ -248,23 +250,27 @@ public class Stock {
     public void setKeyStockPriceList(List<StockPrice> keyStockPriceList) {
 //        mKBase.setKeyStockPriceList(keyStockPriceList);
         Log.d("lwd", "stockId:" + getId());
+        Log.d("lwd", "5分钟K线");
+        List<StockPrice> qualified5PricePoint = mK5Minutes.setKeyStockPriceList(keyStockPriceList);
+        printQualifiedTimePoint(qualified5PricePoint, 5);
         Log.d("lwd", "15分钟K线");
         List<StockPrice> qualified15PricePoint = mK15Minutes.setKeyStockPriceList(keyStockPriceList);
-        printQualifiedTimePoint(qualified15PricePoint);
+        printQualifiedTimePoint(qualified15PricePoint, 15);
         Log.d("lwd", "30分钟K线");
         List<StockPrice> qualified30PricePoint = mK30Minutes.setKeyStockPriceList(keyStockPriceList);
-        printQualifiedTimePoint(qualified30PricePoint);
+        printQualifiedTimePoint(qualified30PricePoint, 30);
         Log.d("lwd", "60分钟K线");
         List<StockPrice> qualified60PricePoint = mK60Minutes.setKeyStockPriceList(keyStockPriceList);
-        printQualifiedTimePoint(qualified60PricePoint);
+        printQualifiedTimePoint(qualified60PricePoint, 60);
     }
 
     /**
      * 打印挑选出的时间点
-     * @param countedDay
      * @param stockPriceList
      */
-    public void printQualifiedTimePoint(List<StockPrice> stockPriceList){
+    public void printQualifiedTimePoint(List<StockPrice> stockPriceList, int countedDay){
+        if(countedDay != 30)
+            return;
         for(StockPrice stockPrice : stockPriceList){
             String msg = String.format("合理买入点，时间点:%s，价格:%f",
                     stockPrice.getTime().toString(),

@@ -17,7 +17,7 @@ public class K15Minutes extends KBase {
 
     @Override
     public List<StockPrice> setKeyStockPriceList(List<StockPrice> keyStockPriceList) {
-//        super.setTIME_POINT_STRING(TIME_POINT_STRING);
+        super.setTIME_POINT_STRING(TIME_POINT_STRING);
        return super.setKeyStockPriceList(keyStockPriceList);
     }
 
