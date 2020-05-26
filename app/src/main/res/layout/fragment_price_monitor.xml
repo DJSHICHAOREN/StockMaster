@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tv_deal_point"
+            android:layout_width="wrap_content"
+            android:layout_height="30dp"
+            android:text="Hello World!"
+            android:visibility="visible"/>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_stock_list"
+            android:layout_width="match_parent"
+            android:layout_height="600dp"
+            android:scrollbars="vertical"/>
+
+        <Button
+            android:id="@+id/btn_goto_command_stocks"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="enter command stocks">
+        </Button>
+
+</LinearLayout>

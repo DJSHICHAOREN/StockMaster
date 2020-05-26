@@ -7,30 +7,44 @@
     tools:context=".ui.activity.main.MainActivity"
     android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/tv_deal_point"
-        android:layout_width="wrap_content"
-        android:layout_height="30dp"
-        android:text="Hello World!"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintHorizontal_bias="0.461"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.039"
-        android:visibility="visible"/>
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rv_stock_list"
+    <androidx.viewpager.widget.ViewPager
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/vp_monitor_panel"
         android:layout_width="match_parent"
-        android:layout_height="600dp"
-        android:scrollbars="vertical"/>
+        android:layout_height="match_parent" >
 
-    <Button
-        android:id="@+id/btn_goto_command_stocks"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="enter command stocks">
-    </Button>
+        <com.google.android.material.tabs.TabLayout
+            android:id="@+id/tab_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+    </androidx.viewpager.widget.ViewPager>
+
+
+<!--    <TextView-->
+<!--        android:id="@+id/tv_deal_point"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="30dp"-->
+<!--        android:text="Hello World!"-->
+<!--        app:layout_constraintBottom_toBottomOf="parent"-->
+<!--        app:layout_constraintHorizontal_bias="0.461"-->
+<!--        app:layout_constraintLeft_toLeftOf="parent"-->
+<!--        app:layout_constraintRight_toRightOf="parent"-->
+<!--        app:layout_constraintTop_toTopOf="parent"-->
+<!--        app:layout_constraintVertical_bias="0.039"-->
+<!--        android:visibility="visible"/>-->
+
+<!--    <androidx.recyclerview.widget.RecyclerView-->
+<!--        android:id="@+id/rv_stock_list"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="600dp"-->
+<!--        android:scrollbars="vertical"/>-->
+
+<!--    <Button-->
+<!--        android:id="@+id/btn_goto_command_stocks"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:text="enter command stocks">-->
+<!--    </Button>-->
 
 </LinearLayout>

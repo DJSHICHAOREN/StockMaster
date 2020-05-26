@@ -2,7 +2,7 @@ package com.example.stockmaster.util;
 import android.util.Log;
 
 import com.example.stockmaster.ui.activity.main.MainActivity;
-import com.example.stockmaster.ui.activity.main.MainActivity.MainActivityUIManager;
+//import com.example.stockmaster.ui.activity.main.MainActivity.MainActivityUIManager;
 import com.example.stockmaster.entity.Stock;
 import com.example.stockmaster.entity.StockPrice;
 
