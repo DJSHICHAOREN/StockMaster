@@ -62,16 +62,14 @@ public class Stock {
     private List<StockPrice> mKeyStockPriceList = new ArrayList<>();
     public enum DealType{SALE, BUY, NULL}
     private DealType previousDealType = DealType.NULL;
-    ShortSwingAnalyser mShortSwingAnalyser;
     private List<Float> previousFourDayPriceList;
     public Stock(){
 
     }
 
-    public Stock(ShortSwingAnalyser shortSwingAnalyser, String id, String name, int monitorType){
+    public Stock(String id, String name, int monitorType){
         this.id = id;
         this.name = name;
-        mShortSwingAnalyser = shortSwingAnalyser;
         this.monitorType = monitorType;
         this.mKBaseList = Arrays.asList(new K5Minutes(id), new K15Minutes(id), new K30Minutes(id), new K60Minutes(id));
     }
@@ -255,7 +253,6 @@ public class Stock {
      * @param keyStockPriceList
      */
     public boolean setKeyStockPriceList(List<StockPrice> keyStockPriceList) {
-        Log.d("lwd", "stockId:" + getId());
         for(KBase kBase : mKBaseList){
             kBase.setKeyStockPriceList(keyStockPriceList);
         }

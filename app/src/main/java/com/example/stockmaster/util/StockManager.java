@@ -71,9 +71,9 @@ public class StockManager {
             if(stockId.length() > 2 && !stockId.substring(0,2).equals("hk")){
                 stockId = "hk" + stockId;
             }
-            Stock stock = new Stock(mShortSwingAnalyser, stockId, "", isMonitorBuyPoint ? 1 : 0);
+            Stock stock = new Stock(stockId, "", isMonitorBuyPoint ? 1 : 0);
             // 将股票实例存入数据库
-            stock = DBUtil.saveStock(stock);
+            DBUtil.saveStock(stock);
             mStockList.add(stock);
             mStockIdList.add(stockId);
 
