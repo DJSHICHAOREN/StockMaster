@@ -2,7 +2,6 @@ package com.example.stockmaster.ui.fragment.price_monitor;
 
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.content.ServiceConnection;
@@ -19,8 +18,6 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.app.NotificationCompat;
-import androidx.core.app.NotificationManagerCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -28,9 +25,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.stockmaster.R;
 import com.example.stockmaster.service.BrainService;
 import com.example.stockmaster.ui.activity.base.UIManager;
-import com.example.stockmaster.ui.activity.main.MainActivity;
 import com.example.stockmaster.ui.activity.recommand.RecommandActivity;
 import com.example.stockmaster.ui.adapter.StockListAdapter;
+import com.example.stockmaster.util.StockManager;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -47,7 +44,6 @@ public class PriceMonitorFragment extends Fragment {
 
     private RecyclerView.Adapter mStockListAdapter;
     private BrainService mBrainService;
-    private MainPresent mMainPresent;
 
     private Handler handler = new Handler(){
         @Override
@@ -81,12 +77,12 @@ public class PriceMonitorFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_price_monitor, container, false);
         ButterKnife.bind(this, view);
 
-        MainActivityUIManager mainActivityUIManager = new MainActivityUIManager();
-        mMainPresent = new MainPresent(this, mainActivityUIManager);
+        // 创建工具实例
+        StockManager.setMainActivityUIManager(new MainActivityUIManager());
         // 设置RecyclerView的布局
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
         rv_stock_list.setLayoutManager(linearLayoutManager);
-        mStockListAdapter = new StockListAdapter(mMainPresent.getStockList(), this);
+        mStockListAdapter = new StockListAdapter(StockManager.getStockList(), this);
         rv_stock_list.setAdapter(mStockListAdapter);
 
 

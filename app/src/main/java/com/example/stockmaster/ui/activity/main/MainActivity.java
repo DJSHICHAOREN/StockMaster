@@ -37,6 +37,7 @@ import com.example.stockmaster.ui.activity.base.UIManager;
 import com.example.stockmaster.ui.activity.recommand.RecommandActivity;
 import com.example.stockmaster.ui.adapter.MonitorPanelAdapter;
 import com.example.stockmaster.ui.adapter.StockListAdapter;
+import com.example.stockmaster.util.StockManager;
 import com.google.android.material.tabs.TabLayout;
 
 import java.io.Serializable;
@@ -65,6 +66,9 @@ public class MainActivity extends AppCompatActivity {
         // 设置viewPager的adapter
         monitorPanelAdapter = new MonitorPanelAdapter(getSupportFragmentManager());
         vp_monitor_panel.setAdapter(monitorPanelAdapter);
+
+        // 载入股票列表
+        StockManager.loadStocks();
 
         // 开启service
         Intent intent = new Intent(this, BrainService.class);

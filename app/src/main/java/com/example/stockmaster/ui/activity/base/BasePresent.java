@@ -1,8 +1,11 @@
 package com.example.stockmaster.ui.activity.base;
 
-import androidx.appcompat.app.AppCompatActivity;
+import android.view.View;
 
-public class BasePresent<V extends AppCompatActivity> {
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+
+public class BasePresent<V extends Fragment> {
     protected V mView;
 
     public BasePresent(V view){

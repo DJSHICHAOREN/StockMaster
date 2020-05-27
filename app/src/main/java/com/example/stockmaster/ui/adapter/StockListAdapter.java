@@ -1,16 +1,12 @@
 package com.example.stockmaster.ui.adapter;
 
 import android.content.Intent;
-import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
-import android.text.Layout;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -20,20 +16,20 @@ import com.example.stockmaster.R;
 import com.example.stockmaster.entity.Stock;
 import com.example.stockmaster.ui.activity.detail.DetailActivity;
 import com.example.stockmaster.ui.activity.main.MainActivity;
+import com.example.stockmaster.ui.fragment.price_monitor.PriceMonitorFragment;
 import com.example.stockmaster.util.DBUtil;
 
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 
 public class StockListAdapter extends RecyclerView.Adapter<StockListAdapter.StockListViewHolder> {
     private List<Stock> mStockList;
-    private MainActivity mMainActivity;
-    public StockListAdapter(List<Stock> stockList, MainActivity mainActivity){
+    private PriceMonitorFragment mPriceMonitorFragment;
+    public StockListAdapter(List<Stock> stockList, PriceMonitorFragment priceMonitorFragment){
         mStockList = stockList;
-        mMainActivity = mainActivity;
+        mPriceMonitorFragment = priceMonitorFragment;
         Log.d("lwd", mStockList.toString());
     }
 
@@ -55,9 +51,10 @@ public class StockListAdapter extends RecyclerView.Adapter<StockListAdapter.Stoc
         holder.ll_stock_item.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(mMainActivity, DetailActivity.class);
+                Intent intent = new Intent(mPriceMonitorFragment.getActivity(), DetailActivity.class);
                 intent.putExtra("stockIndex", position);
-                mMainActivity.startActivity(intent);
+                mPriceMonitorFragment.startActivity(intent);
+
             }
         });
         holder.btn_monitor_type.setOnClickListener(new View.OnClickListener() {
@@ -82,13 +79,13 @@ public class StockListAdapter extends RecyclerView.Adapter<StockListAdapter.Stoc
         drawable.setShape(GradientDrawable.OVAL);
         switch (monitorType){
             case 0:
-                drawable.setColor(mMainActivity.getResources().getColor(R.color.colorSuperviseNull));
+                drawable.setColor(mPriceMonitorFragment.getResources().getColor(R.color.colorSuperviseNull));
                 break;
             case 1:
-                drawable.setColor(mMainActivity.getResources().getColor(R.color.colorSuperviseBuy));
+                drawable.setColor(mPriceMonitorFragment.getResources().getColor(R.color.colorSuperviseBuy));
                 break;
             case 2:
-                drawable.setColor(mMainActivity.getResources().getColor(R.color.colorSuperviseSale));
+                drawable.setColor(mPriceMonitorFragment.getResources().getColor(R.color.colorSuperviseSale));
                 break;
         }
         btn_monitor_type.setBackground(drawable);
