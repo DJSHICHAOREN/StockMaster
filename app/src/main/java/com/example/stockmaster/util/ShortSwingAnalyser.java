@@ -12,9 +12,9 @@ import java.util.List;
 /**
  * 分析股票的买卖点
  */
-public class StockAnalyser {
+public class ShortSwingAnalyser {
 
-    public StockAnalyser() {
+    public ShortSwingAnalyser() {
     }
 
 

@@ -6,7 +6,6 @@ import com.example.stockmaster.entity.Stock;
 import com.example.stockmaster.entity.StockPrice;
 import com.example.stockmaster.service.BrainService;
 import com.example.stockmaster.ui.activity.base.UIManager;
-import com.example.stockmaster.ui.activity.main.MainActivity;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -18,16 +17,17 @@ import java.util.List;
 public class StockManager {
     private static List<Stock> mStockList = new ArrayList<Stock>();
     private static List<String> mStockIdList = new ArrayList<String>();
-    private static StockAnalyser mStockAnalyser = new StockAnalyser();
+    private  static List<Stock> mQualifiedStockList = new ArrayList<>();
+    private static ShortSwingAnalyser mShortSwingAnalyser = new ShortSwingAnalyser();
     private static UIManager mMainActivityUIManager;
     private static BrainService mBrainService;
-//    private static ArrayList<String> DEFAULT_STOCK_ID_LIST = new ArrayList<String>(Arrays.asList("hk01349", "hk03709", "hk01622", "hk01565", "hk02606", "hk09926", "hk02400", "hk06060", "hk09969","hk00981","hk00302", "hk01055", "hk06186", "hk01610", "hk00772", "hk06855", "hk03319", "hk09916", "hk01941", "hk01873", "hk02013", "hk03331", "hk00853", "hk00777", "hk00826", "hk09928", "hk02018", "hk06919", "hk01745", "hk06185", "hk09966", "hk03759", "hk01501", "hk01300", "hk01691", "hk09922", "hk00175", "hk00589", "hk01525", "hk01347"));
+    private static ArrayList<String> DEFAULT_STOCK_ID_LIST = new ArrayList<String>(Arrays.asList("hk01349", "hk03709", "hk01622", "hk01565", "hk02606", "hk09926", "hk02400", "hk06060", "hk09969","hk00981","hk00302", "hk01055", "hk06186", "hk01610", "hk00772", "hk06855", "hk03319", "hk09916", "hk01941", "hk01873", "hk02013", "hk03331", "hk00853", "hk00777", "hk00826", "hk09928", "hk02018", "hk06919", "hk01745", "hk06185", "hk09966", "hk03759", "hk01501", "hk01300", "hk01691", "hk09922", "hk00175", "hk00589", "hk01525", "hk01347"));
 //    private static ArrayList<String> STOCK_ID_LIST = new ArrayList<String>(Arrays.asList("hk09926", "hk02400", "hk06060", "hk00589"));
-    private static ArrayList<String> DEFAULT_STOCK_ID_LIST = new ArrayList<String>(Arrays.asList("hk06855"));
+//    private static ArrayList<String> DEFAULT_STOCK_ID_LIST = new ArrayList<String>(Arrays.asList("hk06855"));
 
     public static void loadStocks(){
-        getStocksFromDB();
-//        createStocks(DEFAULT_STOCK_ID_LIST, false);
+//        getStocksFromDB();
+        createStocks(DEFAULT_STOCK_ID_LIST, false);
     }
 
     public static void loadStockPrice(){
@@ -71,7 +71,7 @@ public class StockManager {
             if(stockId.length() > 2 && !stockId.substring(0,2).equals("hk")){
                 stockId = "hk" + stockId;
             }
-            Stock stock = new Stock(mStockAnalyser, stockId, "", isMonitorBuyPoint ? 1 : 0);
+            Stock stock = new Stock(mShortSwingAnalyser, stockId, "", isMonitorBuyPoint ? 1 : 0);
             // 将股票实例存入数据库
             stock = DBUtil.saveStock(stock);
             mStockList.add(stock);
@@ -93,7 +93,7 @@ public class StockManager {
      */
     public static void add(Stock stock, StockPrice stockPrice){
         if(stock.addStockPrice(stockPrice)){
-            mStockAnalyser.analyse(stock);
+            mShortSwingAnalyser.analyse(stock);
         }
     }
 
@@ -128,7 +128,10 @@ public class StockManager {
         int stockIndex = mStockIdList.indexOf(stockId);
         Stock stock = mStockList.get(stockIndex);
         if(stock != null){
-            stock.setKeyStockPriceList(stockPriceList);
+            // 初始计算满足条件stock
+            if(stock.setKeyStockPriceList(stockPriceList)){
+                mQualifiedStockList.add(stock);
+            }
 
 //            for(StockPrice stockPrice : stockPriceList){
 //                // 保存价格到数据库
@@ -220,7 +223,7 @@ public class StockManager {
     public static List<Stock> getLineUpStocks(){
         List<Stock> lineUpStockList = new ArrayList<>();
         for(Stock stock : mStockList){
-            if(StockAnalyser.isFiveDayLineUp(stock)){
+            if(ShortSwingAnalyser.isFiveDayLineUp(stock)){
                 lineUpStockList.add(stock);
             }
         }

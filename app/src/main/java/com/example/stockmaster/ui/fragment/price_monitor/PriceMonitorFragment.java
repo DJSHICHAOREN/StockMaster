@@ -140,31 +140,6 @@ public class PriceMonitorFragment extends Fragment {
             }
         }
 
-
-        /**
-         * 发送notification
-         * @param notificationContent 发送的内容
-         */
-//        public void sendNotification(int notificationId, String notificationContent){
-//            // Create an explicit intent for an Activity in your app
-//            Intent intent = new Intent(getContext(), MainActivity.this);
-////            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-//            PendingIntent pendingIntent = PendingIntent.getActivity(MainActivity.this, 0, intent, 0);
-//
-//            NotificationCompat.Builder builder = new NotificationCompat.Builder(MainActivity.this, CHANNEL_ID)
-//                    .setSmallIcon(R.mipmap.ic_launcher)
-//                    .setContentTitle("交易通知")
-//                    .setVibrate(new long[]{0, 1000,1000,1000})
-//                    .setContentText(notificationContent)
-//                    .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-//                    .setContentIntent(pendingIntent)
-//                    .setAutoCancel(true);
-//
-//            NotificationManagerCompat notificationManager = NotificationManagerCompat.from(MainActivity.this);
-//            // notificationId is a unique int for each notification that you must define
-//            notificationManager.notify(notificationId, builder.build());
-//        }
-
         /**
          * 更新最上方的买卖点，并发出通知
          * @param dealString

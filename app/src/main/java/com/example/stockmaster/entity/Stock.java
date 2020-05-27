@@ -9,14 +9,14 @@ import com.example.stockmaster.entity.k.K30Minutes;
 import com.example.stockmaster.entity.k.K5Minutes;
 import com.example.stockmaster.entity.k.K60Minutes;
 import com.example.stockmaster.entity.k.KBase;
-import com.example.stockmaster.entity.ma.MaState;
-import com.example.stockmaster.util.MaCalculater;
-import com.example.stockmaster.util.StockAnalyser;
+import com.example.stockmaster.util.ShortSwingAnalyser;
 
 import org.xutils.db.annotation.Column;
 import org.xutils.db.annotation.Table;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 @Table(name = "stock")
@@ -40,11 +40,17 @@ public class Stock {
     @Column(name = "ma250")
     public float ma250;
 
-    public KBase mKBase = new KBase();
-    public K5Minutes mK5Minutes = new K5Minutes();
-    public K15Minutes mK15Minutes = new K15Minutes();
-    public K30Minutes mK30Minutes = new K30Minutes();
-    public K60Minutes mK60Minutes = new K60Minutes();
+//    @Column(name = "k5_minutes_satisfied_time")
+//    public Date k5MinutesSatisfiedTime;
+//
+//    @Column(name = "one_day_minutes_satisfied_time")
+//    public Date oneDayMinutesSatisfiedTime;
+
+//    public K5Minutes mK5Minutes = new K5Minutes();
+//    public K15Minutes mK15Minutes = new K15Minutes();
+//    public K30Minutes mK30Minutes = new K30Minutes();
+//    public K60Minutes mK60Minutes = new K60Minutes();
+    public List<KBase> mKBaseList;
 
     public boolean isReceivedTodayData = false; //在为true时，才可以接收分钟的数据
     public List<StockPrice> todayStockPriceList = new ArrayList<>();
@@ -56,17 +62,18 @@ public class Stock {
     private List<StockPrice> mKeyStockPriceList = new ArrayList<>();
     public enum DealType{SALE, BUY, NULL}
     private DealType previousDealType = DealType.NULL;
-    StockAnalyser mStockAnalyser;
+    ShortSwingAnalyser mShortSwingAnalyser;
     private List<Float> previousFourDayPriceList;
     public Stock(){
 
     }
 
-    public Stock(StockAnalyser stockAnalyser, String id, String name, int monitorType){
+    public Stock(ShortSwingAnalyser shortSwingAnalyser, String id, String name, int monitorType){
         this.id = id;
         this.name = name;
-        mStockAnalyser = stockAnalyser;
+        mShortSwingAnalyser = shortSwingAnalyser;
         this.monitorType = monitorType;
+        this.mKBaseList = Arrays.asList(new K5Minutes(id), new K15Minutes(id), new K30Minutes(id), new K60Minutes(id));
     }
 
     /**
@@ -247,21 +254,30 @@ public class Stock {
      * 添加关键价格列表
      * @param keyStockPriceList
      */
-    public void setKeyStockPriceList(List<StockPrice> keyStockPriceList) {
-//        mKBase.setKeyStockPriceList(keyStockPriceList);
+    public boolean setKeyStockPriceList(List<StockPrice> keyStockPriceList) {
         Log.d("lwd", "stockId:" + getId());
-        Log.d("lwd", "5分钟K线");
-        List<StockPrice> qualified5PricePoint = mK5Minutes.setKeyStockPriceList(keyStockPriceList);
-        printQualifiedTimePoint(qualified5PricePoint, 5);
-        Log.d("lwd", "15分钟K线");
-        List<StockPrice> qualified15PricePoint = mK15Minutes.setKeyStockPriceList(keyStockPriceList);
-        printQualifiedTimePoint(qualified15PricePoint, 15);
-        Log.d("lwd", "30分钟K线");
-        List<StockPrice> qualified30PricePoint = mK30Minutes.setKeyStockPriceList(keyStockPriceList);
-        printQualifiedTimePoint(qualified30PricePoint, 30);
-        Log.d("lwd", "60分钟K线");
-        List<StockPrice> qualified60PricePoint = mK60Minutes.setKeyStockPriceList(keyStockPriceList);
-        printQualifiedTimePoint(qualified60PricePoint, 60);
+        for(KBase kBase : mKBaseList){
+            kBase.setKeyStockPriceList(keyStockPriceList);
+        }
+
+//        Log.d("lwd", "5分钟K线");
+//        List<StockPrice> qualified5PricePoint = mK5Minutes.setKeyStockPriceList(keyStockPriceList);
+//        printQualifiedTimePoint(qualified5PricePoint, 5);
+//        Log.d("lwd", "15分钟K线");
+//        List<StockPrice> qualified15PricePoint = mK15Minutes.setKeyStockPriceList(keyStockPriceList);
+//        printQualifiedTimePoint(qualified15PricePoint, 15);
+//        Log.d("lwd", "30分钟K线");
+//        List<StockPrice> qualified30PricePoint = mK30Minutes.setKeyStockPriceList(keyStockPriceList);
+//        printQualifiedTimePoint(qualified30PricePoint, 30);
+//        Log.d("lwd", "60分钟K线");
+//        List<StockPrice> qualified60PricePoint = mK60Minutes.setKeyStockPriceList(keyStockPriceList);
+//        printQualifiedTimePoint(qualified60PricePoint, 60);
+
+//        if(qualified30PricePoint.size() > 0){
+//            return true;
+//        }
+
+        return false;
     }
 
     /**
