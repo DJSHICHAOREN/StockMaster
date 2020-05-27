@@ -73,8 +73,9 @@ public class StockManager {
             }
             Stock stock = new Stock(stockId, "", isMonitorBuyPoint ? 1 : 0);
             // 将股票实例存入数据库
-            DBUtil.saveStock(stock);
+            stock = DBUtil.saveStock(stock);
             mStockList.add(stock);
+            Log.d("lwd", "添加stockId:" + stockId);
             mStockIdList.add(stockId);
 
         }

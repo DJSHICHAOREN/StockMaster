@@ -253,6 +253,10 @@ public class Stock {
      * @param keyStockPriceList
      */
     public boolean setKeyStockPriceList(List<StockPrice> keyStockPriceList) {
+        // 由于在数据库中读取的stock不会经过构造函数，所以mKBaseList可能为空
+        if(mKBaseList == null){
+            this.mKBaseList = Arrays.asList(new K5Minutes(id), new K15Minutes(id), new K30Minutes(id), new K60Minutes(id));
+        }
         for(KBase kBase : mKBaseList){
             kBase.setKeyStockPriceList(keyStockPriceList);
         }
