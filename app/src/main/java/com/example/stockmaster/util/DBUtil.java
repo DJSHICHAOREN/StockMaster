@@ -2,6 +2,7 @@ package com.example.stockmaster.util;
 
 import com.example.stockmaster.entity.Stock;
 import com.example.stockmaster.entity.StockPrice;
+import com.example.stockmaster.entity.strategy.StrategyAnalyseResult;
 
 import org.xutils.DbManager;
 import org.xutils.ex.DbException;
@@ -135,6 +136,17 @@ public class DBUtil {
 
             }
 
+        } catch (DbException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void saveStrategyAnalyseResult(StrategyAnalyseResult strategyAnalyseResult){
+        try {
+            if(db == null){
+                db = x.getDb(daoConfig);
+            }
+            db.saveOrUpdate(strategyAnalyseResult);
         } catch (DbException e) {
             e.printStackTrace();
         }

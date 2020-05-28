@@ -8,12 +8,12 @@ import java.util.List;
 
 public class UpEmanativeStrategy extends BaseStrategy {
     private static int STRATEGY_ID = 0;
-    public UpEmanativeStrategy(String stockId, List<MaState> maStateList) {
-        super(STRATEGY_ID, stockId, maStateList);
+    public UpEmanativeStrategy() {
+        super(STRATEGY_ID);
     }
 
     @Override
-    public StrategyAnalyseResult analyse(){
+    public StrategyAnalyseResult analyse(String stockId, List<MaState> maStateList){
         if(maStateList == null || maStateList.size() < 3){
 //            Log.d("lwd", "maStateList为空或者maStateList的长度小于3");
             return null;
@@ -25,6 +25,7 @@ public class UpEmanativeStrategy extends BaseStrategy {
         MaState lastMaState3 = maStateList.get(maStateListLength-3);
 
         if(lastMaState3.getMa30() == 0){
+            isPrintBeginAnalyseTime = true;
             return null;
         }
         // 打印开始信息
@@ -69,7 +70,7 @@ public class UpEmanativeStrategy extends BaseStrategy {
 
         if(isSeriation && isRise && isHorizontalBefore){
             Log.d("lwd", String.format("%s 买他", lastMaState1.getTime()));
-            return new StrategyAnalyseResult(getStockId(), getStrategyId(), lastMaState1.getTime());
+            return new StrategyAnalyseResult(stockId, getStrategyId(), lastMaState1.getTime(), 0);
         }
         return null;
 

@@ -15,13 +15,14 @@ public class KBase {
     public String TIME_POINT_STRING = "";
 
     private List<MaState> maStateList = new ArrayList<>();
-    private MaStateAnalyser maStateAnalyser;
+    private MaStateAnalyser maStateAnalyser = MaStateAnalyser.getInstance();
     private List<StockPrice> qualifiedPricePointList = new ArrayList<>();
     private int mKNum = 0;
+    private String mStockId;
     public KBase(String stockId, String TIME_POINT_STRING, int kNum){
         this.TIME_POINT_STRING = TIME_POINT_STRING;
-        maStateAnalyser = new MaStateAnalyser(stockId, maStateList);
         mKNum = kNum;
+        mStockId = stockId;
     }
 
     /**
@@ -37,7 +38,7 @@ public class KBase {
         // 添加价格列表之后计算均值
         for(int i=MaCalculater.getMinCountedDay(); i<filteredStockPriceList.size(); i++){
             maStateList.add(MaCalculater.calMaState(filteredStockPriceList.subList(0, i)));
-            maStateAnalyser.analyse();
+            maStateAnalyser.analyse(mStockId, maStateList);
         }
     }
 
