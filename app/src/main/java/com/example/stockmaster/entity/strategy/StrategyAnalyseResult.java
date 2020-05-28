@@ -8,6 +8,9 @@ import java.util.Date;
 @Table(name = "StrategyAnalyseResult")
 public class StrategyAnalyseResult {
 
+    @Column(name = "id", isId = true)
+    public String id;
+
     @Column(name = "stockId")
     public String stockId;
 
@@ -20,11 +23,16 @@ public class StrategyAnalyseResult {
     @Column(name = "type")
     public int type; // 类型：购买：0，卖出：1
 
+    public StrategyAnalyseResult(){
+
+    }
+
     public StrategyAnalyseResult(String stockId, int strategyId, Date time, int type){
         this.stockId = stockId;
         this.strategyId = strategyId;
         this.time = time;
         this.type = type;
+        this.id = stockId + "_" + strategyId + "_" + time.toString() + "_" + type;
     }
 
     public String getStockId() {
@@ -49,5 +57,13 @@ public class StrategyAnalyseResult {
 
     public void setTime(Date time) {
         this.time = time;
+    }
+
+    public int getType() {
+        return type;
+    }
+
+    public void setType(int type) {
+        this.type = type;
     }
 }

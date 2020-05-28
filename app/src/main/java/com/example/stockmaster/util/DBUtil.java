@@ -2,6 +2,7 @@ package com.example.stockmaster.util;
 
 import com.example.stockmaster.entity.Stock;
 import com.example.stockmaster.entity.StockPrice;
+import com.example.stockmaster.entity.sina.ResponseResult;
 import com.example.stockmaster.entity.strategy.StrategyAnalyseResult;
 
 import org.xutils.DbManager;
@@ -126,30 +127,33 @@ public class DBUtil {
         return new ArrayList<>();
     }
 
-    public static void clearStockPrice(){
-        try {
-            if(db == null){
-                db = x.getDb(daoConfig);
-            }
-            List<StockPrice> stockPriceList = db.selector(StockPrice.class).findAll();
-            for(StockPrice stockPrice : stockPriceList){
-
-            }
-
-        } catch (DbException e) {
-            e.printStackTrace();
-        }
-    }
 
     public static void saveStrategyAnalyseResult(StrategyAnalyseResult strategyAnalyseResult){
         try {
             if(db == null){
                 db = x.getDb(daoConfig);
             }
-            db.saveOrUpdate(strategyAnalyseResult);
+            db.save(strategyAnalyseResult);
+
         } catch (DbException e) {
             e.printStackTrace();
         }
+    }
+
+    public static List<StrategyAnalyseResult> getStrategyAnalyseResultList(){
+        try {
+            if(db == null){
+                db = x.getDb(daoConfig);
+            }
+            List<StrategyAnalyseResult> strategyAnalyseResultList = db.selector(StrategyAnalyseResult.class).findAll();
+            if(strategyAnalyseResultList == null){
+                return new ArrayList<>();
+            }
+            return strategyAnalyseResultList;
+        } catch (DbException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
 }

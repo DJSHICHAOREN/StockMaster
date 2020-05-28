@@ -4,6 +4,8 @@ import android.util.Log;
 
 import com.example.stockmaster.entity.Stock;
 import com.example.stockmaster.entity.StockPrice;
+import com.example.stockmaster.entity.sina.ResponseResult;
+import com.example.stockmaster.entity.strategy.StrategyAnalyseResult;
 import com.example.stockmaster.service.BrainService;
 import com.example.stockmaster.ui.activity.base.UIManager;
 
@@ -130,9 +132,9 @@ public class StockManager {
         Stock stock = mStockList.get(stockIndex);
         if(stock != null){
             // 初始计算满足条件stock
-            if(stock.setKeyStockPriceList(stockPriceList)){
-                mQualifiedStockList.add(stock);
-            }
+            stock.setKeyStockPriceList(stockPriceList);
+            List<StrategyAnalyseResult> strategyAnalyseResultList = DBUtil.getStrategyAnalyseResultList();
+            Log.d("lwd", "strategyAnalyseResultList的长度：" + strategyAnalyseResultList.size());
 
 //            for(StockPrice stockPrice : stockPriceList){
 //                // 保存价格到数据库

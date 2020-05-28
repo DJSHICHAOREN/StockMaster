@@ -19,8 +19,8 @@ public class MaStateAnalyser {
     }
 
     public void analyse(String stockId, List<MaState> maStateList){
-        for(BaseStrategy baseStrategy : mBaseStrategyList){
-            StrategyAnalyseResult strategyAnalyseResult = baseStrategy.analyse(stockId, maStateList);
+        for(BaseStrategy strategy : mBaseStrategyList){
+            StrategyAnalyseResult strategyAnalyseResult = strategy.analyse(stockId, maStateList);
             if(strategyAnalyseResult != null){
                 DBUtil.saveStrategyAnalyseResult(strategyAnalyseResult);
             }
