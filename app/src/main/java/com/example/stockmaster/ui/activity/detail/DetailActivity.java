@@ -8,9 +8,7 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import com.example.stockmaster.R;
-import com.example.stockmaster.entity.Stock;
 import com.example.stockmaster.ui.adapter.DealListAdapter;
-import com.example.stockmaster.ui.adapter.StockListAdapter;
 import com.example.stockmaster.util.StockManager;
 
 import butterknife.BindView;

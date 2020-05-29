@@ -26,7 +26,7 @@ import com.example.stockmaster.R;
 import com.example.stockmaster.service.BrainService;
 import com.example.stockmaster.ui.activity.base.UIManager;
 import com.example.stockmaster.ui.activity.recommand.RecommandActivity;
-import com.example.stockmaster.ui.adapter.StockListAdapter;
+import com.example.stockmaster.ui.adapter.PriceMonitorAdapter;
 import com.example.stockmaster.util.StockManager;
 
 import butterknife.BindView;
@@ -42,7 +42,7 @@ public class PriceMonitorFragment extends Fragment {
     public RecyclerView rv_stock_list;
 
 
-    private RecyclerView.Adapter mStockListAdapter;
+    private RecyclerView.Adapter mPriceMonitorAdapter;
     private BrainService mBrainService;
 
     private Handler handler = new Handler(){
@@ -59,11 +59,11 @@ public class PriceMonitorFragment extends Fragment {
                 case 2:{
                     Bundle bundle = msg.getData();
                     int itemIndex = bundle.getInt("itemIndex");
-                    mStockListAdapter.notifyItemChanged(itemIndex);
+                    mPriceMonitorAdapter.notifyItemChanged(itemIndex);
                     break;
                 }
                 case 3:{
-                    mStockListAdapter.notifyDataSetChanged();
+                    mPriceMonitorAdapter.notifyDataSetChanged();
                     break;
                 }
             }
@@ -78,13 +78,12 @@ public class PriceMonitorFragment extends Fragment {
         ButterKnife.bind(this, view);
 
         // 创建工具实例
-        StockManager.setMainActivityUIManager(new MainActivityUIManager());
+        StockManager.setPriceMonitorFragmentUIManager(new PriceMonitorFragmentUIManager());
         // 设置RecyclerView的布局
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
         rv_stock_list.setLayoutManager(linearLayoutManager);
-        mStockListAdapter = new StockListAdapter(StockManager.getStockList(), this);
-        rv_stock_list.setAdapter(mStockListAdapter);
-
+        mPriceMonitorAdapter = new PriceMonitorAdapter(StockManager.getStockList(), this);
+        rv_stock_list.setAdapter(mPriceMonitorAdapter);
 
         return view;
     }
@@ -114,10 +113,10 @@ public class PriceMonitorFragment extends Fragment {
 
 
 
-    public class MainActivityUIManager extends UIManager {
+    public class PriceMonitorFragmentUIManager extends UIManager {
         private String CHANNEL_ID = "STOCK_MASTER_CHANNEL";
 //        private int notificationId = 0;
-        public MainActivityUIManager(){
+        public PriceMonitorFragmentUIManager(){
             createNotificationChannel();
         }
 

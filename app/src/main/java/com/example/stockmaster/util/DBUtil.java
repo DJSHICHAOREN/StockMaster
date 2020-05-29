@@ -140,7 +140,7 @@ public class DBUtil {
         }
     }
 
-    public static List<StrategyAnalyseResult> getStrategyAnalyseResultList(){
+    public static List<StrategyAnalyseResult> getAllStrategyAnalyseResult(){
         try {
             if(db == null){
                 db = x.getDb(daoConfig);
@@ -149,6 +149,22 @@ public class DBUtil {
             if(strategyAnalyseResultList == null){
                 return new ArrayList<>();
             }
+            return strategyAnalyseResultList;
+        } catch (DbException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public static List<StrategyAnalyseResult> getStrategyAnalyseResultByStockId(String stockId){
+        try {
+            if(db == null){
+                db = x.getDb(daoConfig);
+            }
+            List<StrategyAnalyseResult> strategyAnalyseResultList = db.selector(StrategyAnalyseResult.class)
+                    .where("stockId", "=", stockId)
+                    .findAll();
+
             return strategyAnalyseResultList;
         } catch (DbException e) {
             e.printStackTrace();

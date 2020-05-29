@@ -15,7 +15,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.stockmaster.R;
 import com.example.stockmaster.entity.Stock;
 import com.example.stockmaster.ui.activity.detail.DetailActivity;
-import com.example.stockmaster.ui.activity.main.MainActivity;
 import com.example.stockmaster.ui.fragment.price_monitor.PriceMonitorFragment;
 import com.example.stockmaster.util.DBUtil;
 
@@ -24,10 +23,10 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class StockListAdapter extends RecyclerView.Adapter<StockListAdapter.StockListViewHolder> {
+public class PriceMonitorAdapter extends RecyclerView.Adapter<PriceMonitorAdapter.StockListViewHolder> {
     private List<Stock> mStockList;
     private PriceMonitorFragment mPriceMonitorFragment;
-    public StockListAdapter(List<Stock> stockList, PriceMonitorFragment priceMonitorFragment){
+    public PriceMonitorAdapter(List<Stock> stockList, PriceMonitorFragment priceMonitorFragment){
         mStockList = stockList;
         mPriceMonitorFragment = priceMonitorFragment;
         Log.d("lwd", mStockList.toString());
@@ -35,15 +34,15 @@ public class StockListAdapter extends RecyclerView.Adapter<StockListAdapter.Stoc
 
     @NonNull
     @Override
-    public StockListAdapter.StockListViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public PriceMonitorAdapter.StockListViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         // mLayoutView
-        View mLayoutView = LayoutInflater.from(parent.getContext()).inflate(R.layout.stock_list_item, parent, false);
+        View mLayoutView = LayoutInflater.from(parent.getContext()).inflate(R.layout.monitor_price_stock_list_item, parent, false);
         StockListViewHolder stockListViewHolder = new StockListViewHolder(mLayoutView);
         return stockListViewHolder;
     }
 
     @Override
-    public void onBindViewHolder(@NonNull StockListAdapter.StockListViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull PriceMonitorAdapter.StockListViewHolder holder, int position) {
         final Stock stock = mStockList.get(position);
         holder.tv_stock_id.setText(stock.getId());
         holder.tv_stock_name.setText(stock.getName());

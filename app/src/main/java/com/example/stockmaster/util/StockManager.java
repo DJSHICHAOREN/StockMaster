@@ -4,7 +4,6 @@ import android.util.Log;
 
 import com.example.stockmaster.entity.Stock;
 import com.example.stockmaster.entity.StockPrice;
-import com.example.stockmaster.entity.sina.ResponseResult;
 import com.example.stockmaster.entity.strategy.StrategyAnalyseResult;
 import com.example.stockmaster.service.BrainService;
 import com.example.stockmaster.ui.activity.base.UIManager;
@@ -21,7 +20,8 @@ public class StockManager {
     private static List<String> mStockIdList = new ArrayList<String>();
     private  static List<Stock> mQualifiedStockList = new ArrayList<>();
     private static ShortSwingAnalyser mShortSwingAnalyser = new ShortSwingAnalyser();
-    private static UIManager mMainActivityUIManager;
+    private static UIManager mPriceMonitorUIManager;
+    private static UIManager mStockMonitorUIManager;
     private static BrainService mBrainService;
     private static ArrayList<String> DEFAULT_STOCK_ID_LIST = new ArrayList<String>(Arrays.asList("hk01349", "hk03709", "hk01622", "hk01565", "hk02606", "hk09926", "hk02400", "hk06060", "hk09969","hk00981","hk00302", "hk01055", "hk06186", "hk01610", "hk00772", "hk06855", "hk03319", "hk09916", "hk01941", "hk01873", "hk02013", "hk03331", "hk00853", "hk00777", "hk00826", "hk09928", "hk02018", "hk06919", "hk01745", "hk06185", "hk09966", "hk03759", "hk01501", "hk01300", "hk01691", "hk09922", "hk00175", "hk00589", "hk01525", "hk01347"));
 //    private static ArrayList<String> STOCK_ID_LIST = new ArrayList<String>(Arrays.asList("hk09926", "hk02400", "hk06060", "hk00589"));
@@ -42,8 +42,12 @@ public class StockManager {
         mBrainService = brainService;
     }
 
-    public static void setMainActivityUIManager(UIManager mainActivityUIManager) {
-        mMainActivityUIManager = mainActivityUIManager;
+    public static void setPriceMonitorFragmentUIManager(UIManager mainActivityUIManager) {
+        mPriceMonitorUIManager = mainActivityUIManager;
+    }
+
+    public static void setStockMonitorFragmentUIManager(UIManager stockMonitorUIManager){
+        mStockMonitorUIManager = stockMonitorUIManager;
     }
 
     /**
@@ -81,8 +85,8 @@ public class StockManager {
             mStockIdList.add(stockId);
 
         }
-        if(mMainActivityUIManager != null){
-            mMainActivityUIManager.notifyStockListDateSetChanged();
+        if(mPriceMonitorUIManager != null){
+            mPriceMonitorUIManager.notifyStockListDateSetChanged();
         }
     }
 
@@ -133,9 +137,12 @@ public class StockManager {
         if(stock != null){
             // 初始计算满足条件stock
             stock.setKeyStockPriceList(stockPriceList);
-            List<StrategyAnalyseResult> strategyAnalyseResultList = DBUtil.getStrategyAnalyseResultList();
+            List<StrategyAnalyseResult> strategyAnalyseResultList = DBUtil.getStrategyAnalyseResultByStockId(stock.getId());
             Log.d("lwd", "strategyAnalyseResultList的长度：" + strategyAnalyseResultList.size());
-
+            if(strategyAnalyseResultList.size() > 0){
+                mQualifiedStockList.add(stock);
+                mStockMonitorUIManager.notifyStockListDateSetChanged();
+            }
 //            for(StockPrice stockPrice : stockPriceList){
 //                // 保存价格到数据库
 //                DBUtil.saveStockPrice(stockPrice);
@@ -204,10 +211,10 @@ public class StockManager {
      */
     public static void addBuyAndSaleStockPrice(Stock stock, StockPrice stockPrice, Stock.DealType dealType){
         if(stock.addBuyAndSaleStockPrice(stockPrice, dealType)){
-            if(mMainActivityUIManager != null){
-                mMainActivityUIManager.refreshUIWhenGetNewDealPoint(stock.getName() + " " +stockPrice.toStringWithId(),
+            if(mPriceMonitorUIManager != null){
+                mPriceMonitorUIManager.refreshUIWhenGetNewDealPoint(stock.getName() + " " +stockPrice.toStringWithId(),
                         stockPrice.getNotificationId(), stockPrice.getNotificationContent());
-                mMainActivityUIManager.notifyStockListItemChanged(mStockIdList.indexOf(stock.id));
+                mPriceMonitorUIManager.notifyStockListItemChanged(mStockIdList.indexOf(stock.id));
             }
             // 若为请求的分时价格，则为实时的，则发送通知
             if(mBrainService != null
@@ -221,6 +228,10 @@ public class StockManager {
                 }
             }
         }
+    }
+
+    public static List<Stock> getQualifiedStockList() {
+        return mQualifiedStockList;
     }
 
     public static List<Stock> getLineUpStocks(){
