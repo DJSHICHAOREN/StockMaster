@@ -139,10 +139,14 @@ public class StockManager {
             stock.setKeyStockPriceList(stockPriceList);
             List<StrategyAnalyseResult> strategyAnalyseResultList = DBUtil.getStrategyAnalyseResultByStockId(stock.getId());
             Log.d("lwd", "strategyAnalyseResultList的长度：" + strategyAnalyseResultList.size());
-            if(strategyAnalyseResultList.size() > 0){
-                mQualifiedStockList.add(stock);
-                mStockMonitorUIManager.notifyStockListDateSetChanged();
+            if(mStockMonitorUIManager != null){
+                if(strategyAnalyseResultList.size() > 0){
+                    stock.setStrategyAnalyseResultList(strategyAnalyseResultList);
+                    mQualifiedStockList.add(stock);
+                    mStockMonitorUIManager.notifyStockListDateSetChanged();
+                }
             }
+
 //            for(StockPrice stockPrice : stockPriceList){
 //                // 保存价格到数据库
 //                DBUtil.saveStockPrice(stockPrice);

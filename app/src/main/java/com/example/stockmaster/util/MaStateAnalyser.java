@@ -18,9 +18,9 @@ public class MaStateAnalyser {
         mBaseStrategyList.add(new UpEmanativeStrategy());
     }
 
-    public void analyse(String stockId, List<MaState> maStateList){
+    public void analyse(String stockId, List<MaState> maStateList, int kLevel){
         for(BaseStrategy strategy : mBaseStrategyList){
-            StrategyAnalyseResult strategyAnalyseResult = strategy.analyse(stockId, maStateList);
+            StrategyAnalyseResult strategyAnalyseResult = strategy.analyse(stockId, maStateList, kLevel);
             if(strategyAnalyseResult != null){
                 DBUtil.saveStrategyAnalyseResult(strategyAnalyseResult);
             }

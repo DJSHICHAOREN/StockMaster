@@ -23,16 +23,20 @@ public class StrategyAnalyseResult {
     @Column(name = "type")
     public int type; // 类型：购买：0，卖出：1
 
+    @Column(name = "kLevel")
+    public int kLevel;
+
     public StrategyAnalyseResult(){
 
     }
 
-    public StrategyAnalyseResult(String stockId, int strategyId, Date time, int type){
+    public StrategyAnalyseResult(String stockId, int strategyId, int kLevel, Date time, int type){
         this.stockId = stockId;
         this.strategyId = strategyId;
         this.time = time;
         this.type = type;
         this.id = stockId + "_" + strategyId + "_" + time.toString() + "_" + type;
+        this.kLevel = kLevel;
     }
 
     public String getStockId() {
@@ -65,5 +69,19 @@ public class StrategyAnalyseResult {
 
     public void setType(int type) {
         this.type = type;
+    }
+
+    public int getkLevel() {
+        return kLevel;
+    }
+
+    public void setkLevel(int kLevel) {
+        this.kLevel = kLevel;
+    }
+
+    @Override
+    public String toString(){
+        String optionString = this.type == 0 ? "买点" : "卖点";
+        return String.format("%dK线%s，时间：%s", this.kLevel, optionString, this.time.toString().substring(0, this.time.toString().indexOf("GMT")));
     }
 }

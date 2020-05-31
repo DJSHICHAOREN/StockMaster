@@ -13,7 +13,7 @@ public class UpEmanativeStrategy extends BaseStrategy {
     }
 
     @Override
-    public StrategyAnalyseResult analyse(String stockId, List<MaState> maStateList){
+    public StrategyAnalyseResult analyse(String stockId, List<MaState> maStateList, int kLevel){
         if(maStateList == null || maStateList.size() < 3){
 //            Log.d("lwd", "maStateList为空或者maStateList的长度小于3");
             return null;
@@ -70,7 +70,7 @@ public class UpEmanativeStrategy extends BaseStrategy {
 
         if(isSeriation && isRise && isHorizontalBefore){
             Log.d("lwd", String.format("%s 买他", lastMaState1.getTime()));
-            return new StrategyAnalyseResult(stockId, getStrategyId(), lastMaState1.getTime(), 0);
+            return new StrategyAnalyseResult(stockId, getStrategyId(), kLevel, lastMaState1.getTime(), 0);
         }
         return null;
 

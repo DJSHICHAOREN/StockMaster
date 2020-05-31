@@ -17,11 +17,11 @@ public class KBase {
     private List<MaState> maStateList = new ArrayList<>();
     private MaStateAnalyser maStateAnalyser = MaStateAnalyser.getInstance();
     private List<StockPrice> qualifiedPricePointList = new ArrayList<>();
-    private int mKNum = 0;
+    private int mKLevel = 0; // K线的级别
     private String mStockId;
-    public KBase(String stockId, String TIME_POINT_STRING, int kNum){
+    public KBase(String stockId, String TIME_POINT_STRING, int kLevel){
         this.TIME_POINT_STRING = TIME_POINT_STRING;
-        mKNum = kNum;
+        mKLevel = kLevel;
         mStockId = stockId;
     }
 
@@ -34,11 +34,11 @@ public class KBase {
             Log.e("lwd", "keyStockPriceList 为null");
         }
         List<StockPrice> filteredStockPriceList = filterKeyStockPrice(keyStockPriceList);
-        Log.d("lwd", String.format("%d分钟K线分析", mKNum));
+        Log.d("lwd", String.format("%d分钟K线分析", mKLevel));
         // 添加价格列表之后计算均值
         for(int i=MaCalculater.getMinCountedDay(); i<filteredStockPriceList.size(); i++){
             maStateList.add(MaCalculater.calMaState(filteredStockPriceList.subList(0, i)));
-            maStateAnalyser.analyse(mStockId, maStateList);
+            maStateAnalyser.analyse(mStockId, maStateList, mKLevel);
         }
     }
 

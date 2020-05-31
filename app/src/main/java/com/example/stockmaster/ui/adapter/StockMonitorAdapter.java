@@ -1,5 +1,6 @@
 package com.example.stockmaster.ui.adapter;
 
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,11 +9,13 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.stockmaster.R;
 import com.example.stockmaster.entity.Stock;
 import com.example.stockmaster.ui.activity.detail.DetailActivity;
+import com.example.stockmaster.ui.activity.detail.KMADetailActivity;
 import com.example.stockmaster.util.DBUtil;
 
 import java.util.List;
@@ -22,9 +25,11 @@ import butterknife.ButterKnife;
 
 public class StockMonitorAdapter extends RecyclerView.Adapter<StockMonitorAdapter.StockListViewHolder> {
     private List<Stock> mStockList;
+    private Fragment mStockMonitorFragment;
 
-    public StockMonitorAdapter(List<Stock> stockList){
+    public StockMonitorAdapter(List<Stock> stockList, Fragment stockMonitorFragment){
         mStockList = stockList;
+        mStockMonitorFragment = stockMonitorFragment;
     }
     @NonNull
     @Override
@@ -39,7 +44,21 @@ public class StockMonitorAdapter extends RecyclerView.Adapter<StockMonitorAdapte
         final Stock stock = mStockList.get(position);
         holder.tv_stock_id.setText(stock.getId());
         holder.tv_stock_name.setText(stock.getName());
-        holder.tv_deal_tip.setText(stock.getRecentDealTips());
+        holder.tv_deal_tip.setText(stock.getStrategyAnalyseDescribeString());
+        holder.ll_stock_item.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+//                Intent intent = new Intent(mStockMonitorFragment.getActivity(), KMADetailActivity.class);
+//                intent.putExtra("stockId", mStockList.get(position).id);
+//                mStockMonitorFragment.startActivity(intent);
+
+                AlertDialog alertDialog1 = new AlertDialog.Builder(mStockMonitorFragment.getContext())
+                        .setTitle("全部建议")//标题
+                        .setMessage(stock.getStrategyAnalyseDescribeString())//内容
+                        .create();
+                alertDialog1.show();
+            }
+        });
     }
 
     @Override

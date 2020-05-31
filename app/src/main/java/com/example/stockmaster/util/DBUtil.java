@@ -163,6 +163,7 @@ public class DBUtil {
             }
             List<StrategyAnalyseResult> strategyAnalyseResultList = db.selector(StrategyAnalyseResult.class)
                     .where("stockId", "=", stockId)
+                    .and("kLevel", ">=", 30)
                     .findAll();
 
             return strategyAnalyseResultList;

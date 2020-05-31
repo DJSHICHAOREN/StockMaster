@@ -3,7 +3,7 @@
     android:id="@+id/ll_stock_item"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="60dp">
+    android:layout_height="100dp">
 
     <Button
         android:id="@+id/btn_monitor_type"
@@ -46,9 +46,11 @@
         <TextView
             android:id="@+id/tv_deal_tip"
             android:layout_width="wrap_content"
-            android:layout_height="20dp"
+            android:layout_height="60dp"
             android:layout_below="@id/ll_stock_id_and_name"
-            android:text="买点，时间：9:43:0，价格：13.23"></TextView>
+            android:text="买点，时间：9:43:0，价格：13.23"
+            android:scrollbars="vertical"></TextView>
+
 
     </LinearLayout>
 

@@ -11,7 +11,7 @@ public abstract class BaseStrategy {
         this.strategyId = strategyId;
     }
 
-    public abstract StrategyAnalyseResult analyse(String stockId, List<MaState> maStateList);
+    public abstract StrategyAnalyseResult analyse(String stockId, List<MaState> maStateList, int kLevel);
 
     public int getStrategyId() {
         return strategyId;

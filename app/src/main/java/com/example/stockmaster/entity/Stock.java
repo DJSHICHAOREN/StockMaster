@@ -9,6 +9,7 @@ import com.example.stockmaster.entity.k.K30Minutes;
 import com.example.stockmaster.entity.k.K5Minutes;
 import com.example.stockmaster.entity.k.K60Minutes;
 import com.example.stockmaster.entity.k.KBase;
+import com.example.stockmaster.entity.strategy.StrategyAnalyseResult;
 import com.example.stockmaster.util.ShortSwingAnalyser;
 
 import org.xutils.db.annotation.Column;
@@ -40,17 +41,8 @@ public class Stock {
     @Column(name = "ma250")
     public float ma250;
 
-//    @Column(name = "k5_minutes_satisfied_time")
-//    public Date k5MinutesSatisfiedTime;
-//
-//    @Column(name = "one_day_minutes_satisfied_time")
-//    public Date oneDayMinutesSatisfiedTime;
-
-//    public K5Minutes mK5Minutes = new K5Minutes();
-//    public K15Minutes mK15Minutes = new K15Minutes();
-//    public K30Minutes mK30Minutes = new K30Minutes();
-//    public K60Minutes mK60Minutes = new K60Minutes();
     public List<KBase> mKBaseList;
+    public List<StrategyAnalyseResult> mStrategyAnalyseResultList;
 
     public boolean isReceivedTodayData = false; //在为true时，才可以接收分钟的数据
     public List<StockPrice> todayStockPriceList = new ArrayList<>();
@@ -261,23 +253,6 @@ public class Stock {
             kBase.setKeyStockPriceList(keyStockPriceList);
         }
 
-//        Log.d("lwd", "5分钟K线");
-//        List<StockPrice> qualified5PricePoint = mK5Minutes.setKeyStockPriceList(keyStockPriceList);
-//        printQualifiedTimePoint(qualified5PricePoint, 5);
-//        Log.d("lwd", "15分钟K线");
-//        List<StockPrice> qualified15PricePoint = mK15Minutes.setKeyStockPriceList(keyStockPriceList);
-//        printQualifiedTimePoint(qualified15PricePoint, 15);
-//        Log.d("lwd", "30分钟K线");
-//        List<StockPrice> qualified30PricePoint = mK30Minutes.setKeyStockPriceList(keyStockPriceList);
-//        printQualifiedTimePoint(qualified30PricePoint, 30);
-//        Log.d("lwd", "60分钟K线");
-//        List<StockPrice> qualified60PricePoint = mK60Minutes.setKeyStockPriceList(keyStockPriceList);
-//        printQualifiedTimePoint(qualified60PricePoint, 60);
-
-//        if(qualified30PricePoint.size() > 0){
-//            return true;
-//        }
-
     }
 
     /**
@@ -346,4 +321,25 @@ public class Stock {
     public void setReceivedTodayData(boolean receivedTodayData) {
         isReceivedTodayData = receivedTodayData;
     }
+
+    public List<StrategyAnalyseResult> getStrategyAnalyseResultList() {
+        return mStrategyAnalyseResultList;
+    }
+
+    public void setStrategyAnalyseResultList(List<StrategyAnalyseResult> mStrategyAnalyseResultList) {
+        this.mStrategyAnalyseResultList = mStrategyAnalyseResultList;
+    }
+
+    public String getStrategyAnalyseDescribeString(){
+        if(this.mStrategyAnalyseResultList == null){
+            return "没有信息";
+        }
+        String resultString = "";
+        for(StrategyAnalyseResult strategyAnalyseResult : this.mStrategyAnalyseResultList){
+            resultString += strategyAnalyseResult.toString() + "\n";
+        }
+        return resultString;
+
+    }
+
 }
