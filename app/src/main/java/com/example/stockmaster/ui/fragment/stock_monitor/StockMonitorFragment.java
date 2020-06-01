@@ -46,7 +46,7 @@ public class StockMonitorFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_stock_monitor, container, false);
         ButterKnife.bind(this, view);
 
-        StockManager.setStockMonitorFragmentUIManager(new PriceMonitorFragmentUIManager());
+        StockManager.setStockMonitorFragmentUIManager(new StockMonitorFragmentUIManager());
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
         rv_stock_list.setLayoutManager(linearLayoutManager);
@@ -57,7 +57,7 @@ public class StockMonitorFragment extends Fragment {
         return view;
     }
 
-    public class PriceMonitorFragmentUIManager extends UIManager {
+    public class StockMonitorFragmentUIManager extends UIManager {
         public void notifyStockListDateSetChanged(){
             Message notifyListUpdateMsg = Message.obtain();
             notifyListUpdateMsg.what = 1;

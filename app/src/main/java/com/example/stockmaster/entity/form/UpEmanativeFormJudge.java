@@ -77,13 +77,13 @@ public class UpEmanativeFormJudge extends BaseFormJudge {
                                 isSeriation = true;
                                 isRise = true;
                             }
-                        }
-                        else{
-                            if(lastMaState1.getMa30() > lastMaState1.getMa60()
-                            && lastMaState1.getMa60() > lastMaState2.getMa60()){
-                                if(kLevel == 5){
-                                    isSeriation = true;
-                                    isRise = true;
+                            else{
+                                if(lastMaState1.getMa30() > lastMaState1.getMa60()
+                                            && lastMaState1.getMa60() > lastMaState2.getMa60()){
+                                        if(kLevel == 5){
+                                            isSeriation = true;
+                                            isRise = true;
+                                        }
                                 }
                             }
                         }
@@ -122,9 +122,8 @@ public class UpEmanativeFormJudge extends BaseFormJudge {
 
         if(isSeriation && isRise){
             Log.d("lwd", String.format("%s 买他", lastMaState1.getTime()));
-            return new StockForm(stockId, getFormId(), kLevel, lastMaState1.getTime(), 0);
+            return new StockForm(stockId, getFormId(), kLevel, lastMaState1.getTime(), 0, lastMaState1.getPrice());
         }
         return null;
-
     }
 }

@@ -37,7 +37,7 @@ public class MainActivity extends AppCompatActivity {
         vp_monitor_panel.setAdapter(monitorPanelAdapter);
 
         // 载入股票列表
-        StockManager.loadStocks();
+        StockManager.initStockManager();
 
         // 开启service
         Intent intent = new Intent(this, BrainService.class);

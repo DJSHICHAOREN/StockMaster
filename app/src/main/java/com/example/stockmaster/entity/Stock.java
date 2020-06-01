@@ -10,6 +10,7 @@ import com.example.stockmaster.entity.k.K5Minutes;
 import com.example.stockmaster.entity.k.K60Minutes;
 import com.example.stockmaster.entity.k.KBase;
 import com.example.stockmaster.entity.form.StockForm;
+import com.example.stockmaster.entity.strategy.StrategyAnalyseResult;
 
 import org.xutils.db.annotation.Column;
 import org.xutils.db.annotation.Table;
@@ -40,7 +41,7 @@ public class Stock {
     public float ma250;
 
     public List<KBase> mKBaseList;
-    public List<StockForm> mStockFormList;
+    public List<StrategyAnalyseResult> mStrategyAnalyseResultList;
 
     public boolean isReceivedTodayData = false; //在为true时，才可以接收分钟的数据
     public List<StockPrice> todayStockPriceList = new ArrayList<>();
@@ -320,21 +321,21 @@ public class Stock {
         isReceivedTodayData = receivedTodayData;
     }
 
-    public List<StockForm> getStrategyAnalyseResultList() {
-        return mStockFormList;
+    public List<StrategyAnalyseResult> getStrategyAnalyseResultList() {
+        return mStrategyAnalyseResultList;
     }
 
-    public void setStrategyAnalyseResultList(List<StockForm> mStockFormList) {
-        this.mStockFormList = mStockFormList;
+    public void setStrategyAnalyseResultList(List<StrategyAnalyseResult> mStockFormList) {
+        this.mStrategyAnalyseResultList = mStockFormList;
     }
 
     public String getStrategyAnalyseDescribeString(){
-        if(this.mStockFormList == null){
+        if(this.mStrategyAnalyseResultList == null){
             return "没有信息";
         }
         String resultString = "";
-        for(StockForm stockForm : this.mStockFormList){
-            resultString += stockForm.toString() + "\n";
+        for(StrategyAnalyseResult strategyAnalyseResult : this.mStrategyAnalyseResultList){
+            resultString += strategyAnalyseResult.toString() + "\n";
         }
         return resultString;
 

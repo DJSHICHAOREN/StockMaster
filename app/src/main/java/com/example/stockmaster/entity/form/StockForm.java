@@ -26,17 +26,20 @@ public class StockForm {
     @Column(name = "kLevel")
     public int kLevel;
 
+    @Column(name = "price")
+    public float price;
+
     public StockForm(){
 
     }
 
-    public StockForm(String stockId, int formId, int kLevel, Date time, int type){
+    public StockForm(String stockId, int formId, int kLevel, Date time, int type, float price){
         this.stockId = stockId;
         this.formId = formId;
         this.time = time;
         this.type = type;
-        this.id = stockId + "_" + formId + "_" + time.toString() + "_" + type;
         this.kLevel = kLevel;
+        this.price = price;
     }
 
     public String getStockId() {
@@ -77,6 +80,14 @@ public class StockForm {
 
     public void setkLevel(int kLevel) {
         this.kLevel = kLevel;
+    }
+
+    public float getPrice() {
+        return price;
+    }
+
+    public void setPrice(float price) {
+        this.price = price;
     }
 
     @Override

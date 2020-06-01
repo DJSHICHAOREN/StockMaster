@@ -132,7 +132,7 @@ public class DBUtil {
             if(db == null){
                 db = x.getDb(daoConfig);
             }
-            db.save(stockForm);
+            db.saveBindingId(stockForm);
 
         } catch (DbException e) {
             e.printStackTrace();

@@ -27,13 +27,16 @@ public class StrategyAnalyseResult {
     @Column(name = "price")
     public float price;
 
-    public Stock stock;
-
-    public StrategyAnalyseResult(Stock stock, float price, int strategyId, Date time, int type) {
-        this.stock = stock;
+    public StrategyAnalyseResult(String stockId, float price, int strategyId, Date time, int type) {
+        this.stockId = stockId;
         this.price = price;
         this.strategyId = strategyId;
         this.time = time;
         this.type = type;
+    }
+
+    @Override
+    public String toString(){
+        return String.format("买点：%s，价格：%f", time, price);
     }
 }

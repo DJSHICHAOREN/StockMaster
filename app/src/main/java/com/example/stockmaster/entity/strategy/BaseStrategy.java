@@ -7,5 +7,8 @@ import java.util.List;
 
 public abstract class BaseStrategy {
     private int strategyId;
-    public abstract List<StrategyAnalyseResult> analyse(List<StockForm> stockFormList, List<Date> dateList);
+    public BaseStrategy(int strategyId){
+        this.strategyId = strategyId;
+    }
+    public abstract List<StrategyAnalyseResult> analyse(List<StockForm> stockFormList, List<Date> dateList, String stockId);
 }
