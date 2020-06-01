@@ -7,11 +7,12 @@ import com.example.stockmaster.BuildConfig;
 
 /**
  * Log类，加个开关.
+ * 控制只在DEBUG模式下显示Log
  */
 public class LogUtil {
 
 	public static boolean DEBUG = BuildConfig.DEBUG; //开关
-	public static final String TAG = "MyStock";
+	public static final String TAG = "lwd";
 
 	public static int v(String msg) {
 		return v(TAG,msg);

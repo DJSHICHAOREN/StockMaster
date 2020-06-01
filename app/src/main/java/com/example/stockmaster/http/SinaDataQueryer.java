@@ -14,11 +14,14 @@ import com.example.stockmaster.entity.masina.MAResponseResult;
 import com.example.stockmaster.http.converter.ResponseStringToObject;
 import com.example.stockmaster.util.MAGenerator;
 import com.example.stockmaster.util.StockManager;
+import com.example.stockmaster.util.TextUtil;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.reflect.TypeToken;
 
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class SinaDataQueryer {
@@ -113,6 +116,7 @@ public class SinaDataQueryer {
                             }
                             if(dayCount == 5){
                                 List<StockPrice> stockPriceList = mResponseStringToObject.sinaTodayPriceResponseToObjectList(response, true, StockPrice.QueryType.FIVEDAY);
+                                List<Date> dateList = TextUtil.convertStringToDateList(response);
                                 StockManager.saveStockPriceList(stockPriceList, stockId);
                                 // 为了求五日均线,得到收盘价列表
 //                                List<Float> fiveDayPriceList = mMaGenerator.generateDayMA5(response);

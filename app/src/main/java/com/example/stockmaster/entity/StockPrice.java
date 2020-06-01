@@ -54,14 +54,19 @@ public class StockPrice {
     }
 
     public void setTime(String timeStr) throws NumberFormatException{
+        this.time = convertStringToDate(timeStr);
+    }
+
+    public static Date convertStringToDate(String timeStr){
         try {
             if(timeStr.contains("/")){
                 timeStr = timeStr.replaceAll("/", "-");
             }
-            this.time = mSimpleDateFormat.parse(timeStr);
+            return mSimpleDateFormat.parse(timeStr);
         } catch (ParseException e) {
             e.printStackTrace();
         }
+        return null;
     }
 
     public void setDealType(Stock.DealType dealType) {

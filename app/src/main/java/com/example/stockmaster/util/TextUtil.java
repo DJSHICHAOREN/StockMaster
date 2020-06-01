@@ -1,6 +1,10 @@
 package com.example.stockmaster.util;
 
+import com.example.stockmaster.entity.StockPrice;
+
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -15,7 +19,7 @@ public class TextUtil {
      * @param regex 正则表达式
      * @return 所有满足正则表达式的字符串
      */
-    public ArrayList<String> getAllSatisfyStrings(String str, String regex) {
+    public static ArrayList<String> getAllSatisfyStrings(String str, String regex) {
         if (str == null || str.isEmpty()) {
             return null;
         }
@@ -30,5 +34,17 @@ public class TextUtil {
             allSatisfyStr.add(matcher.group());
         }
         return allSatisfyStr;
+    }
+
+    public static List<Date> convertStringToDateList(String str){
+        List<String> dateStringList = getAllSatisfyStrings(str,
+                "\"date\":\"\\d*\\-\\d*\\-\\d*\"");
+
+        List<Date> dateList = new ArrayList<>();
+        for(String dateString : dateStringList){
+            dateString = dateString.split(":")[1].replaceAll("\"", "");
+            dateList.add(StockPrice.convertStringToDate(dateString + " " + "09:31:00"));
+        }
+        return dateList;
     }
 }
