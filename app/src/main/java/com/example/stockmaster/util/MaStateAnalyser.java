@@ -1,28 +1,25 @@
 package com.example.stockmaster.util;
 
-import android.util.Log;
-
 import com.example.stockmaster.entity.ma.MaState;
-import com.example.stockmaster.entity.strategy.BaseStrategy;
-import com.example.stockmaster.entity.strategy.StrategyAnalyseResult;
-import com.example.stockmaster.entity.strategy.UpEmanativeStrategy;
+import com.example.stockmaster.entity.form.BaseFormJudge;
+import com.example.stockmaster.entity.form.StockForm;
+import com.example.stockmaster.entity.form.UpEmanativeFormJudge;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 public class MaStateAnalyser {
     private static MaStateAnalyser instance = null;
-    private List<BaseStrategy> mBaseStrategyList = new ArrayList<>();
+    private List<BaseFormJudge> mBaseFormJudgeList = new ArrayList<>();
     public MaStateAnalyser(){
-        mBaseStrategyList.add(new UpEmanativeStrategy());
+        mBaseFormJudgeList.add(new UpEmanativeFormJudge());
     }
 
     public void analyse(String stockId, List<MaState> maStateList, int kLevel){
-        for(BaseStrategy strategy : mBaseStrategyList){
-            StrategyAnalyseResult strategyAnalyseResult = strategy.analyse(stockId, maStateList, kLevel);
-            if(strategyAnalyseResult != null){
-                DBUtil.saveStrategyAnalyseResult(strategyAnalyseResult);
+        for(BaseFormJudge baseFormJudge : mBaseFormJudgeList){
+            StockForm stockForm = baseFormJudge.judge(stockId, maStateList, kLevel);
+            if(stockForm != null){
+                DBUtil.saveStockForm(stockForm);
             }
         }
     }
@@ -33,6 +30,5 @@ public class MaStateAnalyser {
         }
         return instance;
     }
-
 
 }

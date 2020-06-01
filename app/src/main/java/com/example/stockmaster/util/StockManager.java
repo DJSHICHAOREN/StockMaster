@@ -4,7 +4,7 @@ import android.util.Log;
 
 import com.example.stockmaster.entity.Stock;
 import com.example.stockmaster.entity.StockPrice;
-import com.example.stockmaster.entity.strategy.StrategyAnalyseResult;
+import com.example.stockmaster.entity.form.StockForm;
 import com.example.stockmaster.service.BrainService;
 import com.example.stockmaster.ui.activity.base.UIManager;
 
@@ -138,11 +138,11 @@ public class StockManager {
         if(stock != null){
             // 初始计算满足条件stock
             stock.setKeyStockPriceList(stockPriceList);
-            List<StrategyAnalyseResult> strategyAnalyseResultList = DBUtil.getStrategyAnalyseResultByStockId(stock.getId());
-            Log.d("lwd", "strategyAnalyseResultList的长度：" + strategyAnalyseResultList.size());
+            List<StockForm> stockFormList = DBUtil.getStockFormByStockId(stock.getId());
+            Log.d("lwd", "strategyAnalyseResultList的长度：" + stockFormList.size());
             if(mStockMonitorUIManager != null){
-                if(strategyAnalyseResultList.size() > 0){
-                    stock.setStrategyAnalyseResultList(strategyAnalyseResultList);
+                if(stockFormList.size() > 0){
+                    stock.setStrategyAnalyseResultList(stockFormList);
                     mQualifiedStockList.add(stock);
                     mStockMonitorUIManager.notifyStockListDateSetChanged();
                 }

@@ -1,4 +1,4 @@
-package com.example.stockmaster.entity.strategy;
+package com.example.stockmaster.entity.form;
 
 import android.util.Log;
 
@@ -6,10 +6,10 @@ import com.example.stockmaster.entity.ma.MaState;
 
 import java.util.List;
 
-public class UpEmanativeStrategy extends BaseStrategy {
-    private static int STRATEGY_ID = 0;
-    public UpEmanativeStrategy() {
-        super(STRATEGY_ID);
+public class UpEmanativeFormJudge extends BaseFormJudge {
+    private static int FORM_ID = 0;
+    public UpEmanativeFormJudge() {
+        super(FORM_ID);
     }
 
     /**0号交易策略，高确定性
@@ -27,7 +27,7 @@ public class UpEmanativeStrategy extends BaseStrategy {
      * @return
      */
     @Override
-    public StrategyAnalyseResult analyse(String stockId, List<MaState> maStateList, int kLevel){
+    public StockForm judge(String stockId, List<MaState> maStateList, int kLevel){
         if(maStateList == null || maStateList.size() < 3){
 //            Log.d("lwd", "maStateList为空或者maStateList的长度小于3");
             return null;
@@ -43,13 +43,13 @@ public class UpEmanativeStrategy extends BaseStrategy {
         && kLevel == 30 && lastMaState3.getMa20() == 0
         && kLevel == 15 && lastMaState3.getMa30() == 0
         && kLevel == 5 && lastMaState3.getMa60() == 0){
-            isPrintBeginAnalyseTime = true;
+            isPrintBeginJudgeTime = true;
             return null;
         }
         // 打印开始信息
-        if(isPrintBeginAnalyseTime){
+        if(isPrintBeginJudgeTime){
             Log.d("lwd", String.format("time=%s，ma60不等于0，开始分析", lastMaState1.getTime().toString()));
-            isPrintBeginAnalyseTime = false;
+            isPrintBeginJudgeTime = false;
         }
 
         boolean isSeriation = false; // 均线是否是呈梯子型排列
@@ -122,7 +122,7 @@ public class UpEmanativeStrategy extends BaseStrategy {
 
         if(isSeriation && isRise){
             Log.d("lwd", String.format("%s 买他", lastMaState1.getTime()));
-            return new StrategyAnalyseResult(stockId, getStrategyId(), kLevel, lastMaState1.getTime(), 0);
+            return new StockForm(stockId, getFormId(), kLevel, lastMaState1.getTime(), 0);
         }
         return null;
 

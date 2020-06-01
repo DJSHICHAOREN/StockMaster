@@ -1,12 +1,12 @@
-package com.example.stockmaster.entity.strategy;
+package com.example.stockmaster.entity.form;
 
 import org.xutils.db.annotation.Column;
 import org.xutils.db.annotation.Table;
 
 import java.util.Date;
 
-@Table(name = "StrategyAnalyseResult")
-public class StrategyAnalyseResult {
+@Table(name = "StockForm")
+public class StockForm {
 
     @Column(name = "id", isId = true)
     public String id;
@@ -14,8 +14,8 @@ public class StrategyAnalyseResult {
     @Column(name = "stockId")
     public String stockId;
 
-    @Column(name = "strategyId")
-    public int strategyId;
+    @Column(name = "formId")
+    public int formId;
 
     @Column(name = "time")
     public Date time;
@@ -26,16 +26,16 @@ public class StrategyAnalyseResult {
     @Column(name = "kLevel")
     public int kLevel;
 
-    public StrategyAnalyseResult(){
+    public StockForm(){
 
     }
 
-    public StrategyAnalyseResult(String stockId, int strategyId, int kLevel, Date time, int type){
+    public StockForm(String stockId, int formId, int kLevel, Date time, int type){
         this.stockId = stockId;
-        this.strategyId = strategyId;
+        this.formId = formId;
         this.time = time;
         this.type = type;
-        this.id = stockId + "_" + strategyId + "_" + time.toString() + "_" + type;
+        this.id = stockId + "_" + formId + "_" + time.toString() + "_" + type;
         this.kLevel = kLevel;
     }
 
@@ -47,12 +47,12 @@ public class StrategyAnalyseResult {
         this.stockId = stockId;
     }
 
-    public int getStrategyId() {
-        return strategyId;
+    public int getFormId() {
+        return formId;
     }
 
-    public void setStrategyId(int strategyId) {
-        this.strategyId = strategyId;
+    public void setFormId(int formId) {
+        this.formId = formId;
     }
 
     public Date getTime() {

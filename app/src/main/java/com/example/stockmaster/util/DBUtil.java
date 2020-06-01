@@ -2,8 +2,7 @@ package com.example.stockmaster.util;
 
 import com.example.stockmaster.entity.Stock;
 import com.example.stockmaster.entity.StockPrice;
-import com.example.stockmaster.entity.sina.ResponseResult;
-import com.example.stockmaster.entity.strategy.StrategyAnalyseResult;
+import com.example.stockmaster.entity.form.StockForm;
 
 import org.xutils.DbManager;
 import org.xutils.ex.DbException;
@@ -128,44 +127,44 @@ public class DBUtil {
     }
 
 
-    public static void saveStrategyAnalyseResult(StrategyAnalyseResult strategyAnalyseResult){
+    public static void saveStockForm(StockForm stockForm){
         try {
             if(db == null){
                 db = x.getDb(daoConfig);
             }
-            db.save(strategyAnalyseResult);
+            db.save(stockForm);
 
         } catch (DbException e) {
             e.printStackTrace();
         }
     }
 
-    public static List<StrategyAnalyseResult> getAllStrategyAnalyseResult(){
+    public static List<StockForm> getAllStrategyAnalyseResult(){
         try {
             if(db == null){
                 db = x.getDb(daoConfig);
             }
-            List<StrategyAnalyseResult> strategyAnalyseResultList = db.selector(StrategyAnalyseResult.class).findAll();
-            if(strategyAnalyseResultList == null){
+            List<StockForm> stockFormList = db.selector(StockForm.class).findAll();
+            if(stockFormList == null){
                 return new ArrayList<>();
             }
-            return strategyAnalyseResultList;
+            return stockFormList;
         } catch (DbException e) {
             e.printStackTrace();
         }
         return null;
     }
 
-    public static List<StrategyAnalyseResult> getStrategyAnalyseResultByStockId(String stockId){
+    public static List<StockForm> getStockFormByStockId(String stockId){
         try {
             if(db == null){
                 db = x.getDb(daoConfig);
             }
-            List<StrategyAnalyseResult> strategyAnalyseResultList = db.selector(StrategyAnalyseResult.class)
+            List<StockForm> stockFormList = db.selector(StockForm.class)
                     .where("stockId", "=", stockId)
                     .findAll();
 
-            return strategyAnalyseResultList;
+            return stockFormList;
         } catch (DbException e) {
             e.printStackTrace();
         }
