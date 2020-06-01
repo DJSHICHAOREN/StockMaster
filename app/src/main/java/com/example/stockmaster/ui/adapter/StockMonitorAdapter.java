@@ -53,7 +53,7 @@ public class StockMonitorAdapter extends RecyclerView.Adapter<StockMonitorAdapte
 //                mStockMonitorFragment.startActivity(intent);
 
                 AlertDialog alertDialog1 = new AlertDialog.Builder(mStockMonitorFragment.getContext())
-                        .setTitle("全部建议")//标题
+                        .setTitle(stock.getId() + " " + stock.getName())//标题
                         .setMessage(stock.getStrategyAnalyseDescribeString())//内容
                         .create();
                 alertDialog1.show();

@@ -12,6 +12,20 @@ public class UpEmanativeStrategy extends BaseStrategy {
         super(STRATEGY_ID);
     }
 
+    /**0号交易策略，高确定性
+     * (1)
+     * 5K: ma5 > ma10 > ma20 > ma30 > ma60
+     * 15K: ma5 > ma10 > ma20 > ma30
+     * 30K: ma5 > ma10 > ma20
+     * 60K: ma5 > ma10
+     * 日K: ma5向上
+     * (2)
+     * 为上升形态
+     * @param stockId
+     * @param maStateList
+     * @param kLevel
+     * @return
+     */
     @Override
     public StrategyAnalyseResult analyse(String stockId, List<MaState> maStateList, int kLevel){
         if(maStateList == null || maStateList.size() < 3){
@@ -24,13 +38,17 @@ public class UpEmanativeStrategy extends BaseStrategy {
         MaState lastMaState2 = maStateList.get(maStateListLength-2);
         MaState lastMaState3 = maStateList.get(maStateListLength-3);
 
-        if(lastMaState3.getMa30() == 0){
+        // 确保信息有效
+        if(kLevel == 60 && lastMaState3.getMa10() == 0
+        && kLevel == 30 && lastMaState3.getMa20() == 0
+        && kLevel == 15 && lastMaState3.getMa30() == 0
+        && kLevel == 5 && lastMaState3.getMa60() == 0){
             isPrintBeginAnalyseTime = true;
             return null;
         }
         // 打印开始信息
         if(isPrintBeginAnalyseTime){
-            Log.d("lwd", String.format("time=%s，ma30不等于0，开始分析", lastMaState1.getTime().toString()));
+            Log.d("lwd", String.format("time=%s，ma60不等于0，开始分析", lastMaState1.getTime().toString()));
             isPrintBeginAnalyseTime = false;
         }
 
@@ -38,37 +56,71 @@ public class UpEmanativeStrategy extends BaseStrategy {
         boolean isRise = false; // 均线是否上升
         boolean isHorizontalBefore = false; // 均线之前是否横盘
         // 判断均线是否阶梯形排列
-        if(lastMaState1.getMa5() > lastMaState1.getMa10()
-                && lastMaState1.getMa10() > lastMaState1.getMa20()){
-            isSeriation = true;
-        }
-        // 判断均线是否都在上升
-        if(lastMaState2.getMa5() != 0
-                && lastMaState2.getMa10() != 0
-                && lastMaState2.getMa20() != 0
-                && lastMaState2.getMa30() != 0){
-            if(lastMaState1.getMa5() - lastMaState2.getMa5() > 0
-                    && lastMaState1.getMa10() - lastMaState2.getMa10() > 0
-                    && lastMaState1.getMa20() - lastMaState2.getMa20() > 0
-                    && lastMaState1.getMa30() - lastMaState2.getMa30() > 0){
+        if(lastMaState1.getMa5() >= lastMaState1.getMa10()
+            && lastMaState1.getMa5() > lastMaState2.getMa5()
+            && lastMaState1.getMa10() > lastMaState2.getMa10()){
+            if(kLevel == 60){
+                isSeriation = true;
                 isRise = true;
             }
-        }
-        // 判断均线在之前是否横盘
-        if(lastMaState3.getMa5() != 0 && lastMaState3.getMa10() != 0 && lastMaState3.getMa20() != 0){
-            // 得到均线之前的斜率
-            float ma5SlopeBefore = (lastMaState2.getMa5() - lastMaState3.getMa5())/lastMaState3.getMa5();
-            float ma10SlopeBefore = (lastMaState2.getMa10() - lastMaState3.getMa10())/lastMaState3.getMa10();
-//            float ma20Slope = (lastMaState2.getMa20() - lastMaState3.getMa20())/lastMaState3.getMa20();
-            float ma5SlopeNow = (lastMaState1.getMa5() - lastMaState2.getMa5())/lastMaState2.getMa5();
-            float ma10SlopeNow = (lastMaState1.getMa10() - lastMaState2.getMa10())/lastMaState2.getMa10();
-            if(ma5SlopeNow > ma5SlopeBefore && ma10SlopeNow > ma10SlopeBefore){
-                if(lastMaState3.getMaPriceDispersion() <= 0.01 && lastMaState2.getMaPriceDispersion() <= 0.01)
-                    isHorizontalBefore = true;
+            else{
+                if(lastMaState1.getMa10() > lastMaState1.getMa20()
+                && lastMaState1.getMa20() > lastMaState2.getMa20()){
+                    if(kLevel == 30){
+                        isSeriation = true;
+                        isRise = true;
+                    }
+                    else{
+                        if(lastMaState1.getMa20() > lastMaState1.getMa30()
+                        && lastMaState1.getMa30() > lastMaState2.getMa30()){
+                            if(kLevel == 15){
+                                isSeriation = true;
+                                isRise = true;
+                            }
+                        }
+                        else{
+                            if(lastMaState1.getMa30() > lastMaState1.getMa60()
+                            && lastMaState1.getMa60() > lastMaState2.getMa60()){
+                                if(kLevel == 5){
+                                    isSeriation = true;
+                                    isRise = true;
+                                }
+                            }
+                        }
+                    }
+                }
             }
         }
 
-        if(isSeriation && isRise && isHorizontalBefore){
+        // 判断均线是否都在上升
+//        if(lastMaState2.getMa5() != 0
+//                && lastMaState2.getMa10() != 0
+//                && lastMaState2.getMa20() != 0
+//                && lastMaState2.getMa30() != 0){
+//            if(lastMaState1.getMa5() - lastMaState2.getMa5() > 0
+//                    && lastMaState1.getMa10() - lastMaState2.getMa10() > 0
+//                    && lastMaState1.getMa20() - lastMaState2.getMa20() > 0
+//                    && lastMaState1.getMa30() - lastMaState2.getMa30() > 0){
+//                isRise = true;
+//            }
+//        }
+
+
+        // 判断均线在之前是否横盘
+//        if(lastMaState3.getMa5() != 0 && lastMaState3.getMa10() != 0 && lastMaState3.getMa20() != 0){
+//            // 得到均线之前的斜率
+//            float ma5SlopeBefore = (lastMaState2.getMa5() - lastMaState3.getMa5())/lastMaState3.getMa5();
+//            float ma10SlopeBefore = (lastMaState2.getMa10() - lastMaState3.getMa10())/lastMaState3.getMa10();
+////            float ma20Slope = (lastMaState2.getMa20() - lastMaState3.getMa20())/lastMaState3.getMa20();
+//            float ma5SlopeNow = (lastMaState1.getMa5() - lastMaState2.getMa5())/lastMaState2.getMa5();
+//            float ma10SlopeNow = (lastMaState1.getMa10() - lastMaState2.getMa10())/lastMaState2.getMa10();
+//            if(ma5SlopeNow > ma5SlopeBefore && ma10SlopeNow > ma10SlopeBefore){
+//                if(lastMaState3.getMaPriceDispersion() <= 0.01 && lastMaState2.getMaPriceDispersion() <= 0.01)
+//                    isHorizontalBefore = true;
+//            }
+//        }
+
+        if(isSeriation && isRise){
             Log.d("lwd", String.format("%s 买他", lastMaState1.getTime()));
             return new StrategyAnalyseResult(stockId, getStrategyId(), kLevel, lastMaState1.getTime(), 0);
         }
