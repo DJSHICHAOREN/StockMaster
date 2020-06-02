@@ -26,6 +26,7 @@ public class StockManager {
     private static List<String> mStockIdList = new ArrayList<String>();
     private  static List<Stock> mStockMonitorPickedStockList = new ArrayList<>(); // 在股票监控界面显示的被选中的股票
     private  static List<Stock> mPriceMonitorStockList = new ArrayList<>(); // 在价格监视的股票
+    private  static List<String> mPriceMonitorStockIdList = new ArrayList<>(); // 在价格监视的股票
     private static ShortSwingAnalyser mShortSwingAnalyser = new ShortSwingAnalyser();
     private static UIManager mPriceMonitorUIManager;
     private static UIManager mStockMonitorUIManager;
@@ -102,6 +103,7 @@ public class StockManager {
             // 添加价格监控列表
             if(DEFAULT_PRICE_MONITOR_STOCK_ID_LIST.indexOf(stockId) != -1){
                 mPriceMonitorStockList.add(stock);
+                mPriceMonitorStockIdList.add(stockId);
             }
 
         }
@@ -243,10 +245,10 @@ public class StockManager {
      */
     public static void addBuyAndSaleStockPrice(Stock stock, StockPrice stockPrice, Stock.DealType dealType){
         if(stock.addBuyAndSaleStockPrice(stockPrice, dealType)){
-            if(mPriceMonitorUIManager != null){
+            if(mPriceMonitorUIManager != null && mPriceMonitorStockIdList.contains(stock.getId())){
                 mPriceMonitorUIManager.refreshUIWhenGetNewDealPoint(stock.getName() + " " +stockPrice.toStringWithId(),
                         stockPrice.getNotificationId(), stockPrice.getNotificationContent());
-                mPriceMonitorUIManager.notifyStockListItemChanged(mStockIdList.indexOf(stock.id));
+                mPriceMonitorUIManager.notifyStockListItemChanged(mPriceMonitorStockIdList.indexOf(stock.id));
             }
             // 若为请求的分时价格，则为实时的，则发送通知
             if(mBrainService != null

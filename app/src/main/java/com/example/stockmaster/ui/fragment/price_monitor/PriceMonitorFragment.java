@@ -59,6 +59,7 @@ public class PriceMonitorFragment extends Fragment {
                 case 2:{
                     Bundle bundle = msg.getData();
                     int itemIndex = bundle.getInt("itemIndex");
+                    Log.d("lwd", "price notifyItemChanged itemIndex:" + itemIndex);
                     mPriceMonitorAdapter.notifyItemChanged(itemIndex);
                     break;
                 }
