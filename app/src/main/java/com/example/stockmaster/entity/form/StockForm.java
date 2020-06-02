@@ -34,6 +34,7 @@ public class StockForm {
     }
 
     public StockForm(String stockId, int formId, int kLevel, Date time, int type, float price){
+        this.id = stockId + "_" + formId + "_" + time.toString() + "_" + type + "_" + kLevel;
         this.stockId = stockId;
         this.formId = formId;
         this.time = time;

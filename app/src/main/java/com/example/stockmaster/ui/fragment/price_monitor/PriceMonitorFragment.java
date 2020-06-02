@@ -82,7 +82,7 @@ public class PriceMonitorFragment extends Fragment {
         // 设置RecyclerView的布局
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
         rv_stock_list.setLayoutManager(linearLayoutManager);
-        mPriceMonitorAdapter = new PriceMonitorAdapter(StockManager.getStockList(), this);
+        mPriceMonitorAdapter = new PriceMonitorAdapter(StockManager.getPriceMonitorStockList(), this);
         rv_stock_list.setAdapter(mPriceMonitorAdapter);
 
         return view;

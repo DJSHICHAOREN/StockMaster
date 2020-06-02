@@ -30,7 +30,7 @@ public class DataQueryerManager {
      */
     public void queryFiveDayPrice(){
         // 每天只请求一次五日的价格
-        for(final String stockId : StockManager.getDefaultStockIdList()) {
+        for(final String stockId : StockManager.getDefaultStockMonitorStockIdList()) {
             Runnable runnable = new Runnable() {
                 @Override
                 public void run() {
@@ -58,7 +58,7 @@ public class DataQueryerManager {
                 if(hour < 9 || hour > 16){
                     return;
                 }
-                for(final String stockId : StockManager.getDefaultStockIdList()) {
+                for(final String stockId : StockManager.getDefaultStockMonitorStockIdList()) {
                     Runnable runnable = new Runnable() {
                         @Override
                         public void run() {
@@ -83,13 +83,13 @@ public class DataQueryerManager {
         if(hour < 9 || hour > 16){
             // 请求分时股票数据
             String stockIdStr = "";
-            for(String stockId : StockManager.getDefaultStockIdList()) {
+            for(String stockId : StockManager.getDefaultStockMonitorStockIdList()) {
                 stockIdStr = stockIdStr + "rt_" + stockId + ",";
             }
             final String stockIdString = stockIdStr;
             mSinaDataQueryer.queryStocksNowPrice(stockIdString);
             // 请求一天股票数据
-            for(final String stockId : StockManager.getDefaultStockIdList()) {
+            for(final String stockId : StockManager.getDefaultStockMonitorStockIdList()) {
                 Runnable runnable = new Runnable() {
                     @Override
                     public void run() {
@@ -107,7 +107,7 @@ public class DataQueryerManager {
     public void beginQueryMinutePrice(){
         // 拼出股票列表字符串
         String stockIdStr = "";
-        for(String stockId : StockManager.getDefaultStockIdList()) {
+        for(String stockId : StockManager.getDefaultStockMonitorStockIdList()) {
             stockIdStr = stockIdStr + "rt_" + stockId + ",";
         }
         final String stockIdString = stockIdStr;
