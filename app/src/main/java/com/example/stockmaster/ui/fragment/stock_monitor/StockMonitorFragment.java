@@ -51,7 +51,7 @@ public class StockMonitorFragment extends Fragment {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
         rv_stock_list.setLayoutManager(linearLayoutManager);
 
-        mStockMonitorAdapter = new StockMonitorAdapter(StockManager.getQualifiedStockList(), this);
+        mStockMonitorAdapter = new StockMonitorAdapter(StockManager.getStockMonitorPickedStockList(), this);
         rv_stock_list.setAdapter(mStockMonitorAdapter);
 
         return view;
