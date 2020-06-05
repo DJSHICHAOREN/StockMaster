@@ -33,11 +33,11 @@ public class KBase {
         if(stockPriceList == null){
             Log.e("lwd", "stockPriceList 为null");
         }
-//        List<StockPrice> filteredStockPriceList = filterKeyStockPrice(stockPriceList);
+        List<StockPrice> filteredStockPriceList = filterKeyStockPrice(stockPriceList);
         Log.d("lwd", String.format("%d分钟K线分析_stockId:%s", mKLevel, mStockId));
         // 添加价格列表之后计算均值
         for(int i=MaCalculater.getMinCountedDay(); i<stockPriceList.size(); i++){
-            maStateList.add(MaCalculater.calMaState( filterPreviousKeyStockPrice(stockPriceList.subList(0, i)) ));
+            maStateList.add(MaCalculater.calMaState( filterPreviousKeyStockPrice(stockPriceList.subList(0, i), filteredStockPriceList)));
             maStateAnalyser.analyse(mStockId, maStateList, mKLevel);
         }
     }
@@ -48,12 +48,18 @@ public class KBase {
      * @param stockPriceList
      * @return
      */
-    private List<StockPrice> filterPreviousKeyStockPrice(List<StockPrice> stockPriceList){
-        List<StockPrice> filteredStockPriceList = new ArrayList<>();
-        StockPrice lastStockPrice = stockPriceList.get(filteredStockPriceList.size()-1);
-        for(StockPrice stockPrice : stockPriceList){
-
+    private List<StockPrice> filterPreviousKeyStockPrice(List<StockPrice> stockPriceList, List<StockPrice> filteredStockPriceList){
+        List<StockPrice> resultStockPriceList = new ArrayList<>();
+        StockPrice lastStockPrice = stockPriceList.get(stockPriceList.size()-1);
+        // 将最后一个价格之前的关键价格加入列表
+        for(StockPrice stockPrice : filteredStockPriceList){
+            if(stockPrice.getTime().before(lastStockPrice.getTime())){
+                resultStockPriceList.add(stockPrice);
+            }
         }
+        // 将最后一个价格加入列表
+        resultStockPriceList.add(lastStockPrice);
+        return resultStockPriceList;
     }
 
     /**
@@ -78,10 +84,6 @@ public class KBase {
             }
         }
         return filteredStockPriceList;
-    }
-
-    public String convertDateToMinutesString(Date time){
-
     }
 
     private String getDoubleNumString(int num){
