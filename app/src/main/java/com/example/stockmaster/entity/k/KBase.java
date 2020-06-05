@@ -27,18 +27,32 @@ public class KBase {
 
     /**
      * 添加关键价格列表
-     * @param keyStockPriceList
+     * @param stockPriceList
      */
-    public void setKeyStockPriceList(List<StockPrice> keyStockPriceList) {
-        if(keyStockPriceList == null){
-            Log.e("lwd", "keyStockPriceList 为null");
+    public void setKeyStockPriceList(List<StockPrice> stockPriceList) {
+        if(stockPriceList == null){
+            Log.e("lwd", "stockPriceList 为null");
         }
-        List<StockPrice> filteredStockPriceList = filterKeyStockPrice(keyStockPriceList);
-        Log.d("lwd", String.format("%d分钟K线分析", mKLevel));
+//        List<StockPrice> filteredStockPriceList = filterKeyStockPrice(stockPriceList);
+        Log.d("lwd", String.format("%d分钟K线分析_stockId:%s", mKLevel, mStockId));
         // 添加价格列表之后计算均值
-        for(int i=MaCalculater.getMinCountedDay(); i<filteredStockPriceList.size(); i++){
-            maStateList.add(MaCalculater.calMaState(filteredStockPriceList.subList(0, i)));
+        for(int i=MaCalculater.getMinCountedDay(); i<stockPriceList.size(); i++){
+            maStateList.add(MaCalculater.calMaState( filterPreviousKeyStockPrice(stockPriceList.subList(0, i)) ));
             maStateAnalyser.analyse(mStockId, maStateList, mKLevel);
+        }
+    }
+
+    /**
+     * 最后一个stockPrice不变，他的时间代表
+     * 其他的找前面的最近的keyStockPrice
+     * @param stockPriceList
+     * @return
+     */
+    private List<StockPrice> filterPreviousKeyStockPrice(List<StockPrice> stockPriceList){
+        List<StockPrice> filteredStockPriceList = new ArrayList<>();
+        StockPrice lastStockPrice = stockPriceList.get(filteredStockPriceList.size()-1);
+        for(StockPrice stockPrice : stockPriceList){
+
         }
     }
 
@@ -64,6 +78,10 @@ public class KBase {
             }
         }
         return filteredStockPriceList;
+    }
+
+    public String convertDateToMinutesString(Date time){
+
     }
 
     private String getDoubleNumString(int num){

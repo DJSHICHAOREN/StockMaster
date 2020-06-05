@@ -28,14 +28,14 @@ public class MaCalculater {
             // 计算均价
             if(priceListLength >= countedDay){
                 float sum = 0;
-                for(int i=priceListLength; i > priceListLength-countedDay; i--){
-                    sum += stockPriceList.get(i-1).getPrice();
+                for(int i=priceListLength-1; i >= priceListLength-countedDay; i--){
+                    sum += stockPriceList.get(i).getPrice();
                 }
                 sum /= countedDay;
                 maState.setMaPrice(sum, countedDay);
             }
         }
-//        Log.d("lwd", maState.toString());
+        Log.d("lwd", maState.toString());
         return maState;
     }
 
