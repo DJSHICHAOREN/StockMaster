@@ -1,5 +1,6 @@
 package com.example.stockmaster.util;
 
+import com.example.stockmaster.entity.form.LongToArrangeFormJudge;
 import com.example.stockmaster.entity.ma.MaState;
 import com.example.stockmaster.entity.form.BaseFormJudge;
 import com.example.stockmaster.entity.form.StockForm;
@@ -12,7 +13,8 @@ public class MaStateAnalyser {
     private static MaStateAnalyser instance = null;
     private List<BaseFormJudge> mBaseFormJudgeList = new ArrayList<>();
     public MaStateAnalyser(){
-        mBaseFormJudgeList.add(new UpEmanativeFormJudge());
+//        mBaseFormJudgeList.add(new UpEmanativeFormJudge());
+        mBaseFormJudgeList.add(new LongToArrangeFormJudge());
     }
 
     public void analyse(String stockId, List<MaState> maStateList, int kLevel, String keyStockPriceTimeString){

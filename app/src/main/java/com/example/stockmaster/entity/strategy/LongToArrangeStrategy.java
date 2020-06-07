@@ -1,12 +1,6 @@
 package com.example.stockmaster.entity.strategy;
 
-import android.util.Log;
-
 import com.example.stockmaster.entity.form.StockForm;
-import com.example.stockmaster.entity.k.K15Minutes;
-import com.example.stockmaster.entity.k.K30Minutes;
-import com.example.stockmaster.entity.k.K5Minutes;
-import com.example.stockmaster.entity.k.K60Minutes;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -14,32 +8,10 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public class FlareUpStrategy extends BaseStrategy{
+public class LongToArrangeStrategy extends BaseStrategy {
 
-    private static int STRATEGY_ID = 0;
-
-    public FlareUpStrategy() {
-        super(STRATEGY_ID);
-    }
-
-    /**
-     * 得到dateList中nowDate前一天的的日期
-     * 如果nowDate没有前一天，则返回nowDate
-     * @param dateList
-     * @param nowDate
-     * @return
-     */
-    public Date getPreviousDate(List<Date> dateList, Date nowDate){
-        int nowDateIndex = -1;
-        for(int i=0; i<dateList.size(); i++){
-            if(nowDate.getDate() == dateList.get(i).getDate()){
-                nowDateIndex = i;
-            }
-        }
-        if(nowDateIndex > 0){
-            return dateList.get(nowDateIndex-1);
-        }
-        return nowDate;
+    public LongToArrangeStrategy(int strategyId) {
+        super(strategyId);
     }
 
     @Override

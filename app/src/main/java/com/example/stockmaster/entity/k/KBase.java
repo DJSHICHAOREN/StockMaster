@@ -13,7 +13,6 @@ import java.util.List;
 
 public class KBase {
     public String TIME_POINT_STRING = "";
-
     private List<MaState> maStateList = new ArrayList<>();
     private MaStateAnalyser maStateAnalyser = MaStateAnalyser.getInstance();
     private List<StockPrice> qualifiedPricePointList = new ArrayList<>();
