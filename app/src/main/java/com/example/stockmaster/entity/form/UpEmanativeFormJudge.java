@@ -2,15 +2,32 @@ package com.example.stockmaster.entity.form;
 
 import android.util.Log;
 
+import com.example.stockmaster.entity.k.K15Minutes;
+import com.example.stockmaster.entity.k.K30Minutes;
+import com.example.stockmaster.entity.k.K5Minutes;
+import com.example.stockmaster.entity.k.K60Minutes;
 import com.example.stockmaster.entity.ma.MaState;
 
+import java.util.Date;
 import java.util.List;
 
 public class UpEmanativeFormJudge extends BaseFormJudge {
     private static int FORM_ID = 0;
+
+
     public UpEmanativeFormJudge() {
         super(FORM_ID);
     }
+
+    public MaState getMaStateByTime(List<MaState> maStateList, Date time){
+        for(int i=maStateList.size()-1; i>=0; i--){
+            if(maStateList.get(i).getTime() == time){
+                return maStateList.get(i);
+            }
+        }
+        return null;
+    }
+
 
     /**0号交易策略，高确定性
      * (1)
@@ -28,21 +45,21 @@ public class UpEmanativeFormJudge extends BaseFormJudge {
      */
     @Override
     public StockForm judge(String stockId, List<MaState> maStateList, int kLevel){
-        if(maStateList == null || maStateList.size() < 3){
+        if(maStateList == null || maStateList.size() < kLevel * 3){
 //            Log.d("lwd", "maStateList为空或者maStateList的长度小于3");
             return null;
         }
         // 判断最新的三条线是否是按序排列且上升的
         int maStateListLength = maStateList.size();
         MaState lastMaState1 = maStateList.get(maStateListLength-1);
-        MaState lastMaState2 = maStateList.get(maStateListLength-2);
-        MaState lastMaState3 = maStateList.get(maStateListLength-3);
+        MaState lastMaState2 = getMaStateByTime(maStateList, lastMaState1.privousTime);
+        MaState lastMaState3 = getMaStateByTime(maStateList, lastMaState2.privousTime);
 
         // 确保信息有效
         if(kLevel == 60 && lastMaState3.getMa10() == 0
-        && kLevel == 30 && lastMaState3.getMa20() == 0
-        && kLevel == 15 && lastMaState3.getMa30() == 0
-        && kLevel == 5 && lastMaState3.getMa60() == 0){
+        || kLevel == 30 && lastMaState3.getMa20() == 0
+        || kLevel == 15 && lastMaState3.getMa30() == 0
+        || kLevel == 5 && lastMaState3.getMa60() == 0){
             isPrintBeginJudgeTime = true;
             return null;
         }
@@ -107,20 +124,20 @@ public class UpEmanativeFormJudge extends BaseFormJudge {
 
 
         // 判断均线在之前是否横盘
-        if(lastMaState3.getMa5() != 0 && lastMaState3.getMa10() != 0 && lastMaState3.getMa20() != 0){
-            // 得到均线之前的斜率
-            float ma5SlopeBefore = (lastMaState2.getMa5() - lastMaState3.getMa5())/lastMaState3.getMa5();
-            float ma10SlopeBefore = (lastMaState2.getMa10() - lastMaState3.getMa10())/lastMaState3.getMa10();
-//            float ma20Slope = (lastMaState2.getMa20() - lastMaState3.getMa20())/lastMaState3.getMa20();
-            float ma5SlopeNow = (lastMaState1.getMa5() - lastMaState2.getMa5())/lastMaState2.getMa5();
-            float ma10SlopeNow = (lastMaState1.getMa10() - lastMaState2.getMa10())/lastMaState2.getMa10();
-            if(ma5SlopeNow > ma5SlopeBefore && ma10SlopeNow > ma10SlopeBefore){
-                if(lastMaState3.getMaPriceDispersion() <= 0.01 && lastMaState2.getMaPriceDispersion() <= 0.01)
-                    isHorizontalBefore = true;
-            }
-        }
+//        if(lastMaState3.getMa5() != 0 && lastMaState3.getMa10() != 0 && lastMaState3.getMa20() != 0){
+//            // 得到均线之前的斜率
+//            float ma5SlopeBefore = (lastMaState2.getMa5() - lastMaState3.getMa5())/lastMaState3.getMa5();
+//            float ma10SlopeBefore = (lastMaState2.getMa10() - lastMaState3.getMa10())/lastMaState3.getMa10();
+////            float ma20Slope = (lastMaState2.getMa20() - lastMaState3.getMa20())/lastMaState3.getMa20();
+//            float ma5SlopeNow = (lastMaState1.getMa5() - lastMaState2.getMa5())/lastMaState2.getMa5();
+//            float ma10SlopeNow = (lastMaState1.getMa10() - lastMaState2.getMa10())/lastMaState2.getMa10();
+//            if(ma5SlopeNow > ma5SlopeBefore && ma10SlopeNow > ma10SlopeBefore){
+//                if(lastMaState3.getMaPriceDispersion() <= 0.01 && lastMaState2.getMaPriceDispersion() <= 0.01)
+//                    isHorizontalBefore = true;
+//            }
+//        }
 
-        if(isSeriation && isRise && isHorizontalBefore){
+        if(isSeriation && isRise){
             Log.d("lwd", String.format("%s 买他", lastMaState1.getTime()));
             return new StockForm(stockId, getFormId(), kLevel, lastMaState1.getTime(), 0, lastMaState1.getPrice());
         }

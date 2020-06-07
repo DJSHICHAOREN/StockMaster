@@ -11,10 +11,12 @@ public class MaState {
     public float ma60;
     private float maPriceDispersion;
     public Date time;
+    public Date privousTime;
 
-    public MaState(Date time, float price){
+    public MaState(Date time, float price, Date privousTime){
         this.time = time;
         this.price = price;
+        this.privousTime = privousTime;
     }
 
     public MaState(float price, float ma5, float ma10, float ma20, float ma30, float ma60, Date time) {

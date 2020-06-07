@@ -16,13 +16,13 @@ public class MaCalculater {
     private static List<Integer> mCountedDayList = new ArrayList<>(Arrays.asList(5, 10, 20, 30, 60));
 
     public static MaState calMaState(List<StockPrice> stockPriceList){
-        if(stockPriceList == null || stockPriceList.size() < 1){
+        if(stockPriceList == null || stockPriceList.size() < 2){
             return null;
         }
         // 创建均价对象
         int priceListLength = stockPriceList.size();
         StockPrice lastStockPrice = stockPriceList.get(priceListLength-1);
-        MaState maState = new MaState(lastStockPrice.getTime(), lastStockPrice.getPrice());
+        MaState maState = new MaState(lastStockPrice.getTime(), lastStockPrice.getPrice(), stockPriceList.get(priceListLength-2).getTime());
         // 计算均价
         for(int countedDay : mCountedDayList){
             // 计算均价
@@ -35,7 +35,7 @@ public class MaCalculater {
                 maState.setMaPrice(sum, countedDay);
             }
         }
-        Log.d("lwd", maState.toString());
+//        Log.d("lwd", maState.toString());
         return maState;
     }
 

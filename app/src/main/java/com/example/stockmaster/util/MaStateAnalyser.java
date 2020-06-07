@@ -15,7 +15,7 @@ public class MaStateAnalyser {
         mBaseFormJudgeList.add(new UpEmanativeFormJudge());
     }
 
-    public void analyse(String stockId, List<MaState> maStateList, int kLevel){
+    public void analyse(String stockId, List<MaState> maStateList, int kLevel, String keyStockPriceTimeString){
         for(BaseFormJudge baseFormJudge : mBaseFormJudgeList){
             StockForm stockForm = baseFormJudge.judge(stockId, maStateList, kLevel);
             if(stockForm != null){

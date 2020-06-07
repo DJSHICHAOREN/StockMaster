@@ -38,7 +38,7 @@ public class KBase {
         // 添加价格列表之后计算均值
         for(int i=MaCalculater.getMinCountedDay(); i<stockPriceList.size(); i++){
             maStateList.add(MaCalculater.calMaState( filterPreviousKeyStockPrice(stockPriceList.subList(0, i), filteredStockPriceList)));
-            maStateAnalyser.analyse(mStockId, maStateList, mKLevel);
+            maStateAnalyser.analyse(mStockId, maStateList, mKLevel, TIME_POINT_STRING);
         }
     }
 

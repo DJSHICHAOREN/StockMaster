@@ -1,6 +1,12 @@
 package com.example.stockmaster.entity.strategy;
 
+import android.util.Log;
+
 import com.example.stockmaster.entity.form.StockForm;
+import com.example.stockmaster.entity.k.K15Minutes;
+import com.example.stockmaster.entity.k.K30Minutes;
+import com.example.stockmaster.entity.k.K5Minutes;
+import com.example.stockmaster.entity.k.K60Minutes;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -11,6 +17,12 @@ import java.util.Set;
 public class FlareUpStrategy extends BaseStrategy{
 
     private static int STRATEGY_ID = 0;
+
+    private K5Minutes mK5Minutes = new K5Minutes("");
+    private K15Minutes mK15Minutes = new K15Minutes("");
+    private K30Minutes mK30Minutes = new K30Minutes("");
+    private K60Minutes mK60Minutes = new K60Minutes("");
+
     public FlareUpStrategy() {
         super(STRATEGY_ID);
     }
@@ -49,8 +61,10 @@ public class FlareUpStrategy extends BaseStrategy{
             Set<Integer> kLevelSet = new HashSet<>();
             Date endTime = k60StockForm.getTime();
             Date startTime = getPreviousDate(dateList, endTime);
+//            Log.d("lwd", String.format("开始判断strategy klevel:%d, time:%s", k60StockForm.getkLevel(), k60StockForm.getTime()));
             for(StockForm stockForm : stockFormList){
                 if(stockForm.getTime().after(startTime) && stockForm.getTime().before(endTime)){
+//                    Log.d("lwd", String.format("合格 klevel：%d, time:%s", stockForm.getkLevel(), stockForm.getTime()));
                     kLevelSet.add(stockForm.getkLevel());
                 }
 //                kLevelSet.add(stockForm.getkLevel());
