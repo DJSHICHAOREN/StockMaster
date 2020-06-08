@@ -51,10 +51,7 @@ public class LongToArrangeFormJudge extends BaseFormJudge {
         MaState lastMaState3 = getMaStateByTime(maStateList, lastMaState2.privousTime);
 
         // 确保信息有效
-        if(kLevel == 60 && lastMaState3.getMa10() == 0
-                || kLevel == 30 && lastMaState3.getMa20() == 0
-                || kLevel == 15 && lastMaState3.getMa30() == 0
-                || kLevel == 5 && lastMaState3.getMa60() == 0){
+        if(lastMaState3.getMa30() == 0){
             isPrintBeginJudgeTime = true;
             return null;
         }
@@ -103,7 +100,7 @@ public class LongToArrangeFormJudge extends BaseFormJudge {
 //        }
 
         if(isSeriation && isRise){
-            Log.d("lwd", String.format("%s 买他", lastMaState1.getTime()));
+            Log.d("lwd", String.format("%s 买他，价格:%s", lastMaState1.getTime(), lastMaState1.getPrice()));
             return new StockForm(stockId, getFormId(), kLevel, lastMaState1.getTime(), 0, lastMaState1.getPrice());
         }
         return null;

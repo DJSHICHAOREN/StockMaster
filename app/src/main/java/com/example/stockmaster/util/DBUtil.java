@@ -155,13 +155,14 @@ public class DBUtil {
         return null;
     }
 
-    public static List<StockForm> getStockFormByStockId(String stockId){
+    public static List<StockForm> getStockFormByStockId(String stockId, int formId){
         try {
             if(db == null){
                 db = x.getDb(daoConfig);
             }
             List<StockForm> stockFormList = db.selector(StockForm.class)
                     .where("stockId", "=", stockId)
+                    .and("formId", "=", formId)
                     .findAll();
 
             return stockFormList;
