@@ -18,6 +18,8 @@ import com.example.stockmaster.ui.activity.base.UIManager;
 import com.example.stockmaster.ui.adapter.StockMonitorAdapter;
 import com.example.stockmaster.util.StockManager;
 
+import java.io.File;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -53,6 +55,8 @@ public class StockMonitorFragment extends Fragment {
 
         mStockMonitorAdapter = new StockMonitorAdapter(StockManager.getStockMonitorPickedStockList(), this);
         rv_stock_list.setAdapter(mStockMonitorAdapter);
+
+//        File dbFile = getActivity().getDatabasePath("English");
 
         return view;
     }
