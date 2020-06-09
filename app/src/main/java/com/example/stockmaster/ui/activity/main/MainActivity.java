@@ -6,12 +6,15 @@ import androidx.viewpager.widget.ViewPager;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Environment;
 
 import com.example.stockmaster.R;
 import com.example.stockmaster.service.BrainService;
 import com.example.stockmaster.ui.adapter.MonitorPanelAdapter;
 import com.example.stockmaster.util.StockManager;
 import com.google.android.material.tabs.TabLayout;
+
+import java.io.File;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -42,6 +45,8 @@ public class MainActivity extends AppCompatActivity {
         // 开启service
         Intent intent = new Intent(this, BrainService.class);
         startService(intent);
+
+        getSDCardPath();
     }
 
     @Override
@@ -49,7 +54,15 @@ public class MainActivity extends AppCompatActivity {
         super.onResume();
     }
 
-
+    public static String getSDCardPath() {
+        String SDPATH = Environment.getExternalStorageDirectory() + "/" + "sme_lwd";
+        File out = new File(SDPATH);
+        boolean res = false;
+        if (!out.exists()) {
+            res = out.mkdirs();
+        }
+        return SDPATH;
+    }
 
 }
 

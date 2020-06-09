@@ -1,5 +1,7 @@
 package com.example.stockmaster.util;
 
+import android.os.Environment;
+
 import com.example.stockmaster.entity.Stock;
 import com.example.stockmaster.entity.StockPrice;
 import com.example.stockmaster.entity.form.StockForm;
@@ -36,6 +38,11 @@ public class DBUtil {
                     // db.dropDb();
                 }
             });
+
+    public static String getSDCardPath() {
+        String SDPATH = Environment.getExternalStorageDirectory() + "/";
+        return SDPATH;
+    }
 
     /**
      * 只有在数据库中不存在这只股票时才将其加入数据库
