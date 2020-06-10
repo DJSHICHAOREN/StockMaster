@@ -44,6 +44,7 @@ private static List<BaseStrategy> mStrategyList = Arrays.asList(new LongToArrang
     private static int mNowLoadedStockListSize = 0;
 
     public static void initStockManager(){
+
         List<String> ALL_STOCK_ID_LIST = new ArrayList<>();
         ALL_STOCK_ID_LIST.addAll(DEFAULT_STOCK_MONITOR_STOCK_ID_LIST);
         ALL_STOCK_ID_LIST.addAll(DEFAULT_PRICE_MONITOR_STOCK_ID_LIST);

@@ -5,6 +5,7 @@ import android.os.Environment;
 import com.example.stockmaster.entity.Stock;
 import com.example.stockmaster.entity.StockPrice;
 import com.example.stockmaster.entity.form.StockForm;
+import com.example.stockmaster.ui.activity.main.MainActivity;
 
 import org.xutils.DbManager;
 import org.xutils.ex.DbException;
@@ -15,33 +16,37 @@ import java.util.List;
 
 public class DBUtil {
     public static DbManager db;
-    public static DbManager.DaoConfig daoConfig = new DbManager.DaoConfig()
-            .setDbName("test.db")
-            // 不设置dbDir时, 默认存储在app的私有目录.
-//            .setDbDir(new File("/sdcard")) // "sdcard"的写法并非最佳实践, 这里为了简单, 先这样写了.
-            .setDbVersion(2)
-            .setDbOpenListener(new DbManager.DbOpenListener() {
-                @Override
-                public void onDbOpened(DbManager db) {
-                    // 开启WAL, 对写入加速提升巨大
-                    db.getDatabase().enableWriteAheadLogging();
-                }
-            })
-            .setDbUpgradeListener(new DbManager.DbUpgradeListener() {
-                @Override
-                public void onUpgrade(DbManager db, int oldVersion, int newVersion) {
-                    // TODO: ...
-                    // db.addColumn(...);
-                    // db.dropTable(...);
-                    // ...
-                    // or
-                    // db.dropDb();
-                }
-            });
+    public static DbManager.DaoConfig daoConfig = null;
 
-    public static String getSDCardPath() {
-        String SDPATH = Environment.getExternalStorageDirectory() + "/";
-        return SDPATH;
+    public static void initDBUtil() throws DbException {
+        if(daoConfig == null){
+            daoConfig = new DbManager.DaoConfig()
+                    .setDbName(MainActivity.mDBPath == "" ? "test.db" : MainActivity.mDBPath)
+                    // 不设置dbDir时, 默认存储在app的私有目录.
+//            .setDbDir(new File("/sdcard")) // "sdcard"的写法并非最佳实践, 这里为了简单, 先这样写了.
+                    .setDbVersion(2)
+                    .setDbOpenListener(new DbManager.DbOpenListener() {
+                        @Override
+                        public void onDbOpened(DbManager db) {
+                            // 开启WAL, 对写入加速提升巨大
+                            db.getDatabase().enableWriteAheadLogging();
+                        }
+                    })
+                    .setDbUpgradeListener(new DbManager.DbUpgradeListener() {
+                        @Override
+                        public void onUpgrade(DbManager db, int oldVersion, int newVersion) {
+                            // TODO: ...
+                            // db.addColumn(...);
+                            // db.dropTable(...);
+                            // ...
+                            // or
+                            // db.dropDb();
+                        }
+                    });
+        }
+        if(db == null){
+            db = x.getDb(daoConfig);
+        }
     }
 
     /**
@@ -52,9 +57,8 @@ public class DBUtil {
      */
     public static Stock saveStock(Stock stock){
         try {
-            if(db == null){
-                db = x.getDb(daoConfig);
-            }
+            initDBUtil();
+
             Stock oldStock = db.selector(Stock.class)
                     .where("id", "=", stock.getId())
                     .findFirst();
@@ -70,9 +74,7 @@ public class DBUtil {
 
     public static void updateStock(Stock stock){
         try {
-            if(db == null){
-                db = x.getDb(daoConfig);
-            }
+            initDBUtil();
             db.saveOrUpdate(stock);
         } catch (DbException e) {
             e.printStackTrace();
@@ -81,9 +83,7 @@ public class DBUtil {
 
     public static void saveStockPrice(StockPrice stockPrice){
         try {
-            if(db == null){
-                db = x.getDb(daoConfig);
-            }
+            initDBUtil();
 
             StockPrice oldStockPrice = db.selector(StockPrice.class)
                     .where("stockId", "=", stockPrice.getStockId())
@@ -101,9 +101,7 @@ public class DBUtil {
 
     public static List<Stock> getAllStocks(){
         try {
-            if(db == null){
-                db = x.getDb(daoConfig);
-            }
+            initDBUtil();
             List<Stock> stockList = db.selector(Stock.class).orderBy("id").findAll();
             if(stockList == null){
                 return new ArrayList<>();
@@ -117,9 +115,7 @@ public class DBUtil {
 
     public static List<StockPrice> getStockPriceList(String stockId){
         try {
-            if(db == null){
-                db = x.getDb(daoConfig);
-            }
+            initDBUtil();
             List<StockPrice> stockPriceList = db.selector(StockPrice.class)
                     .where("stockId", "=", stockId)
                     .orderBy("time").findAll();
@@ -136,9 +132,7 @@ public class DBUtil {
 
     public static void saveStockForm(StockForm stockForm){
         try {
-            if(db == null){
-                db = x.getDb(daoConfig);
-            }
+            initDBUtil();
             db.saveOrUpdate(stockForm);
 
         } catch (DbException e) {
@@ -148,9 +142,7 @@ public class DBUtil {
 
     public static List<StockForm> getAllStrategyAnalyseResult(){
         try {
-            if(db == null){
-                db = x.getDb(daoConfig);
-            }
+            initDBUtil();
             List<StockForm> stockFormList = db.selector(StockForm.class).findAll();
             if(stockFormList == null){
                 return new ArrayList<>();
@@ -164,9 +156,7 @@ public class DBUtil {
 
     public static List<StockForm> getStockFormByStockId(String stockId, int formId){
         try {
-            if(db == null){
-                db = x.getDb(daoConfig);
-            }
+            initDBUtil();
             List<StockForm> stockFormList = db.selector(StockForm.class)
                     .where("stockId", "=", stockId)
                     .and("formId", "=", formId)
