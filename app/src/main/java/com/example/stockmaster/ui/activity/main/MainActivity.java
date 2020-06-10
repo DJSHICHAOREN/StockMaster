@@ -7,6 +7,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.viewpager.widget.ViewPager;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
@@ -38,7 +39,7 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
     MonitorPanelAdapter monitorPanelAdapter;
     private final int GET_WRITE_EXTERNAL_STORAGE = 1;
 
-    public static String mDBPath = "";
+    public static File mDBFile = null;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -54,14 +55,16 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
         // 请求存储权限
         requireWriteExternalStorage();
 
+    }
+
+
+    public void initAllThing(){
         // 载入股票列表，需要操作数据库，必须在请求存储权限之后
         StockManager.initStockManager();
 
         // 开启service
         Intent intent = new Intent(this, BrainService.class);
         startService(intent);
-
-
     }
 
     @Override
@@ -79,14 +82,15 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
 
     public void getSDCardPath() {
         String dbPath = Environment.getExternalStorageDirectory() + "/" + "StockMaster";
-        File out = new File(dbPath);
-        if (!out.exists()) {
-            if(out.mkdirs()){
-                mDBPath = dbPath;
+//        File somePath = this.getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS);
+        File dbDir = new File(dbPath);
+        if (!dbDir.exists()) {
+            if(dbDir.mkdirs()){
+                mDBFile = dbDir;
             }
         }
         else{
-            mDBPath = dbPath;
+            mDBFile = dbDir;
         }
     }
 
@@ -96,6 +100,7 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
         String[] perms = {Manifest.permission.WRITE_EXTERNAL_STORAGE};
         if (EasyPermissions.hasPermissions(this, perms)) {
             getSDCardPath();
+            initAllThing();
         } else {
             // Do not have permissions, request them now
             EasyPermissions.requestPermissions(this, getString(R.string.write_external_storage_rational),
