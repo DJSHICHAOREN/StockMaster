@@ -18,6 +18,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
+        android:requestLegacyExternalStorage="true"
         tools:replace="android:appComponentFactory">
         <activity android:name=".ui.activity.detail.KMADetailActivity"></activity>
         <activity android:name=".ui.activity.recommand.RecommandActivity" />

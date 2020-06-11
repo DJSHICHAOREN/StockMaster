@@ -1,6 +1,7 @@
 package com.example.stockmaster.util;
 
 import android.os.Environment;
+import android.util.Log;
 
 import com.example.stockmaster.entity.Stock;
 import com.example.stockmaster.entity.StockPrice;
@@ -11,6 +12,7 @@ import org.xutils.DbManager;
 import org.xutils.ex.DbException;
 import org.xutils.x;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,9 +23,9 @@ public class DBUtil {
     public static void initDBUtil() throws DbException {
         if(daoConfig == null){
             daoConfig = new DbManager.DaoConfig()
-                    .setDbName(MainActivity.mDBPath == "" ? "test.db" : MainActivity.mDBPath)
+                    .setDbName("test.db")
                     // 不设置dbDir时, 默认存储在app的私有目录.
-//            .setDbDir(new File("/sdcard")) // "sdcard"的写法并非最佳实践, 这里为了简单, 先这样写了.
+                    .setDbDir(new File("/sdcard")) // "sdcard"的写法并非最佳实践, 这里为了简单, 先这样写了.
                     .setDbVersion(2)
                     .setDbOpenListener(new DbManager.DbOpenListener() {
                         @Override
@@ -43,6 +45,13 @@ public class DBUtil {
                             // db.dropDb();
                         }
                     });
+            if(MainActivity.mDBFile != null){
+                daoConfig = daoConfig.setDbDir(MainActivity.mDBFile);
+                Log.d("lwd", "mDBFile != null");
+            }
+            else{
+                Log.d("lwd", "mDBFile == null");
+            }
         }
         if(db == null){
             db = x.getDb(daoConfig);
