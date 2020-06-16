@@ -13,6 +13,11 @@ public class MaState {
     public Date time;
     public Date privousTime;
 
+    public float lowestPrice;
+    public float highestPrice;
+    public float beginPrice;
+    public float endPrice;
+
     public MaState(Date time, float price, Date privousTime){
         this.time = time;
         this.price = price;
@@ -76,6 +81,38 @@ public class MaState {
         this.time = time;
     }
 
+    public float getLowestPrice() {
+        return lowestPrice;
+    }
+
+    public void setLowestPrice(float lowestPrice) {
+        this.lowestPrice = lowestPrice;
+    }
+
+    public float getHighestPrice() {
+        return highestPrice;
+    }
+
+    public void setHighestPrice(float highestPrice) {
+        this.highestPrice = highestPrice;
+    }
+
+    public float getBeginPrice() {
+        return beginPrice;
+    }
+
+    public void setBeginPrice(float beginPrice) {
+        this.beginPrice = beginPrice;
+    }
+
+    public float getEndPrice() {
+        return endPrice;
+    }
+
+    public void setEndPrice(float endPrice) {
+        this.endPrice = endPrice;
+    }
+
     public void setMaPrice(float price, int countedDay){
         if(countedDay == 5){
             setMa5(price);
@@ -116,5 +153,12 @@ public class MaState {
     public String toString(){
         return String.format("time:%s ma5:%f, ma10:%f, ma20:%f, ma30:%f, ma60:%f",
                 getTime().toString(), getMa5(), getMa10(), getMa20(), getMa30(), getMa60());
+    }
+
+    public void setCandleArgs(float beginPrice, float endPrice, float highestPrice, float lowestPrice){
+        setBeginPrice(beginPrice);
+        setEndPrice(endPrice);
+        setHighestPrice(highestPrice);
+        setLowestPrice(lowestPrice);
     }
 }

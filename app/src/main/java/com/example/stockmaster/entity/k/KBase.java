@@ -37,9 +37,51 @@ public class KBase {
         // 添加价格列表之后计算均值
         for(int i=MaCalculater.getMinCountedDay(); i<stockPriceList.size(); i++){
             maStateList.add(MaCalculater.calMaState( filterPreviousKeyStockPrice(stockPriceList.subList(0, i), filteredStockPriceList)));
+            calLastMaStateCandleArgs(maStateList);
             maStateAnalyser.analyse(mStockId, maStateList, mKLevel, TIME_POINT_STRING);
         }
     }
+
+    private void calLastMaStateCandleArgs(List<MaState> maStateList){
+        if(maStateList.size() < 1){
+            return;
+        }
+        MaState lastMaState = maStateList.get(maStateList.size()-1);
+        if(maStateList.size() == 1){
+            lastMaState.setCandleArgs(lastMaState.getPrice(), lastMaState.getPrice(), lastMaState.getPrice(), lastMaState.getPrice());
+        }
+        else{
+            MaState previousMaState = maStateList.get(maStateList.size()-2);
+
+            // 如果是关键点价格
+            if(isDateTheKeyTime(lastMaState.getTime())){
+                lastMaState.setCandleArgs(lastMaState.getPrice(), lastMaState.getPrice(), lastMaState.getPrice(), lastMaState.getPrice());
+            }
+            else{
+                // 得到最高价
+                if(lastMaState.getPrice() > previousMaState.getHighestPrice()){
+                    lastMaState.setHighestPrice(lastMaState.getPrice());
+                }
+                else{
+                    lastMaState.setHighestPrice(previousMaState.getHighestPrice());
+                }
+
+                // 得到最低价
+                if(lastMaState.getPrice() < previousMaState.getLowestPrice()){
+                    lastMaState.setLowestPrice(lastMaState.getPrice());
+                }
+                else{
+                    lastMaState.setLowestPrice(previousMaState.getLowestPrice());
+                }
+
+                // 得到开盘价
+                lastMaState.setBeginPrice(previousMaState.getBeginPrice());
+                // 得到收盘价
+                lastMaState.setEndPrice(lastMaState.getPrice());
+            }
+        }
+    }
+
 
     /**
      * 最后一个stockPrice不变，他的时间代表
@@ -70,19 +112,35 @@ public class KBase {
         // 过滤股票价格
         List<StockPrice> filteredStockPriceList = new ArrayList<>();
         for(StockPrice stockPrice : keyStockPriceList){
-            Date time = stockPrice.getTime();
-            String minuteTime = "";
-            if(time != null){
-                String hour = getDoubleNumString(time.getHours());
-                String minute = getDoubleNumString(time.getMinutes());
-                String second = getDoubleNumString(time.getSeconds());
-                minuteTime = hour + ":" + minute + ":" + second;
-            }
-            if(TIME_POINT_STRING.indexOf(minuteTime) != -1){
+            if(isDateTheKeyTime(stockPrice.getTime())){
                 filteredStockPriceList.add(stockPrice);
             }
         }
         return filteredStockPriceList;
+    }
+
+    private boolean isDateTheKeyTime(Date time){
+        String minuteTime = convertDateToShortString(time);
+        if(TIME_POINT_STRING.indexOf(minuteTime) != -1){
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * 将Date对象转为可以对比的字符串
+     * @param time
+     * @return
+     */
+    private String convertDateToShortString(Date time){
+        String minuteTime = "";
+        if(time != null){
+            String hour = getDoubleNumString(time.getHours());
+            String minute = getDoubleNumString(time.getMinutes());
+            String second = getDoubleNumString(time.getSeconds());
+            minuteTime = hour + ":" + minute + ":" + second;
+        }
+        return minuteTime;
     }
 
     private String getDoubleNumString(int num){
