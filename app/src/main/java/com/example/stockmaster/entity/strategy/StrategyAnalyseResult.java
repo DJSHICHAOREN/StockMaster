@@ -39,6 +39,6 @@ public class StrategyAnalyseResult {
     @Override
     public String toString(){
         String saleType = this.type == R.integer.typeStrategyBuy ? "买点" : "卖点";
-        return String.format("%s，时间：%s，价格：%f， 策略：%d", saleType, time, price, this.type);
+        return String.format("%s，时间：%s，价格：%f", saleType, time, price);
     }
 }
