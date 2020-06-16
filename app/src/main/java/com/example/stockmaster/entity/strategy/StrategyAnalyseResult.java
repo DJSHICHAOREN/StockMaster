@@ -1,5 +1,6 @@
 package com.example.stockmaster.entity.strategy;
 
+import com.example.stockmaster.R;
 import com.example.stockmaster.entity.Stock;
 
 import org.xutils.db.annotation.Column;
@@ -37,6 +38,7 @@ public class StrategyAnalyseResult {
 
     @Override
     public String toString(){
-        return String.format("买点：%s，价格：%f", time, price);
+        String saleType = this.type == R.integer.typeStrategyBuy ? "买点" : "卖点";
+        return String.format("%s，时间：%s，价格：%f， 策略：%d", saleType, time, price, this.type);
     }
 }

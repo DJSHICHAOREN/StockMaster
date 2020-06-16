@@ -2,21 +2,16 @@ package com.example.stockmaster.entity.form;
 
 import android.util.Log;
 
-import com.example.stockmaster.entity.k.K15Minutes;
-import com.example.stockmaster.entity.k.K30Minutes;
-import com.example.stockmaster.entity.k.K5Minutes;
-import com.example.stockmaster.entity.k.K60Minutes;
+import com.example.stockmaster.R;
 import com.example.stockmaster.entity.ma.MaState;
 
 import java.util.Date;
 import java.util.List;
 
 public class UpEmanativeFormJudge extends BaseFormJudge {
-    private static int FORM_ID = 0;
-
 
     public UpEmanativeFormJudge() {
-        super(FORM_ID);
+        super(R.integer.formUpEmanative);
     }
 
     public MaState getMaStateByTime(List<MaState> maStateList, Date time){
@@ -52,8 +47,8 @@ public class UpEmanativeFormJudge extends BaseFormJudge {
         // 判断最新的三条线是否是按序排列且上升的
         int maStateListLength = maStateList.size();
         MaState lastMaState1 = maStateList.get(maStateListLength-1);
-        MaState lastMaState2 = getMaStateByTime(maStateList, lastMaState1.privousTime);
-        MaState lastMaState3 = getMaStateByTime(maStateList, lastMaState2.privousTime);
+        MaState lastMaState2 = getMaStateByTime(maStateList, lastMaState1.previousTime);
+        MaState lastMaState3 = getMaStateByTime(maStateList, lastMaState2.previousTime);
 
         // 确保信息有效
         if(kLevel == 60 && lastMaState3.getMa10() == 0
@@ -138,7 +133,7 @@ public class UpEmanativeFormJudge extends BaseFormJudge {
 //        }
 
         if(isSeriation && isRise){
-            Log.d("lwd", String.format("%s 买他", lastMaState1.getTime()));
+//            Log.d("lwd", String.format("%s 买他", lastMaState1.getTime()));
             return new StockForm(stockId, getFormId(), kLevel, lastMaState1.getTime(), 0, lastMaState1.getPrice());
         }
         return null;

@@ -36,7 +36,10 @@ public class KBase {
         Log.d("lwd", String.format("%d分钟K线分析_stockId:%s", mKLevel, mStockId));
         // 添加价格列表之后计算均值
         for(int i=MaCalculater.getMinCountedDay(); i<stockPriceList.size(); i++){
-            maStateList.add(MaCalculater.calMaState( filterPreviousKeyStockPrice(stockPriceList.subList(0, i), filteredStockPriceList)));
+            MaState maState = MaCalculater.calMaState( filterPreviousKeyStockPrice(stockPriceList.subList(0, i), filteredStockPriceList));
+            if(maState != null && maState.getMa5() != 0){
+                maStateList.add(maState);
+            }
             calLastMaStateCandleArgs(maStateList);
             maStateAnalyser.analyse(mStockId, maStateList, mKLevel, TIME_POINT_STRING);
         }
@@ -49,6 +52,7 @@ public class KBase {
         MaState lastMaState = maStateList.get(maStateList.size()-1);
         if(maStateList.size() == 1){
             lastMaState.setCandleArgs(lastMaState.getPrice(), lastMaState.getPrice(), lastMaState.getPrice(), lastMaState.getPrice());
+            lastMaState.setSupportPrice(-1);
         }
         else{
             MaState previousMaState = maStateList.get(maStateList.size()-2);
@@ -56,6 +60,7 @@ public class KBase {
             // 如果是关键点价格
             if(isDateTheKeyTime(lastMaState.getTime())){
                 lastMaState.setCandleArgs(lastMaState.getPrice(), lastMaState.getPrice(), lastMaState.getPrice(), lastMaState.getPrice());
+                lastMaState.setSupportPrice(lastMaState.getLowestPrice());
             }
             else{
                 // 得到最高价
@@ -78,6 +83,8 @@ public class KBase {
                 lastMaState.setBeginPrice(previousMaState.getBeginPrice());
                 // 得到收盘价
                 lastMaState.setEndPrice(lastMaState.getPrice());
+                // 得到支撑价
+                lastMaState.setSupportPrice(previousMaState.getSupportPrice());
             }
         }
     }

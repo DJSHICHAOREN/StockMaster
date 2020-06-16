@@ -2,6 +2,7 @@ package com.example.stockmaster.entity.strategy;
 
 import android.util.Log;
 
+import com.example.stockmaster.R;
 import com.example.stockmaster.entity.form.StockForm;
 import com.example.stockmaster.entity.k.K15Minutes;
 import com.example.stockmaster.entity.k.K30Minutes;
@@ -16,10 +17,8 @@ import java.util.Set;
 
 public class FlareUpStrategy extends BaseStrategy{
 
-    private static int STRATEGY_ID = 0;
-
     public FlareUpStrategy() {
-        super(STRATEGY_ID);
+        super(R.integer.strategyFlareUp);
     }
 
     /**
@@ -65,7 +64,7 @@ public class FlareUpStrategy extends BaseStrategy{
 //                kLevelSet.add(stockForm.getkLevel());
             }
             if (kLevelSet.size() == 4) {
-                strategyAnalyseResultList.add(new StrategyAnalyseResult(stockId, k60StockForm.getPrice(), STRATEGY_ID, k60StockForm.getTime(), 0));
+                strategyAnalyseResultList.add(new StrategyAnalyseResult(stockId, k60StockForm.getPrice(), getStrategyId(), k60StockForm.getTime(), R.integer.typeStrategyBuy));
             }
         }
         return strategyAnalyseResultList;

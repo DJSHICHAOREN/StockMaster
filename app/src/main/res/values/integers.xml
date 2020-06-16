@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <integer name="formUpEmanative">0</integer>
+    <integer name="formLongToArrange">1</integer>
+    <integer name="formFallThroughSupport">2</integer>
+    <integer name="strategyFlareUp">0</integer>
+    <integer name="strategyLongToArrange">1</integer>
+    <integer name="strategyFallThroughSupport">2</integer>
+    <integer name="typeStrategyBuy">0</integer>
+    <integer name="typeStrategySale">1</integer>
+
+
+
+</resources>

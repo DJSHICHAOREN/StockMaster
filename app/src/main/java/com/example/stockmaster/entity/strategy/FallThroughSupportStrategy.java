@@ -5,26 +5,22 @@ import com.example.stockmaster.entity.form.StockForm;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
-public class LongToArrangeStrategy extends BaseStrategy {
-
-    public LongToArrangeStrategy() {
-        super(R.integer.strategyLongToArrange);
+public class FallThroughSupportStrategy extends BaseStrategy {
+    public FallThroughSupportStrategy() {
+        super(R.integer.strategyFallThroughSupport);
     }
 
     @Override
     public List<StrategyAnalyseResult> analyse(List<StockForm> stockFormList, List<Date> dateList, String stockId) {
         List<StrategyAnalyseResult> strategyAnalyseResultList = new ArrayList<>();
-        // 挑选出符合条件的60K线
+        // 若之前有买点，则写入卖出策略
         for(StockForm stockForm : stockFormList){
-            if(stockForm.getkLevel() == 30 && stockForm.getFormId() == R.integer.formLongToArrange){
-                strategyAnalyseResultList.add(new StrategyAnalyseResult(stockId, stockForm.getPrice(), getStrategyId(), stockForm.getTime(), R.integer.typeStrategyBuy));
+            if(stockForm.getkLevel() == 30 && stockForm.getFormId() == R.integer.formFallThroughSupport){
+                strategyAnalyseResultList.add(new StrategyAnalyseResult(stockId, stockForm.getPrice(), getStrategyId(), stockForm.getTime(), R.integer.typeStrategySale));
             }
         }
-
         return strategyAnalyseResultList;
     }
 }

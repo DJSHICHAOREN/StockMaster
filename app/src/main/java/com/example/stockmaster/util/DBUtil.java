@@ -163,12 +163,11 @@ public class DBUtil {
         return null;
     }
 
-    public static List<StockForm> getStockFormByStockId(String stockId, int formId){
+    public static List<StockForm> getStockFormByStockId(String stockId){
         try {
             initDBUtil();
             List<StockForm> stockFormList = db.selector(StockForm.class)
                     .where("stockId", "=", stockId)
-                    .and("formId", "=", formId)
                     .findAll();
 
             return stockFormList;
@@ -176,6 +175,15 @@ public class DBUtil {
             e.printStackTrace();
         }
         return null;
+    }
+
+    public static void  dropStockFormTable(){
+        try {
+            initDBUtil();
+            db.dropTable(StockForm.class);
+        } catch (DbException e) {
+            e.printStackTrace();
+        }
     }
 
 }

@@ -11,17 +11,17 @@ public class MaState {
     public float ma60;
     private float maPriceDispersion;
     public Date time;
-    public Date privousTime;
-
+    public Date previousTime;
+    public float supportPrice;
     public float lowestPrice;
     public float highestPrice;
     public float beginPrice;
     public float endPrice;
 
-    public MaState(Date time, float price, Date privousTime){
+    public MaState(Date time, float price, Date previousTime){
         this.time = time;
         this.price = price;
-        this.privousTime = privousTime;
+        this.previousTime = previousTime;
     }
 
     public MaState(float price, float ma5, float ma10, float ma20, float ma30, float ma60, Date time) {
@@ -111,6 +111,14 @@ public class MaState {
 
     public void setEndPrice(float endPrice) {
         this.endPrice = endPrice;
+    }
+
+    public float getSupportPrice() {
+        return supportPrice;
+    }
+
+    public void setSupportPrice(float supportPrice) {
+        this.supportPrice = supportPrice;
     }
 
     public void setMaPrice(float price, int countedDay){

@@ -11,4 +11,12 @@ public abstract class BaseStrategy {
         this.strategyId = strategyId;
     }
     public abstract List<StrategyAnalyseResult> analyse(List<StockForm> stockFormList, List<Date> dateList, String stockId);
+
+    public int getStrategyId() {
+        return strategyId;
+    }
+
+    public void setStrategyId(int strategyId) {
+        this.strategyId = strategyId;
+    }
 }
