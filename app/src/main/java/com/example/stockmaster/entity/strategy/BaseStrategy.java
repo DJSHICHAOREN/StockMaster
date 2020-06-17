@@ -10,7 +10,7 @@ public abstract class BaseStrategy {
     public BaseStrategy(int strategyId){
         this.strategyId = strategyId;
     }
-    public abstract List<StrategyAnalyseResult> analyse(List<StockForm> stockFormList, List<Date> dateList, String stockId);
+    public abstract List<StrategyResult> analyse(List<StockForm> stockFormList, List<Date> dateList, String stockId);
 
     public int getStrategyId() {
         return strategyId;

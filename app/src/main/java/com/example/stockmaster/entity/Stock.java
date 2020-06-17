@@ -9,8 +9,7 @@ import com.example.stockmaster.entity.k.K30Minutes;
 import com.example.stockmaster.entity.k.K5Minutes;
 import com.example.stockmaster.entity.k.K60Minutes;
 import com.example.stockmaster.entity.k.KBase;
-import com.example.stockmaster.entity.form.StockForm;
-import com.example.stockmaster.entity.strategy.StrategyAnalyseResult;
+import com.example.stockmaster.entity.strategy.StrategyResult;
 
 import org.xutils.db.annotation.Column;
 import org.xutils.db.annotation.Table;
@@ -41,7 +40,7 @@ public class Stock {
     public float ma250;
 
     public List<KBase> mKBaseList;
-    public List<StrategyAnalyseResult> mStrategyAnalyseResultList;
+    public List<StrategyResult> mStrategyResultList;
 
     public boolean isReceivedTodayData = false; //在为true时，才可以接收分钟的数据
     public List<StockPrice> todayStockPriceList = new ArrayList<>();
@@ -322,21 +321,21 @@ public class Stock {
         isReceivedTodayData = receivedTodayData;
     }
 
-    public List<StrategyAnalyseResult> getStrategyAnalyseResultList() {
-        return mStrategyAnalyseResultList;
+    public List<StrategyResult> getStrategyAnalyseResultList() {
+        return mStrategyResultList;
     }
 
-    public void setStrategyAnalyseResultList(List<StrategyAnalyseResult> mStockFormList) {
-        this.mStrategyAnalyseResultList = mStockFormList;
+    public void setStrategyAnalyseResultList(List<StrategyResult> mStockFormList) {
+        this.mStrategyResultList = mStockFormList;
     }
 
     public String getStrategyAnalyseDescribeString(){
-        if(this.mStrategyAnalyseResultList == null){
+        if(this.mStrategyResultList == null){
             return "没有信息";
         }
         String resultString = "";
-        for(StrategyAnalyseResult strategyAnalyseResult : this.mStrategyAnalyseResultList){
-            resultString += strategyAnalyseResult.toString() + "\n";
+        for(StrategyResult strategyResult : this.mStrategyResultList){
+            resultString += strategyResult.toString() + "\n";
         }
         return resultString;
 

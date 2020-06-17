@@ -1,13 +1,7 @@
 package com.example.stockmaster.entity.strategy;
 
-import android.util.Log;
-
 import com.example.stockmaster.R;
 import com.example.stockmaster.entity.form.StockForm;
-import com.example.stockmaster.entity.k.K15Minutes;
-import com.example.stockmaster.entity.k.K30Minutes;
-import com.example.stockmaster.entity.k.K5Minutes;
-import com.example.stockmaster.entity.k.K60Minutes;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -42,7 +36,7 @@ public class FlareUpStrategy extends BaseStrategy{
     }
 
     @Override
-    public List<StrategyAnalyseResult> analyse(List<StockForm> stockFormList, List<Date> dateList, String stockId) {
+    public List<StrategyResult> analyse(List<StockForm> stockFormList, List<Date> dateList, String stockId) {
         List<StockForm> k60MinuteStockFormList = new ArrayList<>();
         // 挑选出符合条件的60K线
         for(StockForm stockForm : stockFormList){
@@ -50,7 +44,7 @@ public class FlareUpStrategy extends BaseStrategy{
                 k60MinuteStockFormList.add(stockForm);
             }
         }
-        List<StrategyAnalyseResult> strategyAnalyseResultList = new ArrayList<>();
+        List<StrategyResult> strategyResultList = new ArrayList<>();
         for(StockForm k60StockForm : k60MinuteStockFormList){
             Set<Integer> kLevelSet = new HashSet<>();
             Date endTime = k60StockForm.getTime();
@@ -64,9 +58,9 @@ public class FlareUpStrategy extends BaseStrategy{
 //                kLevelSet.add(stockForm.getkLevel());
             }
             if (kLevelSet.size() == 4) {
-                strategyAnalyseResultList.add(new StrategyAnalyseResult(stockId, k60StockForm.getPrice(), getStrategyId(), k60StockForm.getTime(), R.integer.typeStrategyBuy));
+                strategyResultList.add(new StrategyResult(stockId, k60StockForm.getPrice(), getStrategyId(), k60StockForm.getTime(), R.integer.typeStrategyBuy));
             }
         }
-        return strategyAnalyseResultList;
+        return strategyResultList;
     }
 }

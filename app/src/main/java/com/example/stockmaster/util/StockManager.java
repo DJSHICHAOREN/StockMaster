@@ -7,7 +7,7 @@ import com.example.stockmaster.entity.StockPrice;
 import com.example.stockmaster.entity.form.StockForm;
 import com.example.stockmaster.entity.strategy.BaseStrategy;
 import com.example.stockmaster.entity.strategy.VBBStrategy;
-import com.example.stockmaster.entity.strategy.StrategyAnalyseResult;
+import com.example.stockmaster.entity.strategy.StrategyResult;
 import com.example.stockmaster.service.BrainService;
 import com.example.stockmaster.ui.activity.base.UIManager;
 
@@ -172,19 +172,19 @@ private static List<BaseStrategy> mStrategyList = Arrays.asList(new VBBStrategy(
         if(stock != null){
             // 初始计算满足条件stock
             stock.setKeyStockPriceList(stockPriceList);
-            List<StrategyAnalyseResult> strategyAnalyseResultList = new ArrayList<>();
+            List<StrategyResult> strategyResultList = new ArrayList<>();
             List<StockForm> stockFormList = DBUtil.getStockFormByStockId(stock.getId());
             for(BaseStrategy baseStrategy : mStrategyList){
-                strategyAnalyseResultList.addAll(baseStrategy.analyse(stockFormList, dateList, stock.getId()));
+                strategyResultList.addAll(baseStrategy.analyse(stockFormList, dateList, stock.getId()));
             }
             // 打印信息
-            for(StrategyAnalyseResult strategyAnalyseResult :strategyAnalyseResultList){
-                Log.d("lwd", strategyAnalyseResult.toString());
+            for(StrategyResult strategyResult : strategyResultList){
+                Log.d("lwd", strategyResult.toString());
             }
 
             if(mStockMonitorUIManager != null){
-                if(strategyAnalyseResultList.size() > 0){
-                    stock.setStrategyAnalyseResultList(strategyAnalyseResultList);
+                if(strategyResultList.size() > 0){
+                    stock.setStrategyAnalyseResultList(strategyResultList);
                     mStockMonitorPickedStockList.add(stock);
 //                    mStockMonitorUIManager.notifyStockListDateSetChanged();
                 }
