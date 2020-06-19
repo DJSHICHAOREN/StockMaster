@@ -1,5 +1,7 @@
 package com.example.stockmaster.entity.form;
 
+import android.util.Log;
+
 import com.example.stockmaster.R;
 import com.example.stockmaster.entity.ma.MaState;
 
@@ -20,6 +22,8 @@ public class FallThroughSupportFormJudge extends BaseFormJudge {
             return null;
         }
         if(lastMaState.price < lastMaState.getSupportPrice()){
+//            Log.d("lwd", String.format("time:%s, lastMaState:%f, getSupportPrice():%f",
+//                    lastMaState.getTime() ,lastMaState.price, lastMaState.getSupportPrice()));
             return new StockForm(stockId, getFormId(), kLevel, lastMaState.getTime(), 1, lastMaState.getPrice());
         }
         return null;

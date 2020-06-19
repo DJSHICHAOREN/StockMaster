@@ -74,6 +74,8 @@ public class KBase {
                 // 得到最低价
                 if(lastMaState.getPrice() < previousMaState.getLowestPrice()){
                     lastMaState.setLowestPrice(lastMaState.getPrice());
+                    Log.d("lwd", String.format("new lowest price：%f, time:%s", lastMaState.getPrice(),
+                            lastMaState.getTime().toString()));
                 }
                 else{
                     lastMaState.setLowestPrice(previousMaState.getLowestPrice());
