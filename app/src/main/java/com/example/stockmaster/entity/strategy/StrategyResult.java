@@ -86,7 +86,7 @@ public class StrategyResult {
 
     @Override
     public String toString(){
-        String saleType = this.type == R.integer.typeStrategyBuy ? "买点" : "卖点";
+        String saleType = this.type == 0 ? "买点" : "卖点";
         return String.format("%s，时间：%s，价格：%f", saleType, time, price);
     }
 }

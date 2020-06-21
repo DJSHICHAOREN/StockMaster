@@ -26,14 +26,14 @@ public class VBBStrategy extends BaseStrategy {
             // 添加买卖点
             if(stockForm.getFormId() == R.integer.formLongToArrange){
                 if(previousBuyFormTime==null || calculateMinutesGap(previousBuyFormTime, stockForm.getTime()) > 5){
-                    StrategyResult strategyResult = new StrategyResult(stockId, stockForm.getPrice(), getStrategyId(), stockForm.getTime(), R.integer.typeStrategyBuy);
+                    StrategyResult strategyResult = new StrategyResult(stockId, stockForm.getPrice(), getStrategyId(), stockForm.getTime(), 0);
                     strategyResultList.add(strategyResult);
                     previousStrategyResult = strategyResult;
                 }
                 previousBuyFormTime = stockForm.getTime();
             }
-            else if(previousStrategyResult != null && previousStrategyResult.getType() == R.integer.typeStrategyBuy && stockForm.getFormId() == R.integer.formFallThroughSupport){
-                StrategyResult strategyResult = new StrategyResult(stockId, stockForm.getPrice(), getStrategyId(), stockForm.getTime(), R.integer.typeStrategySale);
+            else if(previousStrategyResult != null && previousStrategyResult.getType() == 0 && stockForm.getFormId() == R.integer.formFallThroughSupport){
+                StrategyResult strategyResult = new StrategyResult(stockId, stockForm.getPrice(), getStrategyId(), stockForm.getTime(), 1);
                 strategyResultList.add(strategyResult);
                 previousStrategyResult = strategyResult;
             }

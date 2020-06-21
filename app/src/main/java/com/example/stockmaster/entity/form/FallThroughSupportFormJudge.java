@@ -21,7 +21,7 @@ public class FallThroughSupportFormJudge extends BaseFormJudge {
         if(lastMaState.getSupportPrice() == -1){
             return null;
         }
-        if(lastMaState.price < lastMaState.getSupportPrice()){
+        if(lastMaState.price * 1.001 < lastMaState.getSupportPrice()){
 //            Log.d("lwd", String.format("time:%s, lastMaState:%f, getSupportPrice():%f",
 //                    lastMaState.getTime() ,lastMaState.price, lastMaState.getSupportPrice()));
             return new StockForm(stockId, getFormId(), kLevel, lastMaState.getTime(), 1, lastMaState.getPrice());

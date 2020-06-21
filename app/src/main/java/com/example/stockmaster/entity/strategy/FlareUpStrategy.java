@@ -58,7 +58,7 @@ public class FlareUpStrategy extends BaseStrategy{
 //                kLevelSet.add(stockForm.getkLevel());
             }
             if (kLevelSet.size() == 4) {
-                strategyResultList.add(new StrategyResult(stockId, k60StockForm.getPrice(), getStrategyId(), k60StockForm.getTime(), R.integer.typeStrategyBuy));
+                strategyResultList.add(new StrategyResult(stockId, k60StockForm.getPrice(), getStrategyId(), k60StockForm.getTime(), 0));
             }
         }
         return strategyResultList;

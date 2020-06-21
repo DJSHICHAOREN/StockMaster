@@ -40,7 +40,16 @@ public class KBase {
             if(maState != null && maState.getMa5() != 0){
                 maStateList.add(maState);
             }
+            else{
+                continue;
+            }
             calLastMaStateCandleArgs(maStateList);
+
+            // 蜡烛图日志
+//            if(isDateTheKeyTime(maState.getTime())){
+//                Log.d("lwd", String.format("level:%d %s", mKLevel, maState.toCandleString()));
+//            }
+
             maStateAnalyser.analyse(mStockId, maStateList, mKLevel, TIME_POINT_STRING);
         }
     }
@@ -57,10 +66,11 @@ public class KBase {
         else{
             MaState previousMaState = maStateList.get(maStateList.size()-2);
 
-            // 如果是关键点价格
-            if(isDateTheKeyTime(lastMaState.getTime())){
+            // 如果前一个是关键点价格点
+            // 支撑价是上一个前一段的最低价
+            if(isDateTheKeyTime(previousMaState.getTime())){
                 lastMaState.setCandleArgs(lastMaState.getPrice(), lastMaState.getPrice(), lastMaState.getPrice(), lastMaState.getPrice());
-                lastMaState.setSupportPrice(lastMaState.getLowestPrice());
+                lastMaState.setSupportPrice(previousMaState.getLowestPrice());
             }
             else{
                 // 得到最高价
@@ -74,8 +84,8 @@ public class KBase {
                 // 得到最低价
                 if(lastMaState.getPrice() < previousMaState.getLowestPrice()){
                     lastMaState.setLowestPrice(lastMaState.getPrice());
-                    Log.d("lwd", String.format("new lowest price：%f, time:%s", lastMaState.getPrice(),
-                            lastMaState.getTime().toString()));
+//                    Log.d("lwd", String.format("new lowest price：%f, time:%s", lastMaState.getPrice(),
+//                            lastMaState.getTime().toString()));
                 }
                 else{
                     lastMaState.setLowestPrice(previousMaState.getLowestPrice());

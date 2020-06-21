@@ -1,5 +1,7 @@
 package com.example.stockmaster.entity.ma;
 
+import android.util.Log;
+
 import java.util.Date;
 
 public class MaState {
@@ -118,6 +120,7 @@ public class MaState {
     }
 
     public void setSupportPrice(float supportPrice) {
+//        Log.d("lwd", String.format("setSupportPrice time:%s, price:%s", this.getTime(), this.getPrice()));
         this.supportPrice = supportPrice;
     }
 
@@ -161,6 +164,11 @@ public class MaState {
     public String toString(){
         return String.format("time:%s ma5:%f, ma10:%f, ma20:%f, ma30:%f, ma60:%f",
                 getTime().toString(), getMa5(), getMa10(), getMa20(), getMa30(), getMa60());
+    }
+
+    public String toCandleString(){
+        return String.format("time %s, highestPrice:%f, lowestPrice:%f, beginPrice:%f, endPrice:%f, supportPrice:%f",
+                getTime(), getHighestPrice(), getLowestPrice(), getBeginPrice(), getEndPrice(), getSupportPrice());
     }
 
     public void setCandleArgs(float beginPrice, float endPrice, float highestPrice, float lowestPrice){
