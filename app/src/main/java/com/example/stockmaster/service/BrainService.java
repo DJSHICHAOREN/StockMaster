@@ -44,6 +44,8 @@ public class BrainService extends Service {
             public void run() {
                 createNotificationChannel();
 
+                // 请求日均线数据
+                mDataQueryerManager.queryMaPriceOneTime();
                 // 如果在非交易时间，则请求一次一日价格，为了计算买卖点，请求一次分时价格，为了得到股票名字
                 mDataQueryerManager.queryTodayPriceAndMinutePriceOneTime();
                 // 定时请求分时价格

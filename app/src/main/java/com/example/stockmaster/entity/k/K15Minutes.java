@@ -1,13 +1,14 @@
 package com.example.stockmaster.entity.k;
 
+import com.example.stockmaster.entity.Stock;
 import com.example.stockmaster.entity.StockPrice;
 
 import java.util.List;
 
 public class K15Minutes extends KBase {
 
-    public K15Minutes(String stockId) {
-        super(stockId, "09:45:00, " +
+    public K15Minutes(Stock stock) {
+        super(stock, "09:45:00, " +
                 "10:00:00, 10:15:00, 10:30:00, 10:45:00, " +
                 "11:00:00, 11:15:00, 11:30:00, 11:45:00," +
                 "12:00:00," +

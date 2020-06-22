@@ -1,5 +1,7 @@
 package com.example.stockmaster.entity.strategy;
 
+import android.util.Log;
+
 import com.example.stockmaster.R;
 import com.example.stockmaster.entity.Stock;
 import com.example.stockmaster.entity.form.StockForm;
@@ -17,6 +19,11 @@ public class VBBStrategy extends BaseStrategy {
 
     @Override
     public List<StrategyResult> analyse(List<StockForm> stockFormList, List<Date> dateList, String stockId) {
+        if(stockFormList == null){
+            Log.d("lwd", "VBBStrategy analyse stockFormList == null");
+            return new ArrayList<>();
+        }
+
         List<StrategyResult> strategyResultList = new ArrayList<>();
         // 若之前有买点，则写入卖出策略
         for(StockForm stockForm : stockFormList){

@@ -3,6 +3,7 @@ package com.example.stockmaster.entity.form;
 import android.util.Log;
 
 import com.example.stockmaster.R;
+import com.example.stockmaster.entity.Stock;
 import com.example.stockmaster.entity.ma.MaState;
 
 import java.util.Date;
@@ -39,7 +40,7 @@ public class UpEmanativeFormJudge extends BaseFormJudge {
      * @return
      */
     @Override
-    public StockForm judge(String stockId, List<MaState> maStateList, int kLevel){
+    public StockForm judge(String stockId, List<MaState> maStateList, int kLevel, Stock stock){
         if(maStateList == null || maStateList.size() < kLevel * 3){
 //            Log.d("lwd", "maStateList为空或者maStateList的长度小于3");
             return null;

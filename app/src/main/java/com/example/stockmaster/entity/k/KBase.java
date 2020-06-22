@@ -2,6 +2,7 @@ package com.example.stockmaster.entity.k;
 
 import android.util.Log;
 
+import com.example.stockmaster.entity.Stock;
 import com.example.stockmaster.entity.StockPrice;
 import com.example.stockmaster.entity.ma.MaState;
 import com.example.stockmaster.util.MaCalculater;
@@ -18,10 +19,12 @@ public class KBase {
     private List<StockPrice> qualifiedPricePointList = new ArrayList<>();
     private int mKLevel = 0; // K线的级别
     private String mStockId;
-    public KBase(String stockId, String TIME_POINT_STRING, int kLevel){
+    private Stock mStock;
+    public KBase(Stock stock, String TIME_POINT_STRING, int kLevel){
         this.TIME_POINT_STRING = TIME_POINT_STRING;
         mKLevel = kLevel;
-        mStockId = stockId;
+        mStockId = stock.getId();
+        mStock = stock;
     }
 
     /**
@@ -50,7 +53,7 @@ public class KBase {
 //                Log.d("lwd", String.format("level:%d %s", mKLevel, maState.toCandleString()));
 //            }
 
-            maStateAnalyser.analyse(mStockId, maStateList, mKLevel, TIME_POINT_STRING);
+            maStateAnalyser.analyse(mStockId, maStateList, mKLevel, TIME_POINT_STRING, mStock);
         }
     }
 

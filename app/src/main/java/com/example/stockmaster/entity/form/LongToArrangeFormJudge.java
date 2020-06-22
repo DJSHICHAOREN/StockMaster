@@ -3,6 +3,7 @@ package com.example.stockmaster.entity.form;
 import android.util.Log;
 
 import com.example.stockmaster.R;
+import com.example.stockmaster.entity.Stock;
 import com.example.stockmaster.entity.ma.MaState;
 
 import java.util.Date;
@@ -39,7 +40,7 @@ public class LongToArrangeFormJudge extends BaseFormJudge {
      * @return
      */
     @Override
-    public StockForm judge(String stockId, List<MaState> maStateList, int kLevel){
+    public StockForm judge(String stockId, List<MaState> maStateList, int kLevel, Stock stock){
         if(maStateList == null || maStateList.size() < kLevel * 3){
 //            Log.d("lwd", "maStateList为空或者maStateList的长度小于3");
             return null;
@@ -64,6 +65,7 @@ public class LongToArrangeFormJudge extends BaseFormJudge {
         boolean isSeriation = false; // 均线是否是呈梯子型排列
         boolean isRise = false; // 均线是否上升
         boolean isHorizontalBefore = false; // 均线之前是否横盘
+        boolean isDayMaUp = false;
         // 判断均线是否阶梯形排列
         if(lastMaState1.getMa5() >= lastMaState1.getMa10()
                 && lastMaState1.getMa10() > lastMaState1.getMa20()
@@ -99,7 +101,12 @@ public class LongToArrangeFormJudge extends BaseFormJudge {
 //            }
 //        }
 
-        if(isSeriation && isRise){
+        if(stock.getMa10() >= stock.getMa30() &&
+            lastMaState1.getMa30() >= lastMaState1.getMa60()){
+            isDayMaUp = true;
+        }
+
+        if(isSeriation && isRise && isDayMaUp){
 //            Log.d("lwd", String.format("%s 买他，价格:%s", lastMaState1.getTime(), lastMaState1.getPrice()));
             return new StockForm(stockId, getFormId(), kLevel, lastMaState1.getTime(), 0, lastMaState1.getPrice());
         }

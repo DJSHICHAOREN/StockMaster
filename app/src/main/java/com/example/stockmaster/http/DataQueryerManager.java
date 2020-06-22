@@ -127,5 +127,20 @@ public class DataQueryerManager {
         }, 0, 2000); // 1 seconds
     }
 
+    /**
+     * 请求日均线数据
+     */
+    public void queryMaPriceOneTime(){
+        for(final String stockId : StockManager.getDefaultStockMonitorStockIdList()) {
+            Runnable runnable = new Runnable() {
+                @Override
+                public void run() {
+                    mSinaDataQueryer.queryStocksMAPrice(stockId);
+                }
+            };
+            mCachedThreadPool.execute(runnable);
+        }
+    }
+
 
 }

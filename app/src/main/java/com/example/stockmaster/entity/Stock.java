@@ -61,7 +61,7 @@ public class Stock {
         this.id = id;
         this.name = name;
         this.monitorType = monitorType;
-        this.mKBaseList = Arrays.asList(new K5Minutes(id), new K15Minutes(id), new K30Minutes(id), new K60Minutes(id));
+        this.mKBaseList = Arrays.asList(new K5Minutes(this), new K15Minutes(this), new K30Minutes(this), new K60Minutes(this));
     }
 
     /**
@@ -246,7 +246,7 @@ public class Stock {
         // 由于在数据库中读取的stock不会经过构造函数，所以mKBaseList可能为空
         if(mKBaseList == null){
 //            this.mKBaseList = Arrays.asList(new K5Minutes(id), new K15Minutes(id), new K30Minutes(id), new K60Minutes(id));
-            this.mKBaseList = Arrays.asList(new K30Minutes(id), new K60Minutes(id));
+            this.mKBaseList = Arrays.asList(new K30Minutes(this), new K60Minutes(this));
         }
         for(KBase kBase : mKBaseList){
             kBase.setKeyStockPriceList(keyStockPriceList);

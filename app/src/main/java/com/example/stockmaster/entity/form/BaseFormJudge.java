@@ -1,5 +1,6 @@
 package com.example.stockmaster.entity.form;
 
+import com.example.stockmaster.entity.Stock;
 import com.example.stockmaster.entity.ma.MaState;
 
 import java.util.List;
@@ -11,7 +12,7 @@ public abstract class BaseFormJudge {
         this.formId = formId;
     }
 
-    public abstract StockForm judge(String stockId, List<MaState> maStateList, int kLevel);
+    public abstract StockForm judge(String stockId, List<MaState> maStateList, int kLevel, Stock stock);
 
     public int getFormId() {
         return formId;
