@@ -99,6 +99,14 @@ public class ResponseStringToObject {
                     if(sinaStockPrice.getM() == null || sinaStockPrice.getM().equals("")){
                         return null;
                     }
+                    // 过滤时间在09:30:00
+                    String[] timeArray = sinaStockPrice.getM().split(":");
+                    int hour = Integer.parseInt(timeArray[0]);
+                    int minutes = Integer.parseInt(timeArray[1]);
+                    if(hour < 9 || (hour == 9 && minutes <30)){
+                        continue;
+                    }
+
                     // 是否过滤特殊时间点
                     if(isUseTimePoint){
                         String timePointString =
