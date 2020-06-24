@@ -101,8 +101,8 @@ public class LongToArrangeFormJudge extends BaseFormJudge {
 //            }
 //        }
 
-        if(stock.getMa10() >= stock.getMa30() &&
-            lastMaState1.getMa30() >= lastMaState1.getMa60()){
+        if(stock.getDayMaPrice().getMa10() >= stock.getDayMaPrice().getMa30() &&
+                stock.getDayMaPrice().getMa30() >= stock.getDayMaPrice().getMa50()){
             isDayMaUp = true;
         }
 

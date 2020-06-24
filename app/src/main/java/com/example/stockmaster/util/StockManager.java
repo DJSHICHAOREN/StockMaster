@@ -5,6 +5,7 @@ import android.util.Log;
 import com.example.stockmaster.entity.Stock;
 import com.example.stockmaster.entity.StockPrice;
 import com.example.stockmaster.entity.form.StockForm;
+import com.example.stockmaster.entity.ma.DayMaPrice;
 import com.example.stockmaster.entity.strategy.BaseStrategy;
 import com.example.stockmaster.entity.strategy.VBBStrategy;
 import com.example.stockmaster.entity.strategy.StrategyResult;
@@ -41,6 +42,7 @@ public class StockManager {
 private static List<BaseStrategy> mStrategyList = Arrays.asList(new VBBStrategy());
     private static int mAllStockListSize = 0;
     private static int mNowLoadedStockListSize = 0;
+    private static String mLastDealDate = "";
 
     public static void initStockManager(){
 
@@ -103,7 +105,6 @@ private static List<BaseStrategy> mStrategyList = Arrays.asList(new VBBStrategy(
      * @param stockIdList
      */
     public static void createStocks(List<String> stockIdList, boolean isMonitorBuyPoint){
-        Set<String> stockSet = new HashSet<>(stockIdList);
         for(String stockId : stockIdList){
             if(stockId.length() > 2 && !stockId.substring(0,2).equals("hk")){
                 stockId = "hk" + stockId;
@@ -166,7 +167,7 @@ private static List<BaseStrategy> mStrategyList = Arrays.asList(new VBBStrategy(
      * @param stockPriceList
      * @param stockId
      */
-    public static void saveStockPriceList(List<StockPrice> stockPriceList, String stockId, List<Date> dateList){
+    public static void analyseStockPriceList(List<StockPrice> stockPriceList, String stockId, List<Date> dateList){
         int stockIndex = mStockIdList.indexOf(stockId);
         Stock stock = mStockList.get(stockIndex);
         if(stock != null){
@@ -190,14 +191,18 @@ private static List<BaseStrategy> mStrategyList = Arrays.asList(new VBBStrategy(
 //                    mStockMonitorUIManager.notifyStockListDateSetChanged();
                 }
             }
-
-//            for(StockPrice stockPrice : stockPriceList){
-//                // 保存价格到数据库
-//                DBUtil.saveStockPrice(stockPrice);
-//            }
             mNowLoadedStockListSize++;
             Log.d("lwd", String.format("%s 五日关键数据加载完毕 进度：%d/%d", stockId, mNowLoadedStockListSize, mAllStockListSize));
+        }
+    }
 
+    /**
+     * 将价格保存到数据库
+     * @param stockPriceList
+     */
+    public static void saveStockPriceList(List<StockPrice> stockPriceList){
+        for(StockPrice stockPrice : stockPriceList){
+            DBUtil.saveStockPrice(stockPrice);
         }
     }
 
@@ -248,11 +253,11 @@ private static List<BaseStrategy> mStrategyList = Arrays.asList(new VBBStrategy(
 //        Log.d("lwd", String.format("stockId:%s, ma5:%f", stock.id, stock.getMa5()));
     }
 
-    public static void addMAPrice(String stockId, String ma10, String ma30, String ma50, String ma100, String ma250) {
+    public static void setStockDayMaPrice(String stockId, DayMaPrice dayMaPrice) {
         int stockIndex = mStockIdList.indexOf(stockId);
         Stock stock = mStockList.get(stockIndex);
         if(stock != null){
-            stock.setMAPrice(ma10, ma30, ma50, ma100, ma250);
+            stock.setDayMaPrice(dayMaPrice);
             Log.d("lwd", String.format("%s 加载均线数据数据", stockId));
         }
     }
@@ -296,5 +301,13 @@ private static List<BaseStrategy> mStrategyList = Arrays.asList(new VBBStrategy(
             }
         }
         return lineUpStockList;
+    }
+
+    public static String getLastDealDate() {
+        return mLastDealDate;
+    }
+
+    public static void setLastDealDate(String mLastDealDate) {
+        StockManager.mLastDealDate = mLastDealDate;
     }
 }

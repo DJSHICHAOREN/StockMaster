@@ -48,5 +48,14 @@ public class TextUtil {
         return dateList;
     }
 
+    public static String searchDateString(String str){
+        List<String> dateStringList = getAllSatisfyStrings(str,
+                "\\d*/\\d*/\\d*");
+        if(dateStringList.size() > 0){
+            return dateStringList.get(0);
+        }
+        return null;
+    }
+
 
 }

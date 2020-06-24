@@ -10,6 +10,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.stockmaster.entity.StockPrice;
+import com.example.stockmaster.entity.ma.DayMaPrice;
 import com.example.stockmaster.entity.masina.MAResponseResult;
 import com.example.stockmaster.http.converter.ResponseStringToObject;
 import com.example.stockmaster.util.MAGenerator;
@@ -20,7 +21,6 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.reflect.TypeToken;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -117,12 +117,13 @@ public class SinaDataQueryer {
                             if(dayCount == 5){
                                 List<StockPrice> stockPriceList = mResponseStringToObject.sinaTodayPriceResponseToObjectList(response, false, StockPrice.QueryType.FIVEDAY);
                                 List<Date> dateList = TextUtil.convertStringToDateList(response);
-                                StockManager.saveStockPriceList(stockPriceList, stockId, dateList);
+                                StockManager.saveStockPriceList(stockPriceList);
+                                StockManager.analyseStockPriceList(stockPriceList, stockId, dateList);
                                 // 为了求五日均线,得到收盘价列表
                                 List<Float> fiveDayPriceList = mMaGenerator.generateDayMA5(response);
                                 StockManager.setPreviousFourDayPriceList(fiveDayPriceList.subList(1, fiveDayPriceList.size()), stockId);
                                 // 请求均价
-                                queryStocksMAPrice(stockId);
+//                                queryStocksMAPrice(stockId);
                             }
                             Log.d("lwd", String.format("%s %d日数据添加完毕", stockId, dayCount));
                         }
@@ -170,9 +171,10 @@ public class SinaDataQueryer {
                         JsonObject jsonObject = new JsonParser().parse(response).getAsJsonObject();
                         MAResponseResult mAResponseResult = new Gson().fromJson(jsonObject, new TypeToken<MAResponseResult>(){}.getType());
 //                        Log.d("lwd", String.format("stockId:%s, ma10:%s", stockId, mAResponseResult.getData().getMA10()));
-                        StockManager.addMAPrice(stockId, mAResponseResult.getData().getMA10(), mAResponseResult.getData().getMA30(),
+                        DayMaPrice dayMaPrice = new DayMaPrice(stockId, StockManager.getLastDealDate(), mAResponseResult.getData().getMA10(), mAResponseResult.getData().getMA30(),
                                 mAResponseResult.getData().getMA50(), mAResponseResult.getData().getMA100(),
                                 mAResponseResult.getData().getMA250());
+                        StockManager.setStockDayMaPrice(stockId, dayMaPrice);
                     }
                 },
                 new Response.ErrorListener() {
@@ -180,6 +182,33 @@ public class SinaDataQueryer {
                     public void onErrorResponse(VolleyError error) {
                         queryStocksMAPrice(stockId);
                         Log.e("lwd","请求均线数据失败");
+                    }
+                });
+
+        mQueue.add(stringRequest);
+    }
+
+    public void queryLastDealDate(){
+        // Instantiate the RequestQueue.
+        if(mQueue ==null)
+            mQueue = Volley.newRequestQueue(mContext);
+        String url = "http://hq.sinajs.cn/list=rt_hk09988";
+        //http://hq.sinajs.cn/list=rt_hk09988
+
+        // Request a string response from the provided URL.
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        String dateString = TextUtil.searchDateString(response);
+                        StockManager.setLastDealDate(dateString);
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        queryLastDealDate();
+                        Log.e("lwd",String.format("请求最近交易日期失败"));
                     }
                 });
 

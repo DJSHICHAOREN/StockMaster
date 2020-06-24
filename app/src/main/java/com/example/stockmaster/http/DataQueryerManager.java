@@ -48,7 +48,7 @@ public class DataQueryerManager {
     public void beginQueryTodayPrice(){
         Log.d("lwd","获取今天股票数据");
         // 设置计时器进行请求
-        Timer timer = new Timer("TodayStocks");
+        Timer timer = new Timer("beginQueryTodayPrice");
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
@@ -76,11 +76,14 @@ public class DataQueryerManager {
      * 请求今天股票数据为了分析今日买卖点
      * 请求分时股票数据为了得到股票名称
      */
-    public void queryTodayPriceAndMinutePriceOneTime(){
+    public void queryAllOnce(){
         Calendar calendar = Calendar.getInstance();
         //获取系统时间
         int hour = calendar.get(Calendar.HOUR_OF_DAY);
         if(hour < 9 || hour > 16){
+            // 请求最近交易时间
+            mSinaDataQueryer.queryLastDealDate();
+
             // 请求分时股票数据
             String stockIdStr = "";
             for(String stockId : StockManager.getDefaultStockMonitorStockIdList()) {
@@ -88,12 +91,23 @@ public class DataQueryerManager {
             }
             final String stockIdString = stockIdStr;
             mSinaDataQueryer.queryStocksNowPrice(stockIdString);
+
             // 请求一天股票数据
             for(final String stockId : StockManager.getDefaultStockMonitorStockIdList()) {
                 Runnable runnable = new Runnable() {
                     @Override
                     public void run() {
                         mSinaDataQueryer.queryStocksTodayPrice(stockId);
+                    }
+                };
+                mCachedThreadPool.execute(runnable);
+            }
+            // 请求均线数据
+            for(final String stockId : StockManager.getDefaultStockMonitorStockIdList()) {
+                Runnable runnable = new Runnable() {
+                    @Override
+                    public void run() {
+                        mSinaDataQueryer.queryStocksMAPrice(stockId);
                     }
                 };
                 mCachedThreadPool.execute(runnable);
@@ -118,7 +132,7 @@ public class DataQueryerManager {
             return;
         }
         // 设置计时器进行请求
-        Timer timer = new Timer("MinuteStocks");
+        Timer timer = new Timer("beginQueryMinutePrice");
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
@@ -128,19 +142,54 @@ public class DataQueryerManager {
     }
 
     /**
-     * 请求日均线数据
+     * 每半小时请求一次日均线数据
      */
-    public void queryMaPriceOneTime(){
-        for(final String stockId : StockManager.getDefaultStockMonitorStockIdList()) {
-            Runnable runnable = new Runnable() {
-                @Override
-                public void run() {
-                    mSinaDataQueryer.queryStocksMAPrice(stockId);
+    public void beginQueryMaPrice(){
+        // 设置计时器进行请求
+        Timer timer = new Timer("beginQueryMaPrice");
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                Calendar calendar = Calendar.getInstance();
+                //获取系统时间
+                int hour = calendar.get(Calendar.HOUR_OF_DAY);
+                if(hour < 9 || hour > 16){
+                    return;
                 }
-            };
-            mCachedThreadPool.execute(runnable);
-        }
+                for(final String stockId : StockManager.getDefaultStockMonitorStockIdList()) {
+                    Runnable runnable = new Runnable() {
+                        @Override
+                        public void run() {
+                            mSinaDataQueryer.queryStocksMAPrice(stockId);
+                        }
+                    };
+                    mCachedThreadPool.execute(runnable);
+                }
+            }
+        }, 0, 1000*60*30); // 1 seconds
     }
 
+    /**
+     * 每隔20分钟请求一次最近开盘日期
+     */
+    public void beginQueryLastDealDate(){
+        Timer timer = new Timer("queryLastDealDate");
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                Calendar calendar = Calendar.getInstance();
+                //获取系统时间
+                int hour = calendar.get(Calendar.HOUR_OF_DAY);
+                if(hour < 9 || hour > 16){
+                    return;
+                }
+                mSinaDataQueryer.queryLastDealDate();
+
+            }
+        }, 0, 1000*60*20);
+
+
+
+    }
 
 }

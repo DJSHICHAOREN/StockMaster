@@ -9,6 +9,7 @@ import com.example.stockmaster.entity.k.K30Minutes;
 import com.example.stockmaster.entity.k.K5Minutes;
 import com.example.stockmaster.entity.k.K60Minutes;
 import com.example.stockmaster.entity.k.KBase;
+import com.example.stockmaster.entity.ma.DayMaPrice;
 import com.example.stockmaster.entity.strategy.StrategyResult;
 
 import org.xutils.db.annotation.Column;
@@ -28,16 +29,8 @@ public class Stock {
     public StockPrice currentPrice;
     @Column(name = "monitorType")
     public int monitorType; //{0：不监控，1：监控买点，2：监控卖点}
-    @Column(name = "ma10")
-    public float ma10;
-    @Column(name = "ma30")
-    public float ma30;
-    @Column(name = "ma50")
-    public float ma50;
-    @Column(name = "ma100")
-    public float ma100;
-    @Column(name = "ma250")
-    public float ma250;
+
+    private DayMaPrice mDayMaPrice;
 
     public List<KBase> mKBaseList;
     public List<StrategyResult> mStrategyResultList;
@@ -189,22 +182,12 @@ public class Stock {
         return sum;
     }
 
-    public void setMAPrice(String ma10, String ma30, String ma50, String ma100, String ma250) {
-        if(!ma10.equals("NA")){
-            this.ma10 = Float.parseFloat(ma10);
-        }
-        if(!ma30.equals("NA")){
-            this.ma30 = Float.parseFloat(ma30);
-        }
-        if(!ma50.equals("NA")){
-            this.ma50 = Float.parseFloat(ma50);
-        }
-        if(!ma100.equals("NA")){
-            this.ma100 = Float.parseFloat(ma100);
-        }
-        if(!ma250.equals("NA")){
-            this.ma250 = Float.parseFloat(ma250);
-        }
+    public DayMaPrice getDayMaPrice() {
+        return mDayMaPrice;
+    }
+
+    public void setDayMaPrice(DayMaPrice mDayMaPrice) {
+        this.mDayMaPrice = mDayMaPrice;
     }
 
     /**
@@ -271,46 +254,6 @@ public class Stock {
 
     public void setCurrentPrice(StockPrice currentPrice) {
         this.currentPrice = currentPrice;
-    }
-
-    public float getMa10() {
-        return ma10;
-    }
-
-    public void setMa10(float ma10) {
-        this.ma10 = ma10;
-    }
-
-    public float getMa30() {
-        return ma30;
-    }
-
-    public void setMa30(float ma30) {
-        this.ma30 = ma30;
-    }
-
-    public float getMa50() {
-        return ma50;
-    }
-
-    public void setMa50(float ma50) {
-        this.ma50 = ma50;
-    }
-
-    public float getMa100() {
-        return ma100;
-    }
-
-    public void setMa100(float ma100) {
-        this.ma100 = ma100;
-    }
-
-    public float getMa250() {
-        return ma250;
-    }
-
-    public void setMa250(float ma250) {
-        this.ma250 = ma250;
     }
 
     public boolean isReceivedTodayData() {
