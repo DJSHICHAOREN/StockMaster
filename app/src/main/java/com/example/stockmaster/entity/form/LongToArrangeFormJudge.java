@@ -101,6 +101,7 @@ public class LongToArrangeFormJudge extends BaseFormJudge {
 //            }
 //        }
 
+        // 判断日K线是否发散
         if(stock.getDayMaPrice().getMa10() >= stock.getDayMaPrice().getMa30() &&
                 stock.getDayMaPrice().getMa30() >= stock.getDayMaPrice().getMa50()){
             isDayMaUp = true;

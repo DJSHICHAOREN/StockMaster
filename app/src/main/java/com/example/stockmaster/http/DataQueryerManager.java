@@ -84,14 +84,6 @@ public class DataQueryerManager {
             // 请求最近交易时间
             mSinaDataQueryer.queryLastDealDate();
 
-            // 请求分时股票数据
-            String stockIdStr = "";
-            for(String stockId : StockManager.getDefaultStockMonitorStockIdList()) {
-                stockIdStr = stockIdStr + "rt_" + stockId + ",";
-            }
-            final String stockIdString = stockIdStr;
-            mSinaDataQueryer.queryStocksNowPrice(stockIdString);
-
             // 请求一天股票数据
             for(final String stockId : StockManager.getDefaultStockMonitorStockIdList()) {
                 Runnable runnable = new Runnable() {
@@ -102,16 +94,24 @@ public class DataQueryerManager {
                 };
                 mCachedThreadPool.execute(runnable);
             }
-            // 请求均线数据
-            for(final String stockId : StockManager.getDefaultStockMonitorStockIdList()) {
-                Runnable runnable = new Runnable() {
-                    @Override
-                    public void run() {
-                        mSinaDataQueryer.queryStocksMAPrice(stockId);
-                    }
-                };
-                mCachedThreadPool.execute(runnable);
-            }
+        }
+        // 请求分时股票数据
+        String stockIdStr = "";
+        for(String stockId : StockManager.getDefaultStockMonitorStockIdList()) {
+            stockIdStr = stockIdStr + "rt_" + stockId + ",";
+        }
+        final String stockIdString = stockIdStr;
+        mSinaDataQueryer.queryStocksNowPrice(stockIdString);
+
+        // 请求均线数据
+        for(final String stockId : StockManager.getDefaultStockMonitorStockIdList()) {
+            Runnable runnable = new Runnable() {
+                @Override
+                public void run() {
+                    mSinaDataQueryer.queryStocksMAPrice(stockId);
+                }
+            };
+            mCachedThreadPool.execute(runnable);
         }
     }
 
