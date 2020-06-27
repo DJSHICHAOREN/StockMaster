@@ -111,14 +111,14 @@ public class SinaDataQueryer {
                         try{
                             if(dayCount == 1){
                                 List<StockPrice> stockPriceList = mResponseStringToObject.sinaTodayPriceResponseToObjectList(response, false, StockPrice.QueryType.TODAY);
-                                StockManager.addStockPriceList(stockPriceList, stockId, true);
+                                StockManager.addOneDayStockPriceList(stockPriceList, stockId, true);
 
                             }
                             if(dayCount == 5){
                                 List<StockPrice> stockPriceList = mResponseStringToObject.sinaTodayPriceResponseToObjectList(response, false, StockPrice.QueryType.FIVEDAY);
                                 List<Date> dateList = TextUtil.convertStringToDateList(response);
 //                                StockManager.saveStockPriceList(stockPriceList);
-                                StockManager.analyseStockPriceList(stockPriceList, stockId, dateList);
+                                StockManager.addFiveDayStockPriceList(stockPriceList, stockId, dateList);
                                 // 为了求五日均线,得到收盘价列表
                                 List<Float> fiveDayPriceList = mMaGenerator.generateDayMA5(response);
                                 StockManager.setPreviousFourDayPriceList(fiveDayPriceList.subList(1, fiveDayPriceList.size()), stockId);

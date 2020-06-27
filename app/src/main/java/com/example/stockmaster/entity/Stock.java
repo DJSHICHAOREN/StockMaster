@@ -69,12 +69,16 @@ public class Stock {
         dealPriceList.clear();
     }
 
+    public void addMinuteStockPrice(StockPrice stockPrice){
+
+    }
+
     /**
      * 加入股票价格
      * @param stockPrice
      * @return 如果成功加入，则返回true，否则返回false
      */
-    public boolean addStockPrice(StockPrice stockPrice){
+    public boolean addTodayStockPrice(StockPrice stockPrice){
         currentPrice = stockPrice;
         if(!todayStockPriceList.isEmpty()){
             StockPrice lastStockPrice  = todayStockPriceList.get(todayStockPriceList.size()-1);
@@ -97,6 +101,21 @@ public class Stock {
         }
 
         return false;
+    }
+
+    /**
+     * 添加关键价格列表
+     * @param keyStockPriceList
+     */
+    public void addFiveDayKeyStockPriceList(List<StockPrice> keyStockPriceList) {
+        // 由于在数据库中读取的stock不会经过构造函数，所以mKBaseList可能为空
+        if(mKBaseList == null){
+//            this.mKBaseList = Arrays.asList(new K5Minutes(id), new K15Minutes(id), new K30Minutes(id), new K60Minutes(id));
+            this.mKBaseList = Arrays.asList(new K30Minutes(this), new K60Minutes(this));
+        }
+        for(KBase kBase : mKBaseList){
+            kBase.setKeyStockPriceList(keyStockPriceList);
+        }
     }
 
     /**
@@ -221,21 +240,7 @@ public class Stock {
         this.monitorType = monitorType;
     }
 
-    /**
-     * 添加关键价格列表
-     * @param keyStockPriceList
-     */
-    public void setKeyStockPriceList(List<StockPrice> keyStockPriceList) {
-        // 由于在数据库中读取的stock不会经过构造函数，所以mKBaseList可能为空
-        if(mKBaseList == null){
-//            this.mKBaseList = Arrays.asList(new K5Minutes(id), new K15Minutes(id), new K30Minutes(id), new K60Minutes(id));
-            this.mKBaseList = Arrays.asList(new K30Minutes(this), new K60Minutes(this));
-        }
-        for(KBase kBase : mKBaseList){
-            kBase.setKeyStockPriceList(keyStockPriceList);
-        }
 
-    }
 
     /**
      * 打印挑选出的时间点

@@ -15,9 +15,7 @@ import com.example.stockmaster.ui.activity.base.UIManager;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -97,7 +95,7 @@ private static List<BaseStrategy> mStrategyList = Arrays.asList(new VBBStrategy(
     }
 
     public static void getKeyStockPriceFromDB(Stock stock){
-        stock.setKeyStockPriceList(DBUtil.getStockPriceList(stock.getId()));
+        stock.addFiveDayKeyStockPriceList(DBUtil.getStockPriceList(stock.getId()));
     }
 
     /**
@@ -131,12 +129,29 @@ private static List<BaseStrategy> mStrategyList = Arrays.asList(new VBBStrategy(
     }
 
     /**
-     * 添加单只股票的价格
-     * @param stockPrice
+     * 添加实时股票价格
+     * 在添加了从开盘到现在的数据之后，再添加实时的每分钟的数据
+     * @param stockPriceList
      */
-    public static void add(Stock stock, StockPrice stockPrice){
-        if(stock.addStockPrice(stockPrice)){
-            mShortSwingAnalyser.analyse(stock);
+    public static void addMinuteStockPrice(List<StockPrice> stockPriceList){
+        for(StockPrice stockPrice : stockPriceList){
+            int stockIndex = mStockIdList.indexOf(stockPrice.stockId);
+            if(stockIndex == -1){
+                Log.e("lwd", String.format("没有找到价格对应的股票id：%s", stockPrice.stockId));
+                return;
+            }
+            Stock stock = mStockList.get(stockIndex);
+            // 设置股票名称
+            if(stockPrice.getName() != null && stock.getName().equals("")){
+                stock.setName(stockPrice.getName());
+                DBUtil.updateStock(stock);
+            }
+            if(stock != null && stock.isReceivedTodayData){
+                if(stock.addTodayStockPrice(stockPrice)){
+                    mShortSwingAnalyser.analyse(stock);
+                }
+                stock.addMinuteStockPrice(stockPrice);
+            }
         }
     }
 
@@ -145,7 +160,7 @@ private static List<BaseStrategy> mStrategyList = Arrays.asList(new VBBStrategy(
      * @param stockPriceList
      * @return stockId 获取成功的股票Id
      */
-    public static void addStockPriceList(List<StockPrice> stockPriceList, String stockId, boolean isClearBeforeData){
+    public static void addOneDayStockPriceList(List<StockPrice> stockPriceList, String stockId, boolean isClearBeforeData){
         int stockIndex = mStockIdList.indexOf(stockId);
         Stock stock = mStockList.get(stockIndex);
         if(stock != null && stockPriceList.size() > 0){
@@ -154,10 +169,11 @@ private static List<BaseStrategy> mStrategyList = Arrays.asList(new VBBStrategy(
                 stock.clearPriceList();
             }
             for(StockPrice stockPrice : stockPriceList){
-                add(stock, stockPrice);
+                if(stock.addTodayStockPrice(stockPrice)){
+                    mShortSwingAnalyser.analyse(stock);
+                }
             }
-            // 设置获取开盘到当前数据完毕
-            stock.receiveTodayData();
+
             Log.d("lwd", String.format("%s 开盘到当前数据加载完毕", stockId));
         }
     }
@@ -167,12 +183,12 @@ private static List<BaseStrategy> mStrategyList = Arrays.asList(new VBBStrategy(
      * @param stockPriceList
      * @param stockId
      */
-    public static void analyseStockPriceList(List<StockPrice> stockPriceList, String stockId, List<Date> dateList){
+    public static void addFiveDayStockPriceList(List<StockPrice> stockPriceList, String stockId, List<Date> dateList){
         int stockIndex = mStockIdList.indexOf(stockId);
         Stock stock = mStockList.get(stockIndex);
         if(stock != null){
             // 初始计算满足条件stock
-            stock.setKeyStockPriceList(stockPriceList);
+            stock.addFiveDayKeyStockPriceList(stockPriceList);
             List<StrategyResult> strategyResultList = new ArrayList<>();
             List<StockForm> stockFormList = DBUtil.getStockFormByStockId(stock.getId());
             for(BaseStrategy baseStrategy : mStrategyList){
@@ -194,6 +210,8 @@ private static List<BaseStrategy> mStrategyList = Arrays.asList(new VBBStrategy(
             mNowLoadedStockListSize++;
             Log.d("lwd", String.format("%s 五日关键数据加载完毕 进度：%d/%d", stockId, mNowLoadedStockListSize, mAllStockListSize));
         }
+        // 设置获取之前数据完毕，开始获取分时数据
+        stock.receiveTodayData();
     }
 
     /**
@@ -206,30 +224,7 @@ private static List<BaseStrategy> mStrategyList = Arrays.asList(new VBBStrategy(
         }
     }
 
-    /**
-     * 添加实时股票价格
-     * 在添加了从开盘到现在的数据之后，再添加实时的每分钟的数据
-     * @param stockPriceList
-     */
-    public static void addMinuteStockPrice(List<StockPrice> stockPriceList){
-        for(StockPrice stockPrice : stockPriceList){
-            int stockIndex = mStockIdList.indexOf(stockPrice.stockId);
-            if(stockIndex == -1){
-                Log.e("lwd", String.format("没有找到价格对应的股票id：%s", stockPrice.stockId));
-            }
-            Stock stock = mStockList.get(stockIndex);
-            // 设置股票名称
-            if(stockPrice.getName() != null && stock.getName().equals("")){
-                stock.setName(stockPrice.getName());
-                DBUtil.updateStock(stock);
-            }
-            if(stock != null && stock.isReceivedTodayData){
-                add(stock, stockPrice);
-//                Log.d("lwd", String.format("加载分钟数据:%s", stock.id));
-            }
-        }
 
-    }
     //todo:将stock从map存储改为用两个list存储
     public static List<Stock> getStockList(){
         return mStockList;
