@@ -6,6 +6,7 @@ import android.os.Message;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -16,12 +17,14 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.stockmaster.R;
 import com.example.stockmaster.ui.activity.base.UIManager;
 import com.example.stockmaster.ui.adapter.StockMonitorAdapter;
+import com.example.stockmaster.util.ClipBoardUtil;
 import com.example.stockmaster.util.StockManager;
 
 import java.io.File;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 public class StockMonitorFragment extends Fragment {
     @BindView(R.id.rv_stock_list)
@@ -67,5 +70,10 @@ public class StockMonitorFragment extends Fragment {
             notifyListUpdateMsg.what = 1;
             handler.sendMessage(notifyListUpdateMsg);
         }
+    }
+
+    @OnClick(R.id.btn_copy_stock_id_list)
+    public void onCopyStockIdListClick(View view){
+        ClipBoardUtil.CopyStringToClipBoard(getContext(), StockManager.getPickedStockIdListString());
     }
 }

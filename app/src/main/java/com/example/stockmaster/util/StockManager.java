@@ -304,4 +304,12 @@ private static List<BaseStrategy> mStrategyList = Arrays.asList(new VBBStrategy(
     public static void setLastDealDate(String mLastDealDate) {
         StockManager.mLastDealDate = mLastDealDate;
     }
+
+    public static String getPickedStockIdListString(){
+        String stockIdListString = "";
+        for(Stock stock : mStockMonitorPickedStockList){
+            stockIdListString += stock.getId() + ", ";
+        }
+        return stockIdListString;
+    }
 }
