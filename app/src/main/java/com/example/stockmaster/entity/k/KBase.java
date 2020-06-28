@@ -40,24 +40,17 @@ public class KBase {
         if(wholeStockPriceList == null){
             Log.e("lwd", "upDateLastStockPrice wholeStockPriceList 为null");
         }
-//        List<StockPrice> completedKeyStockPriceList = completeStockPriceList(wholeStockPriceList);
-        List<StockPrice> completedKeyStockPriceList = wholeStockPriceList;
+        // 得到关键数据
+        ArrayList<StockPrice> updatedStockPriceList = new ArrayList<>();
+        updatedStockPriceList.addAll(mKeyStockPriceList);
+        updatedStockPriceList.add(wholeStockPriceList.get(wholeStockPriceList.size()-1));
+        // 得到最新的maState
+        MaState newMaState = MaCalculater.calMaState(updatedStockPriceList);
+        // 得到存储的最后一个maState
         MaState lastMaState = maStateList.get(maStateList.size() - 1);
-        for(int i=0; i<completedKeyStockPriceList.size(); i++){
-            StockPrice stockPrice = completedKeyStockPriceList.get(i);
-            if(stockPrice.getTime().after(lastMaState.getTime())){
-                MaState maState = MaCalculater.calMaState(completedKeyStockPriceList.subList(0, i+1));
-                if(maState.getTime().compareTo(lastMaState.getTime()) == 0){
-                    maStateList.remove(maStateList.size()-1);
-                    maStateList.add(maState);
-                }
-                else if(maState.getTime().after(lastMaState.getTime())){
-                    maStateList.add(maState);
-                }
-                else{
-                    continue;
-                }
-            }
+        // 当最新的maState在最后一个maState之后时，将其加入
+        if(newMaState.getTime().after(lastMaState.getTime())){
+            maStateList.add(newMaState);
         }
         maStateAnalyser.analyse(mStockId, maStateList, mKLevel, TIME_POINT_STRING, mStock);
     }

@@ -8,6 +8,8 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static com.example.stockmaster.util.DateUtil.convertStringToDate;
+
 public class TextUtil {
     public static boolean isEmpty(String s){
         return s==null || s.equals("");
@@ -43,10 +45,11 @@ public class TextUtil {
         List<Date> dateList = new ArrayList<>();
         for(String dateString : dateStringList){
             dateString = dateString.split(":")[1].replaceAll("\"", "");
-            dateList.add(StockPrice.convertStringToDate(dateString + " " + "09:31:00"));
+            dateList.add(convertStringToDate(dateString + " " + "09:31:00"));
         }
         return dateList;
     }
+
 
     public static String searchDateString(String str){
         List<String> dateStringList = getAllSatisfyStrings(str,
