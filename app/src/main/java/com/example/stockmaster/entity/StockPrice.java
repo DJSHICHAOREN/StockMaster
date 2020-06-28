@@ -7,6 +7,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import static com.example.stockmaster.util.DateUtil.convertStringToDate;
+
 @Table(name = "stockPrice")
 public class StockPrice {
     @Column(name = "id", isId = true)
@@ -26,7 +28,7 @@ public class StockPrice {
     private QueryType queryType = QueryType.NULL;
 
     public Stock.DealType dealType = Stock.DealType.NULL;
-    private static SimpleDateFormat mSimpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
 
     public StockPrice(){
     }
@@ -45,6 +47,13 @@ public class StockPrice {
         setQueryType(queryType);
     }
 
+    public StockPrice(String stockId, Date time, String price, QueryType queryType){
+        setStockId(stockId);
+        this.time = time;
+        setPrice(price);
+        setQueryType(queryType);
+    }
+
     public void setStockId(String stockId) {
         this.stockId = stockId;
     }
@@ -57,17 +66,7 @@ public class StockPrice {
         this.time = convertStringToDate(timeStr);
     }
 
-    public static Date convertStringToDate(String timeStr){
-        try {
-            if(timeStr.contains("/")){
-                timeStr = timeStr.replaceAll("/", "-");
-            }
-            return mSimpleDateFormat.parse(timeStr);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
+
 
     public void setDealType(Stock.DealType dealType) {
         this.dealType = dealType;

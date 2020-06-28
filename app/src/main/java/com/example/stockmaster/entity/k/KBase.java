@@ -9,22 +9,96 @@ import com.example.stockmaster.util.MaCalculater;
 import com.example.stockmaster.util.MaStateAnalyser;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
 public class KBase {
     public String TIME_POINT_STRING = "";
+    public List<String> TIME_POINT_STRING_LIST;
     private List<MaState> maStateList = new ArrayList<>();
     private MaStateAnalyser maStateAnalyser = MaStateAnalyser.getInstance();
     private List<StockPrice> qualifiedPricePointList = new ArrayList<>();
+    private List<StockPrice> mKeyStockPriceList;
     private int mKLevel = 0; // K线的级别
     private String mStockId;
     private Stock mStock;
     public KBase(Stock stock, String TIME_POINT_STRING, int kLevel){
         this.TIME_POINT_STRING = TIME_POINT_STRING;
+        TIME_POINT_STRING_LIST = Arrays.asList(TIME_POINT_STRING.split(","));
         mKLevel = kLevel;
         mStockId = stock.getId();
         mStock = stock;
+    }
+
+    /**
+     * 更新最后一个价格后重新计算
+     * 由于五日线虽然滞后，但也不是滞后非常多，所以直接忽略中间缺少的maState
+     * @param wholeStockPriceList
+     */
+    public void updateLastStockPrice(List<StockPrice> wholeStockPriceList){
+        if(wholeStockPriceList == null){
+            Log.e("lwd", "upDateLastStockPrice wholeStockPriceList 为null");
+        }
+//        List<StockPrice> completedKeyStockPriceList = completeStockPriceList(wholeStockPriceList);
+        List<StockPrice> completedKeyStockPriceList = wholeStockPriceList;
+        MaState lastMaState = maStateList.get(maStateList.size() - 1);
+        for(int i=0; i<completedKeyStockPriceList.size(); i++){
+            StockPrice stockPrice = completedKeyStockPriceList.get(i);
+            if(stockPrice.getTime().after(lastMaState.getTime())){
+                MaState maState = MaCalculater.calMaState(completedKeyStockPriceList.subList(0, i+1));
+                if(maState.getTime().compareTo(lastMaState.getTime()) == 0){
+                    maStateList.remove(maStateList.size()-1);
+                    maStateList.add(maState);
+                }
+                else if(maState.getTime().after(lastMaState.getTime())){
+                    maStateList.add(maState);
+                }
+                else{
+                    continue;
+                }
+            }
+        }
+        maStateAnalyser.analyse(mStockId, maStateList, mKLevel, TIME_POINT_STRING, mStock);
+    }
+
+    /**
+     * 将分时数据与五日数据之间的空白价格补上。
+     * @param wholeStockPriceList
+     * @return
+     */
+    public List<StockPrice> completeStockPriceList(List<StockPrice> wholeStockPriceList){
+        // 得到mKeyStockPriceList的最后一个，看它的下一个是否在
+        List<StockPrice> completedKeyStockPriceList = new ArrayList<>();
+        completedKeyStockPriceList.addAll(mKeyStockPriceList);
+
+        StockPrice lastKeyStockPrice = completedKeyStockPriceList.get(completedKeyStockPriceList.size()-1);
+        Date nextKeyDate =  getNextKeyDate(lastKeyStockPrice.getTime());
+
+        StockPrice lastMinuteStockPrice = wholeStockPriceList.get(wholeStockPriceList.size()-1);
+        while(nextKeyDate.before(lastMinuteStockPrice.getTime())){
+            completedKeyStockPriceList.add(new StockPrice(lastKeyStockPrice.getStockId(),
+                    nextKeyDate, lastMinuteStockPrice.getPrice(), lastKeyStockPrice.getQueryType()));
+
+            nextKeyDate = getNextKeyDate(lastKeyStockPrice.getTime());
+        }
+        completedKeyStockPriceList.add(lastMinuteStockPrice);
+        return completedKeyStockPriceList;
+    }
+
+    public Date getNextKeyDate(Date stockPriceTime){
+        String shortPriceTime = convertDateToShortString(stockPriceTime);
+        int stockPriceIndex = TIME_POINT_STRING_LIST.indexOf(shortPriceTime);
+        int nextStockPriceIndex=0;
+        if(stockPriceIndex == TIME_POINT_STRING_LIST.size()-1){
+            nextStockPriceIndex = 0;
+        }
+        else {
+            nextStockPriceIndex = nextStockPriceIndex + 1;
+        }
+        Date date = new Date(stockPriceTime.getYear() + "-" + stockPriceTime.getMonth()
+                + "-" + stockPriceTime.getDate() + " " + TIME_POINT_STRING_LIST.get(nextStockPriceIndex));
+        return date;
     }
 
     /**
@@ -33,7 +107,7 @@ public class KBase {
      */
     public void setKeyStockPriceList(List<StockPrice> stockPriceList) {
         if(stockPriceList == null){
-            Log.e("lwd", "stockPriceList 为null");
+            Log.e("lwd", "setKeyStockPriceList stockPriceList 为null");
         }
         List<StockPrice> filteredStockPriceList = filterKeyStockPrice(stockPriceList);
         Log.d("lwd", String.format("%d分钟K线分析_stockId:%s", mKLevel, mStockId));
@@ -138,6 +212,8 @@ public class KBase {
                 filteredStockPriceList.add(stockPrice);
             }
         }
+        // 存储关键价格对象
+        mKeyStockPriceList = filteredStockPriceList;
         return filteredStockPriceList;
     }
 

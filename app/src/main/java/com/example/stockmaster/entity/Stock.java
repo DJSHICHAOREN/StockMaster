@@ -46,6 +46,7 @@ public class Stock {
     public enum DealType{SALE, BUY, NULL}
     private DealType previousDealType = DealType.NULL;
     private List<Float> previousFourDayPriceList;
+    private List<StockPrice> wholeStockPriceList = new ArrayList<>();
     public Stock(){
 
     }
@@ -69,16 +70,33 @@ public class Stock {
         dealPriceList.clear();
     }
 
-    public void addMinuteStockPrice(StockPrice stockPrice){
-
+    /**
+     * 加入全部价格列表
+     * @param stockPrice
+     */
+    public void addToWholeStockPriceList(StockPrice stockPrice){
+        if(!wholeStockPriceList.isEmpty()){
+            StockPrice lastStockPrice  = wholeStockPriceList.get(wholeStockPriceList.size()-1);
+            if(stockPrice.time.compareTo(lastStockPrice.time) == 0 && lastStockPrice.price != stockPrice.price){
+                wholeStockPriceList.remove(todayStockPriceList.size()-1);
+                wholeStockPriceList.add(stockPrice);
+            }
+            // 比列表靠后的时间，添加进列表
+            else if(stockPrice.time.after(lastStockPrice.time)){
+                wholeStockPriceList.add(stockPrice);
+                for(KBase kBase : mKBaseList){
+                    kBase.updateLastStockPrice(wholeStockPriceList);
+                }
+            }
+        }
     }
 
     /**
-     * 加入股票价格
+     * 加入今天的股票价格
      * @param stockPrice
      * @return 如果成功加入，则返回true，否则返回false
      */
-    public boolean addTodayStockPrice(StockPrice stockPrice){
+    public boolean addToTodayStockPriceList(StockPrice stockPrice){
         currentPrice = stockPrice;
         if(!todayStockPriceList.isEmpty()){
             StockPrice lastStockPrice  = todayStockPriceList.get(todayStockPriceList.size()-1);
@@ -107,7 +125,7 @@ public class Stock {
      * 添加关键价格列表
      * @param keyStockPriceList
      */
-    public void addFiveDayKeyStockPriceList(List<StockPrice> keyStockPriceList) {
+    public void setWholeStockPriceList(List<StockPrice> keyStockPriceList) {
         // 由于在数据库中读取的stock不会经过构造函数，所以mKBaseList可能为空
         if(mKBaseList == null){
 //            this.mKBaseList = Arrays.asList(new K5Minutes(id), new K15Minutes(id), new K30Minutes(id), new K60Minutes(id));
@@ -116,6 +134,7 @@ public class Stock {
         for(KBase kBase : mKBaseList){
             kBase.setKeyStockPriceList(keyStockPriceList);
         }
+        wholeStockPriceList = keyStockPriceList;
     }
 
     /**

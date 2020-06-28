@@ -13,7 +13,7 @@ import java.util.List;
  * 股票均价计算器
  */
 public class MaCalculater {
-    private static List<Integer> mCountedDayList = new ArrayList<>(Arrays.asList(5, 10, 20, 30, 60));
+    private static List<Integer> mCountedDayList = new ArrayList<>(Arrays.asList(5, 10, 20, 30));
 
     public static MaState calMaState(List<StockPrice> stockPriceList){
         if(stockPriceList == null || stockPriceList.size() < 2){
@@ -39,6 +39,7 @@ public class MaCalculater {
 //        Log.d("lwd", maState.toString());
         return maState;
     }
+
 
     public static int getMinCountedDay(){
         return mCountedDayList.get(0);

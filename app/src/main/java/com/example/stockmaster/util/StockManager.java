@@ -95,7 +95,7 @@ private static List<BaseStrategy> mStrategyList = Arrays.asList(new VBBStrategy(
     }
 
     public static void getKeyStockPriceFromDB(Stock stock){
-        stock.addFiveDayKeyStockPriceList(DBUtil.getStockPriceList(stock.getId()));
+        stock.setWholeStockPriceList(DBUtil.getStockPriceList(stock.getId()));
     }
 
     /**
@@ -147,10 +147,10 @@ private static List<BaseStrategy> mStrategyList = Arrays.asList(new VBBStrategy(
                 DBUtil.updateStock(stock);
             }
             if(stock != null && stock.isReceivedTodayData){
-                if(stock.addTodayStockPrice(stockPrice)){
+                if(stock.addToTodayStockPriceList(stockPrice)){
                     mShortSwingAnalyser.analyse(stock);
                 }
-                stock.addMinuteStockPrice(stockPrice);
+                stock.addToWholeStockPriceList(stockPrice);
             }
         }
     }
@@ -169,11 +169,10 @@ private static List<BaseStrategy> mStrategyList = Arrays.asList(new VBBStrategy(
                 stock.clearPriceList();
             }
             for(StockPrice stockPrice : stockPriceList){
-                if(stock.addTodayStockPrice(stockPrice)){
+                if(stock.addToTodayStockPriceList(stockPrice)){
                     mShortSwingAnalyser.analyse(stock);
                 }
             }
-
             Log.d("lwd", String.format("%s 开盘到当前数据加载完毕", stockId));
         }
     }
@@ -188,7 +187,7 @@ private static List<BaseStrategy> mStrategyList = Arrays.asList(new VBBStrategy(
         Stock stock = mStockList.get(stockIndex);
         if(stock != null){
             // 初始计算满足条件stock
-            stock.addFiveDayKeyStockPriceList(stockPriceList);
+            stock.setWholeStockPriceList(stockPriceList);
             List<StrategyResult> strategyResultList = new ArrayList<>();
             List<StockForm> stockFormList = DBUtil.getStockFormByStockId(stock.getId());
             for(BaseStrategy baseStrategy : mStrategyList){
