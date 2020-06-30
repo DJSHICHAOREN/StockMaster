@@ -13,6 +13,7 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
+import android.widget.TextView;
 
 import com.example.stockmaster.R;
 import com.example.stockmaster.service.BrainService;
@@ -36,7 +37,7 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
     @BindView(R.id.tab_layout)
     TabLayout tab_layout;
     @BindView(R.id.tv_load_progress)
-    TabLayout tv_load_progress;
+    TextView tv_load_progress;
 
     MonitorPanelAdapter monitorPanelAdapter;
     private final int GET_WRITE_EXTERNAL_STORAGE = 1;
@@ -58,7 +59,6 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
         requireWriteExternalStorage();
 
     }
-
 
     public void initAllThing(){
         // 载入股票列表，需要操作数据库，必须在请求存储权限之后
