@@ -13,7 +13,5 @@ public class ClipBoardUtil {
         ClipData mClipData = ClipData.newPlainText("Label", msg);
         // 将ClipData内容放到系统剪贴板里。
         cm.setPrimaryClip(mClipData);
-
-        Toast.makeText(context,"已复制到剪切板", Toast.LENGTH_LONG).show();
     }
 }

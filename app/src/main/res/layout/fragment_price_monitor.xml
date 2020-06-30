@@ -8,7 +8,7 @@
             android:id="@+id/tv_deal_point"
             android:layout_width="wrap_content"
             android:layout_height="30dp"
-            android:text="Hello World!"
+            android:text="newest tips"
             android:visibility="visible"/>
 
         <androidx.recyclerview.widget.RecyclerView

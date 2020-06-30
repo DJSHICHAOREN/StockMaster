@@ -35,6 +35,8 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
     ViewPager vp_monitor_panel;
     @BindView(R.id.tab_layout)
     TabLayout tab_layout;
+    @BindView(R.id.tv_load_progress)
+    TabLayout tv_load_progress;
 
     MonitorPanelAdapter monitorPanelAdapter;
     private final int GET_WRITE_EXTERNAL_STORAGE = 1;
