@@ -16,8 +16,10 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.stockmaster.R;
 import com.example.stockmaster.ui.activity.base.UIManager;
+import com.example.stockmaster.ui.activity.main.MainActivity;
 import com.example.stockmaster.ui.adapter.StockMonitorAdapter;
 import com.example.stockmaster.util.ClipBoardUtil;
+import com.example.stockmaster.util.FileUtil;
 import com.example.stockmaster.util.StockManager;
 
 import java.io.File;
@@ -74,6 +76,8 @@ public class StockMonitorFragment extends Fragment {
 
     @OnClick(R.id.btn_copy_stock_id_list)
     public void onCopyStockIdListClick(View view){
-        ClipBoardUtil.CopyStringToClipBoard(getContext(), StockManager.getPickedStockIdListString());
+//        ClipBoardUtil.CopyStringToClipBoard(getContext(), StockManager.getPickedStockIdListString());
+
+        FileUtil.writeStringToFile(StockManager.getPickedStockIdListString(), MainActivity.mDBFile.getPath(), "股票id列表.txt");
     }
 }

@@ -17,7 +17,7 @@ public class LongToArrangeFormJudge extends BaseFormJudge {
 
     public MaState getMaStateByTime(List<MaState> maStateList, Date time){
         for(int i=maStateList.size()-1; i>=0; i--){
-            if(maStateList.get(i).getTime() == time){
+            if(maStateList.get(i).getTime() == time || maStateList.get(i).getTime().before(time)){
                 return maStateList.get(i);
             }
         }
@@ -45,10 +45,15 @@ public class LongToArrangeFormJudge extends BaseFormJudge {
 //            Log.d("lwd", "maStateList为空或者maStateList的长度小于3");
             return null;
         }
+
+
         // 判断最新的三条线是否是按序排列且上升的
         int maStateListLength = maStateList.size();
         MaState lastMaState1 = maStateList.get(maStateListLength-1);
         MaState lastMaState2 = getMaStateByTime(maStateList, lastMaState1.previousTime);
+        if(lastMaState2 == null){
+            return null;
+        }
         MaState lastMaState3 = getMaStateByTime(maStateList, lastMaState2.previousTime);
 
         // 确保信息有效

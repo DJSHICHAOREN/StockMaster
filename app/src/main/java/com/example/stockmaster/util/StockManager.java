@@ -308,7 +308,9 @@ private static List<BaseStrategy> mStrategyList = Arrays.asList(new VBBStrategy(
     public static String getPickedStockIdListString(){
         String stockIdListString = "";
         for(Stock stock : mStockMonitorPickedStockList){
-            stockIdListString += stock.getId() + ", ";
+            stockIdListString += stock.getId();
+            stockIdListString += "\r\n";
+            stockIdListString += "\r\n";
         }
         return stockIdListString;
     }
