@@ -53,7 +53,7 @@ public class Stock {
     private List<Float> previousFourDayPriceList;
     private List<StockPrice> wholeStockPriceList = new ArrayList<>();
 
-    private static List<BaseStrategy> mStrategyList = Arrays.asList(new VBBStrategy());
+    private List<BaseStrategy> mStrategyList = Arrays.asList(new VBBStrategy());
     public Stock(){
 
     }
