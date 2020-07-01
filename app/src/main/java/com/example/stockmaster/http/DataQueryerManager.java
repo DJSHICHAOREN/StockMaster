@@ -138,7 +138,7 @@ public class DataQueryerManager {
             public void run() {
                 mSinaDataQueryer.queryStocksNowPrice(stockIdString);
             }
-        }, 0, 2000); // 1 seconds
+        }, 0, 1000 * 60); // 1 seconds
     }
 
     /**
