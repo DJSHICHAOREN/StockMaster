@@ -15,5 +15,9 @@ public class UIManager{
 
     }
 
+    public void flushLoadProgress(String content){
+
+    }
+
 
 }

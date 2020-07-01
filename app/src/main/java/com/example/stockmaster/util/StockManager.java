@@ -11,6 +11,7 @@ import com.example.stockmaster.entity.strategy.VBBStrategy;
 import com.example.stockmaster.entity.strategy.StrategyResult;
 import com.example.stockmaster.service.BrainService;
 import com.example.stockmaster.ui.activity.base.UIManager;
+import com.example.stockmaster.ui.activity.main.MainActivity;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -31,6 +32,7 @@ public class StockManager {
     private static ShortSwingAnalyser mShortSwingAnalyser = new ShortSwingAnalyser();
     private static UIManager mPriceMonitorUIManager;
     private static UIManager mStockMonitorUIManager;
+    private static UIManager mMainActivityUIManager;
     private static BrainService mBrainService;
     private static ArrayList<String> DEFAULT_PRICE_MONITOR_STOCK_ID_LIST = new ArrayList<String>(Arrays.asList());
 //    private static ArrayList<String> DEFAULT_PRICE_MONITOR_STOCK_ID_LIST = new ArrayList<String>(Arrays.asList("hk12566", "hk29703", "hk29703", "hk11497", "hk01349", "hk03709", "hk01622", "hk01565", "hk02606", "hk09926", "hk02400", "hk06060", "hk09969","hk00981","hk00302", "hk01055", "hk06186", "hk01610", "hk00772", "hk06855", "hk03319", "hk09916", "hk01941", "hk01873", "hk02013", "hk03331", "hk00853", "hk00777", "hk00826", "hk09928", "hk02018", "hk06919", "hk01745", "hk06185", "hk09966", "hk03759", "hk01501", "hk01300", "hk01691", "hk09922", "hk00175", "hk00589", "hk01525", "hk01347"));
@@ -78,6 +80,10 @@ private static List<BaseStrategy> mStrategyList = Arrays.asList(new VBBStrategy(
 
     public static void setStockMonitorFragmentUIManager(UIManager stockMonitorUIManager){
         mStockMonitorUIManager = stockMonitorUIManager;
+    }
+
+    public static void setMainActivityUIManager(UIManager mainActivityUIManager){
+        mMainActivityUIManager = mainActivityUIManager;
     }
 
     /**
@@ -207,6 +213,9 @@ private static List<BaseStrategy> mStrategyList = Arrays.asList(new VBBStrategy(
                 }
             }
             mNowLoadedStockListSize++;
+            if(mMainActivityUIManager != null){
+                mMainActivityUIManager.flushLoadProgress(String.format("初始化进度：%d/%d", mNowLoadedStockListSize, mAllStockListSize));
+            }
             Log.d("lwd", String.format("%s 五日关键数据加载完毕 进度：%d/%d", stockId, mNowLoadedStockListSize, mAllStockListSize));
         }
         // 设置获取之前数据完毕，开始获取分时数据

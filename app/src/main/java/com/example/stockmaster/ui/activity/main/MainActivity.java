@@ -17,6 +17,7 @@ import android.widget.TextView;
 
 import com.example.stockmaster.R;
 import com.example.stockmaster.service.BrainService;
+import com.example.stockmaster.ui.activity.base.UIManager;
 import com.example.stockmaster.ui.adapter.MonitorPanelAdapter;
 import com.example.stockmaster.util.StockManager;
 import com.google.android.material.tabs.TabLayout;
@@ -58,6 +59,7 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
         // 请求存储权限
         requireWriteExternalStorage();
 
+        StockManager.setMainActivityUIManager(new MainActivityUIManager());
     }
 
     public void initAllThing(){
@@ -126,6 +128,12 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
         }
         else{
             requireWriteExternalStorage();
+        }
+    }
+
+    public class MainActivityUIManager extends UIManager {
+        public void flushLoadProgress(String content){
+            tv_load_progress.setText(content);
         }
     }
 }
