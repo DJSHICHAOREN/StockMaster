@@ -4,19 +4,24 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 
+import com.example.stockmaster.entity.form.StockForm;
 import com.example.stockmaster.entity.k.K15Minutes;
 import com.example.stockmaster.entity.k.K30Minutes;
 import com.example.stockmaster.entity.k.K5Minutes;
 import com.example.stockmaster.entity.k.K60Minutes;
 import com.example.stockmaster.entity.k.KBase;
 import com.example.stockmaster.entity.ma.DayMaPrice;
+import com.example.stockmaster.entity.strategy.BaseStrategy;
 import com.example.stockmaster.entity.strategy.StrategyResult;
+import com.example.stockmaster.entity.strategy.VBBStrategy;
+import com.example.stockmaster.util.DBUtil;
 
 import org.xutils.db.annotation.Column;
 import org.xutils.db.annotation.Table;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 @Table(name = "stock")
@@ -33,7 +38,7 @@ public class Stock {
     private DayMaPrice mDayMaPrice;
 
     public List<KBase> mKBaseList;
-    public List<StrategyResult> mStrategyResultList;
+    public List<StrategyResult> mStrategyResultList = new ArrayList<>();
 
     public boolean isReceivedTodayData = false; //在为true时，才可以接收分钟的数据
     public List<StockPrice> todayStockPriceList = new ArrayList<>();
@@ -47,6 +52,8 @@ public class Stock {
     private DealType previousDealType = DealType.NULL;
     private List<Float> previousFourDayPriceList;
     private List<StockPrice> wholeStockPriceList = new ArrayList<>();
+
+    private List<BaseStrategy> mStrategyList = Arrays.asList(new VBBStrategy());
     public Stock(){
 
     }
@@ -134,7 +141,17 @@ public class Stock {
         for(KBase kBase : mKBaseList){
             kBase.setKeyStockPriceList(keyStockPriceList);
         }
+
         wholeStockPriceList = keyStockPriceList;
+
+        // 提取形态列表
+        List<StockForm> stockFormList = DBUtil.getStockFormByStockId(getId());
+        if(stockFormList != null){
+            for(StockForm stockForm : stockFormList){
+                analyse(stockForm);
+            }
+        }
+
     }
 
     /**
@@ -306,6 +323,32 @@ public class Stock {
         }
         return resultString;
 
+    }
+
+    /**
+     * 分析每一个价格
+     * @param
+     * @param
+     * @return
+     */
+    public void analyse(StockForm stockForm){
+        if(stockForm != null) {
+            for (BaseStrategy baseStrategy : mStrategyList) {
+                StrategyResult strategyResult = baseStrategy.analyse(stockForm, getId());
+                if (strategyResult != null) {
+                    mStrategyResultList.add(strategyResult);
+                }
+            }
+        }
+
+        // 打印买卖点信息
+//        for(StrategyResult strategyResult : mStrategyResultList){
+//            Log.d("lwd", strategyResult.toString());
+//        }
+    }
+
+    public int getStrategyResultListSize(){
+        return mStrategyResultList.size();
     }
 
 }

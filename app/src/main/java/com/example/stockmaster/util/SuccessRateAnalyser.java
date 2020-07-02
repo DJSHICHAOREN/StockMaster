@@ -12,14 +12,10 @@ public class SuccessRateAnalyser {
     private  static List<SuccessResult> successResultList = new ArrayList<>();
 
     public static void analyse(List<StrategyResult> strategyResultList){
-        SuccessResult successResult = null;
-        if(strategyResultList != null && strategyResultList.size() > 0){
-            successResult = new SuccessResult(strategyResultList.get(0).getStockId());
-        }
-        else{
+        if(strategyResultList == null || strategyResultList.size() == 0){
             return;
         }
-
+        SuccessResult successResult = new SuccessResult(strategyResultList.get(0).getStockId());
         StrategyResult buyStrategy = null;
         StrategyResult saleStrategy = null;
         for (StrategyResult strategyResult: strategyResultList) {
