@@ -156,7 +156,11 @@ public class StockManager {
                 if(stock.addToTodayStockPriceList(stockPrice)){
                     mShortSwingAnalyser.analyse(stock);
                 }
-                stock.addToWholeStockPriceList(stockPrice);
+                List<StrategyResult> strategyResultList = stock.addToWholeStockPriceList(stockPrice);
+                for(StrategyResult strategyResult : strategyResultList){
+                    mBrainService.sendNotification(strategyResult.getNotificationId(),
+                            stock.getName() + " " + strategyResult.toString());
+                }
             }
         }
     }

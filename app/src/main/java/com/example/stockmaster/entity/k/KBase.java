@@ -4,6 +4,7 @@ import android.util.Log;
 
 import com.example.stockmaster.entity.Stock;
 import com.example.stockmaster.entity.StockPrice;
+import com.example.stockmaster.entity.form.StockForm;
 import com.example.stockmaster.entity.ma.MaState;
 import com.example.stockmaster.util.MaCalculater;
 import com.example.stockmaster.util.MaStateAnalyser;
@@ -36,7 +37,7 @@ public class KBase {
      * 由于五日线虽然滞后，但也不是滞后非常多，所以直接忽略中间缺少的maState
      * @param wholeStockPriceList
      */
-    public void updateLastStockPrice(List<StockPrice> wholeStockPriceList){
+    public List<StockForm> updateLastStockPrice(List<StockPrice> wholeStockPriceList){
         if(wholeStockPriceList == null){
             Log.e("lwd", "upDateLastStockPrice wholeStockPriceList 为null");
         }
@@ -52,7 +53,8 @@ public class KBase {
         if(newMaState.getTime().after(lastMaState.getTime())){
             maStateList.add(newMaState);
         }
-        maStateAnalyser.analyse(mStockId, maStateList, mKLevel, TIME_POINT_STRING, mStock);
+        List<StockForm> stockFormList = maStateAnalyser.analyse(mStockId, maStateList, mKLevel, TIME_POINT_STRING, mStock);
+        return stockFormList;
     }
 
     /**
@@ -98,12 +100,13 @@ public class KBase {
      * 添加关键价格列表
      * @param stockPriceList
      */
-    public void setKeyStockPriceList(List<StockPrice> stockPriceList) {
+    public List<StockForm> setKeyStockPriceList(List<StockPrice> stockPriceList) {
         if(stockPriceList == null){
             Log.e("lwd", "setKeyStockPriceList stockPriceList 为null");
         }
         List<StockPrice> filteredStockPriceList = filterKeyStockPrice(stockPriceList);
         Log.d("lwd", String.format("%d分钟K线分析_stockId:%s", mKLevel, mStockId));
+        List<StockForm> stockFormList = new ArrayList<>();
         // 添加价格列表之后计算均值
         for(int i=MaCalculater.getMinCountedDay(); i<stockPriceList.size(); i++){
             MaState maState = MaCalculater.calMaState( filterPreviousKeyStockPrice(stockPriceList.subList(0, i), filteredStockPriceList));
@@ -119,9 +122,9 @@ public class KBase {
 //            if(isDateTheKeyTime(maState.getTime())){
 //                Log.d("lwd", String.format("level:%d %s", mKLevel, maState.toCandleString()));
 //            }
-
-            maStateAnalyser.analyse(mStockId, maStateList, mKLevel, TIME_POINT_STRING, mStock);
+            stockFormList.addAll(maStateAnalyser.analyse(mStockId, maStateList, mKLevel, TIME_POINT_STRING, mStock));
         }
+        return stockFormList;
     }
 
     private void calLastMaStateCandleArgs(List<MaState> maStateList){

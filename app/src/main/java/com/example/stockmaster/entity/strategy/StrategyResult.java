@@ -84,6 +84,10 @@ public class StrategyResult {
         this.price = price;
     }
 
+    public int getNotificationId(){
+        return Integer.parseInt(this.stockId.substring(2));
+    }
+
     @Override
     public String toString(){
         String saleType = this.type == 0 ? "买点" : "卖点";

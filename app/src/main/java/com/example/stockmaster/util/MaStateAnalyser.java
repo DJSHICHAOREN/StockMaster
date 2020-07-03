@@ -20,13 +20,16 @@ public class MaStateAnalyser {
         mBaseFormJudgeList.add(new FallThroughSupportFormJudge());
     }
 
-    public void analyse(String stockId, List<MaState> maStateList, int kLevel, String keyStockPriceTimeString, Stock stock){
+    public List<StockForm> analyse(String stockId, List<MaState> maStateList, int kLevel, String keyStockPriceTimeString, Stock stock){
+        List<StockForm> stockFormList = new ArrayList<>();
         for(BaseFormJudge baseFormJudge : mBaseFormJudgeList){
             StockForm stockForm = baseFormJudge.judge(stockId, maStateList, kLevel, stock);
             if(stockForm != null){
-                DBUtil.saveStockForm(stockForm);
+//                DBUtil.saveStockForm(stockForm);
+                stockFormList.add(stockForm);
             }
         }
+        return stockFormList;
     }
 
     public static MaStateAnalyser getInstance(){

@@ -81,7 +81,8 @@ public class Stock {
      * 加入全部价格列表
      * @param stockPrice
      */
-    public void addToWholeStockPriceList(StockPrice stockPrice){
+    public List<StrategyResult> addToWholeStockPriceList(StockPrice stockPrice){
+        List<StrategyResult> strategyResultList = new ArrayList<>();
         if(!wholeStockPriceList.isEmpty()){
             StockPrice lastStockPrice  = wholeStockPriceList.get(wholeStockPriceList.size()-1);
             if(stockPrice.time.compareTo(lastStockPrice.time) == 0 && lastStockPrice.price != stockPrice.price){
@@ -91,11 +92,19 @@ public class Stock {
             // 比列表靠后的时间，添加进列表
             else if(stockPrice.time.after(lastStockPrice.time)){
                 wholeStockPriceList.add(stockPrice);
+                // 得到形态
+                List<StockForm> stockFormList = new ArrayList<>();
                 for(KBase kBase : mKBaseList){
-                    kBase.updateLastStockPrice(wholeStockPriceList);
+                    stockFormList.addAll(kBase.updateLastStockPrice(wholeStockPriceList));
                 }
+                // 得到策略
+                for(StockForm stockForm : stockFormList){
+                    strategyResultList.addAll(analyse(stockForm));
+                }
+
             }
         }
+        return strategyResultList;
     }
 
     /**
@@ -138,14 +147,15 @@ public class Stock {
 //            this.mKBaseList = Arrays.asList(new K5Minutes(id), new K15Minutes(id), new K30Minutes(id), new K60Minutes(id));
             this.mKBaseList = Arrays.asList(new K30Minutes(this), new K60Minutes(this));
         }
+        List<StockForm> stockFormList = new ArrayList<>();
         for(KBase kBase : mKBaseList){
-            kBase.setKeyStockPriceList(keyStockPriceList);
+            stockFormList.addAll(kBase.setKeyStockPriceList(keyStockPriceList));
         }
 
         wholeStockPriceList = keyStockPriceList;
 
         // 提取形态列表
-        List<StockForm> stockFormList = DBUtil.getStockFormByStockId(getId());
+//        List<StockForm> stockFormList = DBUtil.getStockFormByStockId(getId());
         if(stockFormList != null){
             for(StockForm stockForm : stockFormList){
                 analyse(stockForm);
@@ -331,7 +341,8 @@ public class Stock {
      * @param
      * @return
      */
-    public void analyse(StockForm stockForm){
+    public List<StrategyResult> analyse(StockForm stockForm){
+        List<StrategyResult> strategyResultList = new ArrayList<>();
         if(stockForm != null) {
             for (BaseStrategy baseStrategy : mStrategyList) {
                 StrategyResult strategyResult = baseStrategy.analyse(stockForm, getId());
@@ -345,6 +356,7 @@ public class Stock {
 //        for(StrategyResult strategyResult : mStrategyResultList){
 //            Log.d("lwd", strategyResult.toString());
 //        }
+        return strategyResultList;
     }
 
     public int getStrategyResultListSize(){
