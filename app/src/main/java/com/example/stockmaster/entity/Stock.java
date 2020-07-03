@@ -14,14 +14,13 @@ import com.example.stockmaster.entity.ma.DayMaPrice;
 import com.example.stockmaster.entity.strategy.BaseStrategy;
 import com.example.stockmaster.entity.strategy.StrategyResult;
 import com.example.stockmaster.entity.strategy.VBBStrategy;
-import com.example.stockmaster.util.DBUtil;
+import com.example.stockmaster.util.DateUtil;
 
 import org.xutils.db.annotation.Column;
 import org.xutils.db.annotation.Table;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 
 @Table(name = "stock")
@@ -85,7 +84,7 @@ public class Stock {
         List<StrategyResult> strategyResultList = new ArrayList<>();
         if(!wholeStockPriceList.isEmpty()){
             StockPrice lastStockPrice  = wholeStockPriceList.get(wholeStockPriceList.size()-1);
-            if(stockPrice.time.compareTo(lastStockPrice.time) == 0 && lastStockPrice.price != stockPrice.price){
+            if(DateUtil.isMinuteEqual(stockPrice.getTime(), lastStockPrice.getTime()) && lastStockPrice.price != stockPrice.price){
                 wholeStockPriceList.remove(todayStockPriceList.size()-1);
                 wholeStockPriceList.add(stockPrice);
             }
@@ -347,6 +346,7 @@ public class Stock {
             for (BaseStrategy baseStrategy : mStrategyList) {
                 StrategyResult strategyResult = baseStrategy.analyse(stockForm, getId());
                 if (strategyResult != null) {
+                    strategyResultList.add(strategyResult);
                     mStrategyResultList.add(strategyResult);
                 }
             }

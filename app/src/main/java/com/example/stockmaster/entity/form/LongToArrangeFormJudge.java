@@ -63,7 +63,7 @@ public class LongToArrangeFormJudge extends BaseFormJudge {
         }
         // 打印开始信息
         if(isPrintBeginJudgeTime){
-            Log.d("lwd", String.format("time=%s，ma60不等于0，开始分析", lastMaState1.getTime().toString()));
+//            Log.d("lwd", String.format("time=%s，ma60不等于0，开始分析", lastMaState1.getTime().toString()));
             isPrintBeginJudgeTime = false;
         }
 

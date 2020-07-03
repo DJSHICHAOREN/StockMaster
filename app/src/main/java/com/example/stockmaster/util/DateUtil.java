@@ -17,4 +17,11 @@ public class DateUtil {
         }
         return null;
     }
+
+    public static boolean isMinuteEqual(Date time1, Date time2){
+        if(time1.getMinutes() == time2.getTime()){
+            return true;
+        }
+        return false;
+    }
 }
