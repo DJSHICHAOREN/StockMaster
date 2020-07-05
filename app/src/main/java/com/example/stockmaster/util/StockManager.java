@@ -193,9 +193,12 @@ public class StockManager {
      * @param stockPriceList
      * @param stockId
      */
-    public static void addFiveDayStockPriceList(List<StockPrice> stockPriceList, String stockId){
+    public static void addFiveDayStockPriceList(List<StockPrice> stockPriceList, String stockId, boolean isNewStock){
         int stockIndex = mStockIdList.indexOf(stockId);
         Stock stock = mStockList.get(stockIndex);
+        if(isNewStock){
+            stock = new Stock(stock.getId(), stock.getName(), stock.getMonitorType());
+        }
         if(stock != null){
             stock.setWholeStockPriceList(stockPriceList);
 

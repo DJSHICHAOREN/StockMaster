@@ -7,6 +7,7 @@ import androidx.fragment.app.FragmentPagerAdapter;
 
 import com.example.stockmaster.ui.fragment.price_monitor.PriceMonitorFragment;
 import com.example.stockmaster.ui.fragment.stock_monitor.StockMonitorFragment;
+import com.example.stockmaster.ui.fragment.test.TestFragment;
 
 public class MonitorPanelAdapter extends FragmentPagerAdapter {
     public MonitorPanelAdapter(FragmentManager fm) {
@@ -22,13 +23,16 @@ public class MonitorPanelAdapter extends FragmentPagerAdapter {
             case 1:{
                 return new StockMonitorFragment();
             }
+            case 2:{
+                return new TestFragment();
+            }
         }
         return null;
     }
 
     @Override
     public int getCount() {
-        return 2;
+        return 3;
     }
 
     @Nullable
@@ -40,6 +44,9 @@ public class MonitorPanelAdapter extends FragmentPagerAdapter {
             }
             case 1:{
                 return "股票监控";
+            }
+            case 2:{
+                return "测试";
             }
         }
         return "";

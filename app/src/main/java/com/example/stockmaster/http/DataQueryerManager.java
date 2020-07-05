@@ -16,13 +16,24 @@ import java.util.concurrent.Executors;
  * 设置请求的计时器
  */
 public class DataQueryerManager {
-
+    private static DataQueryerManager instance;
     private SinaDataQueryer mSinaDataQueryer;
     final ExecutorService mCachedThreadPool = Executors.newCachedThreadPool();
 
     public DataQueryerManager(Context context){
         // 创建工具实例
         mSinaDataQueryer = new SinaDataQueryer(context);
+    }
+
+    public static DataQueryerManager getInstance(Context context){
+        if(instance == null){
+            instance = new DataQueryerManager(context);
+        }
+        return instance;
+    }
+
+    public void queryOneStockFiveDayPrice(String stockId, boolean isNewStock){
+        mSinaDataQueryer.queryStocksFiveDayPrice(stockId, isNewStock);
     }
 
     /**
@@ -34,12 +45,13 @@ public class DataQueryerManager {
             Runnable runnable = new Runnable() {
                 @Override
                 public void run() {
-                    mSinaDataQueryer.queryStocksFiveDayPrice(stockId);
+                    queryOneStockFiveDayPrice(stockId, false);
                 }
             };
             mCachedThreadPool.execute(runnable);
         }
     }
+
 
     /**
      * 请求股票今天的价格
@@ -187,9 +199,8 @@ public class DataQueryerManager {
 
             }
         }, 0, 1000*60*20);
-
-
-
     }
+
+
 
 }

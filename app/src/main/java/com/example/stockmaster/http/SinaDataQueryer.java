@@ -75,15 +75,15 @@ public class SinaDataQueryer {
      */
     public void queryStocksTodayPrice(String stockId){
         Log.d("lwd", String.format("%s 开始请求今天数据", stockId));
-        queryStocksNDayPrice(stockId, 1);
+        queryStocksNDayPrice(stockId, 1, false);
     }
 
     /**
      * 查询股票的五日均价
      * @param stockId
      */
-    public void queryStocksFiveDayPrice(String stockId){
-        queryStocksNDayPrice(stockId, 5);
+    public void queryStocksFiveDayPrice(String stockId, boolean isNewStock){
+        queryStocksNDayPrice(stockId, 5, isNewStock);
     }
 
 
@@ -92,7 +92,7 @@ public class SinaDataQueryer {
      * https://quotes.sina.cn/hk/api/openapi.php/HK_MinlineService.getMinline?symbol=02400&day=1&callback=var%20hkT1=
      * @param stockIdCode
      */
-    public void queryStocksNDayPrice(String stockIdCode, final int dayCount){
+    public void queryStocksNDayPrice(String stockIdCode, final int dayCount, final boolean isNewStock){
         if(mQueue ==null)
             mQueue = Volley.newRequestQueue(mContext);
         // 为stockId添加hk
@@ -118,7 +118,7 @@ public class SinaDataQueryer {
                                 List<StockPrice> stockPriceList = mResponseStringToObject.sinaTodayPriceResponseToObjectList(response, false, StockPrice.QueryType.FIVEDAY);
                                 List<Date> dateList = TextUtil.convertStringToDateList(response);
 //                                StockManager.saveStockPriceList(stockPriceList);
-                                StockManager.addFiveDayStockPriceList(stockPriceList, stockId);
+                                StockManager.addFiveDayStockPriceList(stockPriceList, stockId, isNewStock);
                                 // 为了求五日均线,得到收盘价列表
                                 List<Float> fiveDayPriceList = mMaGenerator.generateDayMA5(response);
                                 StockManager.setPreviousFourDayPriceList(fiveDayPriceList.subList(1, fiveDayPriceList.size()), stockId);
@@ -130,7 +130,7 @@ public class SinaDataQueryer {
                         // 得到的时间为空字符串，则抛出异常
                         catch (NumberFormatException ex){
                             Log.e("lwd","得到空的时间字符串");
-                            queryStocksNDayPrice(stockId, dayCount);
+                            queryStocksNDayPrice(stockId, dayCount, isNewStock);
                         }
                     }
                 },

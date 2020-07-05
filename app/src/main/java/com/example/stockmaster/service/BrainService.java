@@ -17,6 +17,8 @@ import com.example.stockmaster.http.DataQueryerManager;
 import com.example.stockmaster.util.StockManager;
 
 public class BrainService extends Service {
+
+    private boolean isBeginQuery = false;
     private String CHANNEL_ID = "BRAIN_SERVICE_NOTIFICATION";
     private DataQueryerManager mDataQueryerManager;
     private StockManager mStockManager;
@@ -30,7 +32,7 @@ public class BrainService extends Service {
 
     public BrainService() {
         StockManager.setBrainService(this);
-        mDataQueryerManager = new DataQueryerManager(this);
+        mDataQueryerManager = DataQueryerManager.getInstance(this);
     }
 
     @Override
