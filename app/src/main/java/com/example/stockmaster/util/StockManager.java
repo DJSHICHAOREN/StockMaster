@@ -197,7 +197,7 @@ public class StockManager {
         int stockIndex = mStockIdList.indexOf(stockId);
         Stock stock = mStockList.get(stockIndex);
         if(isNewStock){
-            stock = new Stock(stock.getId(), stock.getName(), stock.getMonitorType());
+            stock = new Stock(stock.getId(), stock.getName(), stock.getMonitorType(), stock.getDayMaPrice());
         }
         if(stock != null){
             stock.setWholeStockPriceList(stockPriceList);

@@ -64,6 +64,14 @@ public class Stock {
         this.mKBaseList = Arrays.asList(new K5Minutes(this), new K15Minutes(this), new K30Minutes(this), new K60Minutes(this));
     }
 
+    public Stock(String id, String name, int monitorType, DayMaPrice dayMaPrice){
+        this.id = id;
+        this.name = name;
+        this.monitorType = monitorType;
+        this.mKBaseList = Arrays.asList(new K5Minutes(this), new K15Minutes(this), new K30Minutes(this), new K60Minutes(this));
+        this.mDayMaPrice = dayMaPrice;
+    }
+
     /**
      * 清空价格列表
      */
