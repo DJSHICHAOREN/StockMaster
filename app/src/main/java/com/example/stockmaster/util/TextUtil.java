@@ -60,5 +60,11 @@ public class TextUtil {
         return null;
     }
 
+    public static Date searchDate(String str){
+        String dateString = searchDateString(str);
+        Date date = convertStringToDate(dateString + " " + "09:31:00");
+        return date;
+    }
+
 
 }

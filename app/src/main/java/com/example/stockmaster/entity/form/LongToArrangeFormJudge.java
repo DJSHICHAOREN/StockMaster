@@ -5,6 +5,7 @@ import android.util.Log;
 import com.example.stockmaster.R;
 import com.example.stockmaster.entity.Stock;
 import com.example.stockmaster.entity.ma.MaState;
+import com.example.stockmaster.util.StockManager;
 
 import java.util.Date;
 import java.util.List;
@@ -46,10 +47,12 @@ public class LongToArrangeFormJudge extends BaseFormJudge {
             return null;
         }
 
-
         // 判断最新的三条线是否是按序排列且上升的
         int maStateListLength = maStateList.size();
         MaState lastMaState1 = maStateList.get(maStateListLength-1);
+        if(lastMaState1.getTime().getDate() != StockManager.getLastDealDate().getDate()){
+            return null;
+        }
         MaState lastMaState2 = getMaStateByTime(maStateList, lastMaState1.previousTime);
         if(lastMaState2 == null){
             return null;
@@ -107,8 +110,8 @@ public class LongToArrangeFormJudge extends BaseFormJudge {
 //        }
 
         // 判断日K线是否发散
-        if(stock.getDayMaPrice().getMa10() >= stock.getDayMaPrice().getMa30() &&
-                stock.getDayMaPrice().getMa30() >= stock.getDayMaPrice().getMa50()){
+        if(stock.getMa5(lastMaState1.getPrice()) >= stock.getDayMaPrice().getMa10() &&
+        stock.getDayMaPrice().getMa10() >= stock.getDayMaPrice().getMa30()){
             isDayMaUp = true;
         }
 

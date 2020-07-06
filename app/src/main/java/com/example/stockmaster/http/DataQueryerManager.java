@@ -89,13 +89,14 @@ public class DataQueryerManager {
      * 请求分时股票数据为了得到股票名称
      */
     public void queryAllOnce(){
+
+        // 请求最近交易时间
+        mSinaDataQueryer.queryLastDealDate();
+
         Calendar calendar = Calendar.getInstance();
         //获取系统时间
         int hour = calendar.get(Calendar.HOUR_OF_DAY);
         if(hour < 9 || hour > 16){
-            // 请求最近交易时间
-            mSinaDataQueryer.queryLastDealDate();
-
             // 请求一天股票数据
             for(final String stockId : StockManager.getDefaultStockMonitorStockIdList()) {
                 Runnable runnable = new Runnable() {

@@ -239,13 +239,13 @@ public class Stock {
         this.previousFourDayPriceList = previousFourDayPriceList;
     }
 
-    public float getMa5() {
+    public float getMa5(float nowPrice) {
         float sum = 0;
         if(previousFourDayPriceList != null && previousFourDayPriceList.size() == 4 && currentPrice != null){
             for(Float price : previousFourDayPriceList){
                 sum += price;
             }
-            sum += currentPrice.price;
+            sum += nowPrice;
             sum /= 5;
         }
         else{
@@ -361,9 +361,9 @@ public class Stock {
         }
 
         // 打印买卖点信息
-//        for(StrategyResult strategyResult : mStrategyResultList){
-//            Log.d("lwd", strategyResult.toString());
-//        }
+        for(StrategyResult strategyResult : strategyResultList){
+            Log.d("lwd", strategyResult.toString());
+        }
         return strategyResultList;
     }
 

@@ -117,13 +117,13 @@ public class SinaDataQueryer {
                             if(dayCount == 5){
                                 List<StockPrice> stockPriceList = mResponseStringToObject.sinaTodayPriceResponseToObjectList(response, false, StockPrice.QueryType.FIVEDAY);
                                 List<Date> dateList = TextUtil.convertStringToDateList(response);
-//                                StockManager.saveStockPriceList(stockPriceList);
-                                StockManager.addFiveDayStockPriceList(stockPriceList, stockId, isNewStock);
+
                                 // 为了求五日均线,得到收盘价列表
                                 List<Float> fiveDayPriceList = mMaGenerator.generateDayMA5(response);
                                 StockManager.setPreviousFourDayPriceList(fiveDayPriceList.subList(1, fiveDayPriceList.size()), stockId);
                                 // 请求均价
 //                                queryStocksMAPrice(stockId);
+                                StockManager.addFiveDayStockPriceList(stockPriceList, stockId, isNewStock);
                             }
                             Log.d("lwd", String.format("%s %d日数据添加完毕", stockId, dayCount));
                         }
@@ -171,7 +171,7 @@ public class SinaDataQueryer {
                         JsonObject jsonObject = new JsonParser().parse(response).getAsJsonObject();
                         MAResponseResult mAResponseResult = new Gson().fromJson(jsonObject, new TypeToken<MAResponseResult>(){}.getType());
 //                        Log.d("lwd", String.format("stockId:%s, ma10:%s", stockId, mAResponseResult.getData().getMA10()));
-                        DayMaPrice dayMaPrice = new DayMaPrice(stockId, StockManager.getLastDealDate(), mAResponseResult.getData().getMA10(), mAResponseResult.getData().getMA30(),
+                        DayMaPrice dayMaPrice = new DayMaPrice(stockId, StockManager.getLastDealDate()!=null ? StockManager.getLastDealDate().toString() : "", mAResponseResult.getData().getMA10(), mAResponseResult.getData().getMA30(),
                                 mAResponseResult.getData().getMA50(), mAResponseResult.getData().getMA100(),
                                 mAResponseResult.getData().getMA250());
                         StockManager.setStockDayMaPrice(stockId, dayMaPrice);
@@ -200,8 +200,9 @@ public class SinaDataQueryer {
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        String dateString = TextUtil.searchDateString(response);
-                        StockManager.setLastDealDate(dateString);
+//                        String dateString = TextUtil.searchDateString(response);
+                        Date time = TextUtil.searchDate(response);
+                        StockManager.setLastDealDate(time);
                     }
                 },
                 new Response.ErrorListener() {

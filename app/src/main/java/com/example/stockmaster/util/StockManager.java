@@ -42,7 +42,7 @@ public class StockManager {
     private static List<BaseStrategy> mStrategyList = Arrays.asList(new VBBStrategy());
     private static int mAllStockListSize = 0;
     private static int mNowLoadedStockListSize = 0;
-    private static String mLastDealDate = "";
+    private static Date mLastDealDate = null;
 
     public static void initStockManager(){
 
@@ -304,11 +304,11 @@ public class StockManager {
         return lineUpStockList;
     }
 
-    public static String getLastDealDate() {
+    public static Date getLastDealDate() {
         return mLastDealDate;
     }
 
-    public static void setLastDealDate(String mLastDealDate) {
+    public static void setLastDealDate(Date mLastDealDate) {
         StockManager.mLastDealDate = mLastDealDate;
     }
 
