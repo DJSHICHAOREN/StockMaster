@@ -40,6 +40,8 @@ public class TestFragment extends Fragment {
             if(!stockId.contains("hk")){
                 stockId = "hk" + stockId;
             }
+
+            mDataQueryerManager.queryOneStockMaOnce(stockId);
             mDataQueryerManager.queryOneStockFiveDayPrice(stockId, true);
         }
     }

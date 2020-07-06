@@ -116,6 +116,11 @@ public class DataQueryerManager {
         mSinaDataQueryer.queryStocksNowPrice(stockIdString);
 
         // 请求均线数据
+        queryAllMaOnce();
+    }
+
+    public void queryAllMaOnce(){
+
         for(final String stockId : StockManager.getDefaultStockMonitorStockIdList()) {
             Runnable runnable = new Runnable() {
                 @Override
@@ -125,6 +130,10 @@ public class DataQueryerManager {
             };
             mCachedThreadPool.execute(runnable);
         }
+    }
+
+    public void queryOneStockMaOnce(String stockId){
+        mSinaDataQueryer.queryStocksMAPrice(stockId);
     }
 
     /**
@@ -168,15 +177,7 @@ public class DataQueryerManager {
                 if(hour < 9 || hour > 16){
                     return;
                 }
-                for(final String stockId : StockManager.getDefaultStockMonitorStockIdList()) {
-                    Runnable runnable = new Runnable() {
-                        @Override
-                        public void run() {
-                            mSinaDataQueryer.queryStocksMAPrice(stockId);
-                        }
-                    };
-                    mCachedThreadPool.execute(runnable);
-                }
+                queryAllOnce();
             }
         }, 0, 1000*60*30); // 1 seconds
     }
