@@ -110,12 +110,12 @@ public class SinaDataQueryer {
                     public void onResponse(String response) {
                         try{
                             if(dayCount == 1){
-                                List<StockPrice> stockPriceList = mResponseStringToObject.sinaTodayPriceResponseToObjectList(response, false, StockPrice.QueryType.TODAY);
-                                StockManager.addOneDayStockPriceList(stockPriceList, stockId, true);
+                                List<List<StockPrice>> stockPriceEveryDayList = mResponseStringToObject.sinaTodayPriceResponseToObjectList(response, false, StockPrice.QueryType.TODAY);
+                                StockManager.addOneDayStockPriceList(stockPriceEveryDayList, stockId, true);
 
                             }
                             if(dayCount == 5){
-                                List<StockPrice> stockPriceList = mResponseStringToObject.sinaTodayPriceResponseToObjectList(response, false, StockPrice.QueryType.FIVEDAY);
+                                List<List<StockPrice>> stockPriceEveryDayList = mResponseStringToObject.sinaTodayPriceResponseToObjectList(response, false, StockPrice.QueryType.FIVEDAY);
                                 List<Date> dateList = TextUtil.convertStringToDateList(response);
 
                                 // 为了求五日均线,得到收盘价列表
@@ -123,7 +123,7 @@ public class SinaDataQueryer {
                                 StockManager.setPreviousFourDayPriceList(fiveDayPriceList.subList(1, fiveDayPriceList.size()), stockId);
                                 // 请求均价
 //                                queryStocksMAPrice(stockId);
-                                StockManager.addFiveDayStockPriceList(stockPriceList, stockId, isNewStock);
+                                StockManager.addFiveDayStockPriceList(stockPriceEveryDayList, stockId, isNewStock);
                             }
                             Log.d("lwd", String.format("%s %d日数据添加完毕", stockId, dayCount));
                         }

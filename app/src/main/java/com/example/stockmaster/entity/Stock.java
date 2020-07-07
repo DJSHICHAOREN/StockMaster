@@ -51,7 +51,7 @@ public class Stock {
     private DealType previousDealType = DealType.NULL;
     private List<Float> previousFourDayPriceList;
     private List<StockPrice> wholeStockPriceList = new ArrayList<>();
-
+    private float mFiveDayHighestPrice;
     private List<BaseStrategy> mStrategyList = Arrays.asList(new VBBStrategy());
     public Stock(){
 
@@ -144,16 +144,40 @@ public class Stock {
         return false;
     }
 
+    private void calFiveDayHighestPrice(List<List<StockPrice>> stockPriceEveryDayList){
+        for(int i=0; i<stockPriceEveryDayList.size(); i++){
+            if(i == stockPriceEveryDayList.size()-1){
+                break;
+            }
+            List<StockPrice> stockPriceList = stockPriceEveryDayList.get(i);
+            for(StockPrice stockPrice : stockPriceList){
+                if(stockPrice.getPrice() > mFiveDayHighestPrice){
+                    mFiveDayHighestPrice = stockPrice.getPrice();
+                }
+            }
+        }
+    }
+
     /**
      * 添加关键价格列表
-     * @param keyStockPriceList
+     * @param stockPriceEveryDayList
      */
-    public void setWholeStockPriceList(List<StockPrice> keyStockPriceList) {
+    public void setWholeStockPriceList(List<List<StockPrice>> stockPriceEveryDayList) {
         // 由于在数据库中读取的stock不会经过构造函数，所以mKBaseList可能为空
         if(mKBaseList == null){
 //            this.mKBaseList = Arrays.asList(new K5Minutes(id), new K15Minutes(id), new K30Minutes(id), new K60Minutes(id));
             this.mKBaseList = Arrays.asList(new K30Minutes(this), new K60Minutes(this));
         }
+
+        calFiveDayHighestPrice(stockPriceEveryDayList);
+
+        List<StockPrice> keyStockPriceList = new ArrayList<>();
+        for(List<StockPrice> stockPriceList : stockPriceEveryDayList){
+            for(StockPrice stockPrice : stockPriceList){
+                keyStockPriceList.add(stockPrice);
+            }
+        }
+
         List<StockForm> stockFormList = new ArrayList<>();
         for(KBase kBase : mKBaseList){
             stockFormList.addAll(kBase.setKeyStockPriceList(keyStockPriceList));

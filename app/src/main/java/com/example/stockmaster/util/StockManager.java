@@ -64,11 +64,11 @@ public class StockManager {
         }, 0, 2000); // 1 seconds
     }
 
-    public static void loadStockPrice(){
-        for(Stock stock : getStockList()){
-            getKeyStockPriceFromDB(stock);
-        }
-    }
+//    public static void loadStockPrice(){
+//        for(Stock stock : getStockList()){
+//            getKeyStockPriceFromDB(stock);
+//        }
+//    }
 
     public static void setBrainService(BrainService brainService){
         mBrainService = brainService;
@@ -100,9 +100,9 @@ public class StockManager {
         }
     }
 
-    public static void getKeyStockPriceFromDB(Stock stock){
-        stock.setWholeStockPriceList(DBUtil.getStockPriceList(stock.getId()));
-    }
+//    public static void getKeyStockPriceFromDB(Stock stock){
+//        stock.setWholeStockPriceList(DBUtil.getStockPriceList(stock.getId()));
+//    }
 
     /**
      * 根据股票id列表创建股票实例
@@ -168,20 +168,22 @@ public class StockManager {
 
     /**
      * 添加股票价格到股票对象
-     * @param stockPriceList
+     * @param stockPriceEveryDayList
      * @return stockId 获取成功的股票Id
      */
-    public static void addOneDayStockPriceList(List<StockPrice> stockPriceList, String stockId, boolean isClearBeforeData){
+    public static void addOneDayStockPriceList(List<List<StockPrice>> stockPriceEveryDayList, String stockId, boolean isClearBeforeData){
         int stockIndex = mStockIdList.indexOf(stockId);
         Stock stock = mStockList.get(stockIndex);
-        if(stock != null && stockPriceList.size() > 0){
+        if(stock != null && stockPriceEveryDayList.size() > 0){
             // 在添加今天的数据之前要清空之前的价格数据
             if(isClearBeforeData){
                 stock.clearPriceList();
             }
-            for(StockPrice stockPrice : stockPriceList){
-                if(stock.addToTodayStockPriceList(stockPrice)){
-                    mShortSwingAnalyser.analyse(stock);
+            for(List<StockPrice> stockPriceList : stockPriceEveryDayList){
+                for(StockPrice stockPrice : stockPriceList){
+                    if(stock.addToTodayStockPriceList(stockPrice)){
+                        mShortSwingAnalyser.analyse(stock);
+                    }
                 }
             }
             Log.d("lwd", String.format("%s 开盘到当前数据加载完毕", stockId));
@@ -190,17 +192,17 @@ public class StockManager {
 
     /**
      * 保存股票价格到数据库
-     * @param stockPriceList
+     * @param stockPriceEveryDayList
      * @param stockId
      */
-    public static void addFiveDayStockPriceList(List<StockPrice> stockPriceList, String stockId, boolean isNewStock){
+    public static void addFiveDayStockPriceList(List<List<StockPrice>> stockPriceEveryDayList, String stockId, boolean isNewStock){
         int stockIndex = mStockIdList.indexOf(stockId);
         Stock stock = mStockList.get(stockIndex);
         if(isNewStock){
             stock = new Stock(stock.getId(), stock.getName(), stock.getMonitorType(), stock.getDayMaPrice());
         }
         if(stock != null){
-            stock.setWholeStockPriceList(stockPriceList);
+            stock.setWholeStockPriceList(stockPriceEveryDayList);
 
             // 策略结果列表
 //            SuccessRateAnalyser.analyse(strategyResultList);

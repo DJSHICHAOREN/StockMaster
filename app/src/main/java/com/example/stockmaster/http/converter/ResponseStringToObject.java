@@ -69,7 +69,7 @@ public class ResponseStringToObject {
      * @param response
      * @return
      */
-    public List<StockPrice> sinaTodayPriceResponseToObjectList(String response, boolean isUseTimePoint, StockPrice.QueryType queryType){
+    public List<List<StockPrice>> sinaTodayPriceResponseToObjectList(String response, boolean isUseTimePoint, StockPrice.QueryType queryType){
         response = response.replaceAll("\n", "");
         String[] stockStr = response.split(":::");
 
@@ -81,10 +81,13 @@ public class ResponseStringToObject {
         Gson gson = new Gson();
         SinaResponse sinaResponse = gson.fromJson(jsonObject, new TypeToken<SinaResponse>(){}.getType());
         // 将SinaResponse转为List<StockPrice>
-        List<StockPrice> stockPriceList = new ArrayList<>();
+        // 存储每天的股票价格列表
+        List<List<StockPrice>> stockPriceEveryDayList = new ArrayList<>();
         if(sinaResponse != null && sinaResponse.getResult() != null && sinaResponse.getResult().getData() != null){
             List<List<SinaStockPrice>> data = sinaResponse.getResult().getData();
             for(List<SinaStockPrice> oneDaySinaStockPrice : data){
+                List<StockPrice> stockPriceList = new ArrayList<>();
+                stockPriceEveryDayList.add(stockPriceList);
                 // 得到这一天的日期
                 String date = "";
                 if(oneDaySinaStockPrice.get(0) != null && oneDaySinaStockPrice.get(0).getDate() != null){
@@ -126,6 +129,6 @@ public class ResponseStringToObject {
                 }
             }
         }
-        return stockPriceList;
+        return stockPriceEveryDayList;
     }
 }
