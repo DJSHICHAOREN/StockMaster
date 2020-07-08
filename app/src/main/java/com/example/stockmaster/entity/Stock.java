@@ -164,6 +164,29 @@ public class Stock {
     }
 
     /**
+     * 使用一天的价格列表更新全部价格列表
+     * @param stockPriceList
+     */
+    public void updateWholeStockPriceList(List<StockPrice> stockPriceList){
+        if(stockPriceList.size() > 0){
+            StockPrice stockPrice = stockPriceList.get(0);
+            int stockPriceIndex = 0;
+            for(int i=0; i<wholeStockPriceList.size(); i++){
+                if(stockPrice.getTime().compareTo(wholeStockPriceList.get(i).getTime()) == 0){
+                    break;
+                }
+                stockPriceIndex++;
+            }
+            wholeStockPriceList = wholeStockPriceList.subList(0, stockPriceIndex);
+            wholeStockPriceList.addAll(stockPriceList);
+
+        }
+        else{
+            Log.d("lwd", "更新全部价格列表得到了空数据");
+        }
+    }
+
+    /**
      * 添加关键价格列表
      * @param stockPriceEveryDayList
      */
