@@ -4,6 +4,7 @@ import android.util.Log;
 
 import com.example.stockmaster.R;
 import com.example.stockmaster.entity.Stock;
+import com.example.stockmaster.entity.StockPrice;
 import com.example.stockmaster.entity.ma.MaState;
 
 import java.util.List;
@@ -14,7 +15,7 @@ public class FallThroughSupportFormJudge extends BaseFormJudge {
     }
 
     @Override
-    public StockForm judge(String stockId, List<MaState> maStateList, int kLevel, Stock stock) {
+    public StockForm judge(String stockId, List<MaState> maStateList, int kLevel, Stock stock, List<StockPrice> stockPriceList) {
         if(maStateList == null || maStateList.size() < 1){
             return null;
         }

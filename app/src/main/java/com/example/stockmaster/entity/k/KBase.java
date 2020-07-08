@@ -53,7 +53,7 @@ public class KBase {
         if(newMaState.getTime().after(lastMaState.getTime())){
             maStateList.add(newMaState);
         }
-        List<StockForm> stockFormList = maStateAnalyser.analyse(mStockId, maStateList, mKLevel, TIME_POINT_STRING, mStock);
+        List<StockForm> stockFormList = maStateAnalyser.analyse(mStockId, maStateList, mKLevel, TIME_POINT_STRING, mStock, wholeStockPriceList);
         return stockFormList;
     }
 
@@ -122,7 +122,7 @@ public class KBase {
 //            if(isDateTheKeyTime(maState.getTime())){
 //                Log.d("lwd", String.format("level:%d %s", mKLevel, maState.toCandleString()));
 //            }
-            stockFormList.addAll(maStateAnalyser.analyse(mStockId, maStateList, mKLevel, TIME_POINT_STRING, mStock));
+            stockFormList.addAll(maStateAnalyser.analyse(mStockId, maStateList, mKLevel, TIME_POINT_STRING, mStock, stockPriceList.subList(0, i)));
         }
         return stockFormList;
     }

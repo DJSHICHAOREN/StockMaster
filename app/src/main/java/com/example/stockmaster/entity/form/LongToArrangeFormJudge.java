@@ -4,6 +4,7 @@ import android.util.Log;
 
 import com.example.stockmaster.R;
 import com.example.stockmaster.entity.Stock;
+import com.example.stockmaster.entity.StockPrice;
 import com.example.stockmaster.entity.ma.MaState;
 import com.example.stockmaster.util.StockManager;
 
@@ -41,7 +42,7 @@ public class LongToArrangeFormJudge extends BaseFormJudge {
      * @return
      */
     @Override
-    public StockForm judge(String stockId, List<MaState> maStateList, int kLevel, Stock stock){
+    public StockForm judge(String stockId, List<MaState> maStateList, int kLevel, Stock stock, List<StockPrice> stockPriceList){
         if(maStateList == null || maStateList.size() < kLevel * 3){
 //            Log.d("lwd", "maStateList为空或者maStateList的长度小于3");
             return null;
@@ -74,6 +75,8 @@ public class LongToArrangeFormJudge extends BaseFormJudge {
         boolean isRise = false; // 均线是否上升
         boolean isHorizontalBefore = false; // 均线之前是否横盘
         boolean isDayMaUp = false;
+        boolean isHigherThanBeforeDays = false;
+        boolean isMinutePriceUp = false;
         // 判断均线是否阶梯形排列
         if(lastMaState1.getMa5() >= lastMaState1.getMa10()
                 && lastMaState1.getMa10() > lastMaState1.getMa20()
@@ -115,7 +118,17 @@ public class LongToArrangeFormJudge extends BaseFormJudge {
             isDayMaUp = true;
         }
 
-        if(isSeriation && isRise && isDayMaUp){
+        // 判断是否比前四日的价格高
+        if(lastMaState1.getPrice() > stock.getFiveDayHighestPrice() * 1.001){
+            isHigherThanBeforeDays = true;
+        }
+
+//        if(lastMaState1.getPrice() > lastMaState2.getPrice() &&
+//        lastMaState2.getPrice() > lastMaState3.getPrice()){
+//            isMinutePriceUp = true;
+//        }
+
+        if(isSeriation && isRise && isDayMaUp && isHigherThanBeforeDays){
 //            Log.d("lwd", String.format("%s 买他，价格:%s", lastMaState1.getTime(), lastMaState1.getPrice()));
             return new StockForm(stockId, getFormId(), kLevel, lastMaState1.getTime(), 0, lastMaState1.getPrice());
         }

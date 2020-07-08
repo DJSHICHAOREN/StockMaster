@@ -1,6 +1,7 @@
 package com.example.stockmaster.util;
 
 import com.example.stockmaster.entity.Stock;
+import com.example.stockmaster.entity.StockPrice;
 import com.example.stockmaster.entity.form.FallThroughSupportFormJudge;
 import com.example.stockmaster.entity.form.LongToArrangeFormJudge;
 import com.example.stockmaster.entity.ma.MaState;
@@ -20,10 +21,11 @@ public class MaStateAnalyser {
         mBaseFormJudgeList.add(new FallThroughSupportFormJudge());
     }
 
-    public List<StockForm> analyse(String stockId, List<MaState> maStateList, int kLevel, String keyStockPriceTimeString, Stock stock){
+    public List<StockForm> analyse(String stockId, List<MaState> maStateList, int kLevel, String keyStockPriceTimeString,
+                                   Stock stock, List<StockPrice> stockPriceList){
         List<StockForm> stockFormList = new ArrayList<>();
         for(BaseFormJudge baseFormJudge : mBaseFormJudgeList){
-            StockForm stockForm = baseFormJudge.judge(stockId, maStateList, kLevel, stock);
+            StockForm stockForm = baseFormJudge.judge(stockId, maStateList, kLevel, stock, stockPriceList);
             if(stockForm != null){
 //                DBUtil.saveStockForm(stockForm);
                 stockFormList.add(stockForm);

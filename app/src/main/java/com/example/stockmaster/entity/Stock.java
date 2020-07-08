@@ -144,6 +144,10 @@ public class Stock {
         return false;
     }
 
+    /**
+     * 计算前四日的最高价
+     * @param stockPriceEveryDayList
+     */
     private void calFiveDayHighestPrice(List<List<StockPrice>> stockPriceEveryDayList){
         for(int i=0; i<stockPriceEveryDayList.size(); i++){
             if(i == stockPriceEveryDayList.size()-1){
@@ -395,4 +399,11 @@ public class Stock {
         return mStrategyResultList.size();
     }
 
+    public float getFiveDayHighestPrice() {
+        return mFiveDayHighestPrice;
+    }
+
+    public void setFiveDayHighestPrice(float mFiveDayHighestPrice) {
+        this.mFiveDayHighestPrice = mFiveDayHighestPrice;
+    }
 }
