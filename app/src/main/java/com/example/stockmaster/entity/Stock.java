@@ -64,12 +64,13 @@ public class Stock {
         this.mKBaseList = Arrays.asList(new K5Minutes(this), new K15Minutes(this), new K30Minutes(this), new K60Minutes(this));
     }
 
-    public Stock(String id, String name, int monitorType, DayMaPrice dayMaPrice){
+    public Stock(String id, String name, int monitorType, DayMaPrice dayMaPrice, List<Float> previousFourDayPriceList){
         this.id = id;
         this.name = name;
         this.monitorType = monitorType;
         this.mKBaseList = Arrays.asList(new K5Minutes(this), new K15Minutes(this), new K30Minutes(this), new K60Minutes(this));
         this.mDayMaPrice = dayMaPrice;
+        this.previousFourDayPriceList = previousFourDayPriceList;
     }
 
     /**
@@ -269,7 +270,7 @@ public class Stock {
 
     public float getMa5(float nowPrice) {
         float sum = 0;
-        if(previousFourDayPriceList != null && previousFourDayPriceList.size() == 4 && currentPrice != null){
+        if(previousFourDayPriceList != null && previousFourDayPriceList.size() == 4){
             for(Float price : previousFourDayPriceList){
                 sum += price;
             }
@@ -405,5 +406,9 @@ public class Stock {
 
     public void setFiveDayHighestPrice(float mFiveDayHighestPrice) {
         this.mFiveDayHighestPrice = mFiveDayHighestPrice;
+    }
+
+    public List<Float> getPreviousFourDayPriceList() {
+        return previousFourDayPriceList;
     }
 }
