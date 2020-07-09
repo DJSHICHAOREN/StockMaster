@@ -2,6 +2,7 @@ package com.example.stockmaster.entity.strategy;
 
 import com.example.stockmaster.R;
 import com.example.stockmaster.entity.Stock;
+import com.example.stockmaster.util.DateUtil;
 
 import org.xutils.db.annotation.Column;
 import org.xutils.db.annotation.Table;
@@ -90,7 +91,7 @@ public class StrategyResult {
 
     @Override
     public String toString(){
-        String saleType = this.type == 0 ? "买点" : "卖点";
-        return String.format("%s，时间：%s，价格：%f", saleType, time, price);
+        String saleType = this.type == 0 ? "B" : "S";
+        return String.format("%s，时间：%s，价格：%f", saleType, DateUtil.convertDateToShortString(time), price);
     }
 }

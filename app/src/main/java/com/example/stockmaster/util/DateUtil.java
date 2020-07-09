@@ -24,4 +24,24 @@ public class DateUtil {
         }
         return false;
     }
+
+    /**
+     * 将Date对象转为可以对比的字符串
+     * @param time
+     * @return
+     */
+    public static String convertDateToShortString(Date time){
+        String minuteTime = "";
+        if(time != null){
+            String hour = getDoubleNumString(time.getHours());
+            String minute = getDoubleNumString(time.getMinutes());
+            String second = getDoubleNumString(time.getSeconds());
+            minuteTime = hour + ":" + minute + ":" + second;
+        }
+        return minuteTime;
+    }
+
+    private static String getDoubleNumString(int num){
+        return num >= 10 ? num + "" : "0" + num;
+    }
 }

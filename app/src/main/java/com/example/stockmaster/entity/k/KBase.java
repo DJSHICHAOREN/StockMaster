@@ -14,6 +14,8 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
+import static com.example.stockmaster.util.DateUtil.convertDateToShortString;
+
 public class KBase {
     public String TIME_POINT_STRING = "";
     public List<String> TIME_POINT_STRING_LIST;
@@ -221,25 +223,7 @@ public class KBase {
         return false;
     }
 
-    /**
-     * 将Date对象转为可以对比的字符串
-     * @param time
-     * @return
-     */
-    private String convertDateToShortString(Date time){
-        String minuteTime = "";
-        if(time != null){
-            String hour = getDoubleNumString(time.getHours());
-            String minute = getDoubleNumString(time.getMinutes());
-            String second = getDoubleNumString(time.getSeconds());
-            minuteTime = hour + ":" + minute + ":" + second;
-        }
-        return minuteTime;
-    }
 
-    private String getDoubleNumString(int num){
-        return num >= 10 ? num + "" : "0" + num;
-    }
 
     public void setTIME_POINT_STRING(String TIME_POINT_STRING) {
         this.TIME_POINT_STRING = TIME_POINT_STRING;
