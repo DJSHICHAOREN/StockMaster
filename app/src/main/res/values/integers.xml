@@ -3,9 +3,11 @@
     <integer name="formUpEmanative">0</integer>
     <integer name="formLongToArrange">1</integer>
     <integer name="formFallThroughSupport">2</integer>
+    <integer name="formMinuteRise">3</integer>
     <integer name="strategyFlareUp">0</integer>
     <integer name="strategyLongToArrange">1</integer>
-    <integer name="strategyFallThroughSupport">2</integer>
+    <integer name="strategyVBB">2</integer>
+    <integer name="strategyMinuteRise">3</integer>
     <integer name="typeStrategyBuy">0</integer>
     <integer name="typeStrategySale">1</integer>
 

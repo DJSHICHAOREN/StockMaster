@@ -44,4 +44,16 @@ public class DateUtil {
     private static String getDoubleNumString(int num){
         return num >= 10 ? num + "" : "0" + num;
     }
+
+    /**
+     * 计算时间差
+     * @param date1
+     * @param date2
+     * @return
+     */
+    public static long calculateMinutesGap(Date date1, Date date2){
+        long gapMinutes = (date2.getTime() - date1.getTime())/(1000 * 60);
+        gapMinutes = Math.abs(gapMinutes);
+        return gapMinutes;
+    }
 }

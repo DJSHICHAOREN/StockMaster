@@ -20,6 +20,8 @@ public class MaState {
     public float beginPrice;
     public float endPrice;
 
+    public float minPriceInOneHour = -1;
+
     public MaState(Date time, float price, Date previousTime){
         this.time = time;
         this.price = price;
@@ -176,5 +178,13 @@ public class MaState {
         setEndPrice(endPrice);
         setHighestPrice(highestPrice);
         setLowestPrice(lowestPrice);
+    }
+
+    public float getMinPriceInOneHour() {
+        return minPriceInOneHour;
+    }
+
+    public void setMinPriceInOneHour(float minPriceInOneHour) {
+        this.minPriceInOneHour = minPriceInOneHour;
     }
 }

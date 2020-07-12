@@ -3,20 +3,20 @@ package com.example.stockmaster.entity.strategy;
 import android.util.Log;
 
 import com.example.stockmaster.R;
-import com.example.stockmaster.entity.Stock;
 import com.example.stockmaster.entity.form.StockForm;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
+import static com.example.stockmaster.util.DateUtil.calculateMinutesGap;
 
 public class VBBStrategy extends BaseStrategy {
     private StrategyResult previousStrategyResult;
     private Date previousBuyFormTime;
 
-    public List<StrategyResult> mStrategyResultList = new ArrayList<>();
+
     public VBBStrategy() {
-        super(R.integer.strategyFallThroughSupport);
+        super(R.integer.strategyVBB);
     }
 
     @Override
@@ -50,11 +50,7 @@ public class VBBStrategy extends BaseStrategy {
         return strategyResult;
     }
 
-    public static long calculateMinutesGap(Date date1, Date date2){
-        long gapMinutes = (date2.getTime() - date1.getTime())/(1000 * 60);
-        gapMinutes = Math.abs(gapMinutes);
-        return gapMinutes;
-    }
+
 
     public List<StrategyResult> getmStrategyResultList() {
         return mStrategyResultList;

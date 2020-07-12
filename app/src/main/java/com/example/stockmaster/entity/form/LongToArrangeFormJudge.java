@@ -44,7 +44,6 @@ public class LongToArrangeFormJudge extends BaseFormJudge {
     @Override
     public StockForm judge(String stockId, List<MaState> maStateList, int kLevel, Stock stock, List<StockPrice> stockPriceList){
         if(maStateList == null || maStateList.size() < kLevel * 3){
-//            Log.d("lwd", "maStateList为空或者maStateList的长度小于3");
             return null;
         }
 

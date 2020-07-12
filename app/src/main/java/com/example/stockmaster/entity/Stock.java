@@ -12,6 +12,7 @@ import com.example.stockmaster.entity.k.K60Minutes;
 import com.example.stockmaster.entity.k.KBase;
 import com.example.stockmaster.entity.ma.DayMaPrice;
 import com.example.stockmaster.entity.strategy.BaseStrategy;
+import com.example.stockmaster.entity.strategy.MinuteRiseStrategy;
 import com.example.stockmaster.entity.strategy.StrategyResult;
 import com.example.stockmaster.entity.strategy.VBBStrategy;
 import com.example.stockmaster.util.DateUtil;
@@ -52,7 +53,7 @@ public class Stock {
     private List<Float> previousFourDayPriceList;
     private List<StockPrice> wholeStockPriceList = new ArrayList<>();
     private float mFiveDayHighestPrice;
-    private List<BaseStrategy> mStrategyList = Arrays.asList(new VBBStrategy());
+    private List<BaseStrategy> mStrategyList = Arrays.asList(new VBBStrategy(), new MinuteRiseStrategy());
     public Stock(){
 
     }
@@ -194,7 +195,8 @@ public class Stock {
         // 由于在数据库中读取的stock不会经过构造函数，所以mKBaseList可能为空
         if(mKBaseList == null){
 //            this.mKBaseList = Arrays.asList(new K5Minutes(id), new K15Minutes(id), new K30Minutes(id), new K60Minutes(id));
-            this.mKBaseList = Arrays.asList(new K30Minutes(this), new K60Minutes(this));
+//            this.mKBaseList = Arrays.asList(new K30Minutes(this), new K60Minutes(this));
+            this.mKBaseList = Arrays.asList(new K30Minutes(this));
         }
 
         calFiveDayHighestPrice(stockPriceEveryDayList);

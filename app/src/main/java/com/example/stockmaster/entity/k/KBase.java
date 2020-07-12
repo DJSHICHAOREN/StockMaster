@@ -112,6 +112,9 @@ public class KBase {
         // 添加价格列表之后计算均值
         for(int i=MaCalculater.getMinCountedDay(); i<stockPriceList.size(); i++){
             MaState maState = MaCalculater.calMaState( filterPreviousKeyStockPrice(stockPriceList.subList(0, i), filteredStockPriceList));
+            if(i > 60){
+                maState.setMinPriceInOneHour(calMinutePriceInPriceList(stockPriceList.subList(i-60, i)));
+            }
             if(maState != null && maState.getMa5() != 0){
                 maStateList.add(maState);
             }
@@ -127,6 +130,21 @@ public class KBase {
             stockFormList.addAll(maStateAnalyser.analyse(mStockId, maStateList, mKLevel, TIME_POINT_STRING, mStock, stockPriceList.subList(0, i)));
         }
         return stockFormList;
+    }
+
+    /**
+     * 计算价格列表中的最小价格
+     * @param stockPriceList
+     * @return
+     */
+    private float calMinutePriceInPriceList(List<StockPrice> stockPriceList){
+        float minPrice = stockPriceList.get(0).getPrice();
+        for(StockPrice stockPrice : stockPriceList){
+            if(stockPrice.getPrice() < minPrice){
+                minPrice = stockPrice.getPrice();
+            }
+        }
+        return minPrice;
     }
 
     private void calLastMaStateCandleArgs(List<MaState> maStateList){

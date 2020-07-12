@@ -1,7 +1,6 @@
 package com.example.stockmaster.entity.strategy;
 
 import com.example.stockmaster.R;
-import com.example.stockmaster.entity.Stock;
 import com.example.stockmaster.util.DateUtil;
 
 import org.xutils.db.annotation.Column;
@@ -92,6 +91,33 @@ public class StrategyResult {
     @Override
     public String toString(){
         String saleType = this.type == 0 ? "B" : "S";
-        return String.format("%s，时间：%s，价格：%f", saleType, DateUtil.convertDateToShortString(time), price);
+        String strategyType = "";
+        switch (this.strategyId){
+            case R.integer.strategyVBB:{
+                strategyType = "vbb";
+                break;
+            }
+            case R.integer.strategyMinuteRise:{
+                strategyType = "mr";
+                break;
+            }
+        }
+        return String.format("%s %s，时间：%s，价格：%f, stockId:%s", strategyType, saleType, DateUtil.convertDateToShortString(time), getPrice(), getStockId());
+    }
+
+    public String toLongString(){
+        String saleType = this.type == 0 ? "B" : "S";
+        String strategyType = "";
+        switch (this.strategyId){
+            case R.integer.strategyVBB:{
+                strategyType = "vbb";
+                break;
+            }
+            case R.integer.strategyMinuteRise:{
+                strategyType = "mr";
+                break;
+            }
+        }
+        return String.format("%s %s，时间：%s，价格：%f, stockId:%s", strategyType, saleType, getTime(), getPrice(), getStockId());
     }
 }
