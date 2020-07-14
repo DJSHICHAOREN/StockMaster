@@ -50,9 +50,7 @@ public class LongToArrangeFormJudge extends BaseFormJudge {
         // 判断最新的三条线是否是按序排列且上升的
         int maStateListLength = maStateList.size();
         MaState lastMaState1 = maStateList.get(maStateListLength-1);
-        if(lastMaState1.getTime().getDate() != StockManager.getLastDealDate().getDate()){
-            return null;
-        }
+
         MaState lastMaState2 = getMaStateByTime(maStateList, lastMaState1.previousTime);
         if(lastMaState2 == null){
             return null;

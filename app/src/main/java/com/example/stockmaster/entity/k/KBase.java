@@ -8,6 +8,7 @@ import com.example.stockmaster.entity.form.StockForm;
 import com.example.stockmaster.entity.ma.MaState;
 import com.example.stockmaster.util.MaCalculater;
 import com.example.stockmaster.util.MaStateAnalyser;
+import com.example.stockmaster.util.StockManager;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -111,6 +112,12 @@ public class KBase {
         List<StockForm> stockFormList = new ArrayList<>();
         // 添加价格列表之后计算均值
         for(int i=MaCalculater.getMinCountedDay(); i<stockPriceList.size(); i++){
+
+            // 只分析今天的数据开关
+//            if(stockPriceList.get(i).getTime().getDate() != StockManager.getLastDealDate().getDate()){
+//                continue;
+//            }
+
             MaState maState = MaCalculater.calMaState( filterPreviousKeyStockPrice(stockPriceList.subList(0, i), filteredStockPriceList));
             if(i > 60){
                 maState.setMinPriceInOneHour(calMinutePriceInPriceList(stockPriceList.subList(i-60, i)));
@@ -127,6 +134,8 @@ public class KBase {
 //            if(isDateTheKeyTime(maState.getTime())){
 //                Log.d("lwd", String.format("level:%d %s", mKLevel, maState.toCandleString()));
 //            }
+
+
             stockFormList.addAll(maStateAnalyser.analyse(mStockId, maStateList, mKLevel, TIME_POINT_STRING, mStock, stockPriceList.subList(0, i)));
         }
         return stockFormList;

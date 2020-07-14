@@ -26,6 +26,7 @@ public class MaStateAnalyser {
     public List<StockForm> analyse(String stockId, List<MaState> maStateList, int kLevel, String keyStockPriceTimeString,
                                    Stock stock, List<StockPrice> stockPriceList){
         List<StockForm> stockFormList = new ArrayList<>();
+
         for(BaseFormJudge baseFormJudge : mBaseFormJudgeList){
             StockForm stockForm = baseFormJudge.judge(stockId, maStateList, kLevel, stock, stockPriceList);
             if(stockForm != null){

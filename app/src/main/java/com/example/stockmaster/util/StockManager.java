@@ -152,9 +152,9 @@ public class StockManager {
                 DBUtil.updateStock(stock);
             }
             if(stock != null && stock.isReceivedTodayData){
-                if(stock.addToTodayStockPriceList(stockPrice)){
-                    mShortSwingAnalyser.analyse(stock);
-                }
+//                if(stock.addToTodayStockPriceList(stockPrice)){
+//                    mShortSwingAnalyser.analyse(stock);
+//                }
                 List<StrategyResult> strategyResultList = stock.addToWholeStockPriceList(stockPrice);
                 for(StrategyResult strategyResult : strategyResultList){
                     Log.d("lwd", "addMinuteStockPrice" + strategyResultList.toString());
@@ -182,9 +182,9 @@ public class StockManager {
             for(List<StockPrice> stockPriceList : stockPriceEveryDayList){
                 for(StockPrice stockPrice : stockPriceList){
                     allStockPrice.add(stockPrice);
-                    if(stock.addToTodayStockPriceList(stockPrice)){
-                        mShortSwingAnalyser.analyse(stock);
-                    }
+//                    if(stock.addToTodayStockPriceList(stockPrice)){
+//                        mShortSwingAnalyser.analyse(stock);
+//                    }
                 }
             }
             if(stock.isReceivedTodayData){
