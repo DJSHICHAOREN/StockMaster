@@ -53,6 +53,7 @@ public class Stock {
     private List<Float> previousFourDayPriceList;
     private List<StockPrice> wholeStockPriceList = new ArrayList<>();
     private float mFiveDayHighestPrice;
+    private float mFiveDayHighestEndPrice;
     private List<BaseStrategy> mStrategyList = Arrays.asList(new VBBStrategy(), new MinuteRiseStrategy());
     public Stock(){
 
@@ -164,6 +165,21 @@ public class Stock {
         }
     }
 
+    private void calFiveDayHighestEndPrice(List<List<StockPrice>> stockPriceEveryDayList){
+        for(int i=0; i<stockPriceEveryDayList.size(); i++){
+            if(i == stockPriceEveryDayList.size()-1){
+                break;
+            }
+            List<StockPrice> stockPriceList = stockPriceEveryDayList.get(i);
+            if(stockPriceList != null && stockPriceList.size() > 0){
+                Float lastPrice = stockPriceList.get(stockPriceList.size()-1).getPrice();
+                if(mFiveDayHighestEndPrice < lastPrice){
+                    mFiveDayHighestEndPrice = lastPrice;
+                }
+            }
+        }
+    }
+
     /**
      * 使用一天的价格列表更新全部价格列表
      * @param stockPriceList
@@ -200,6 +216,7 @@ public class Stock {
         }
 
         calFiveDayHighestPrice(stockPriceEveryDayList);
+        calFiveDayHighestEndPrice(stockPriceEveryDayList);
 
         List<StockPrice> keyStockPriceList = new ArrayList<>();
         for(List<StockPrice> stockPriceList : stockPriceEveryDayList){
@@ -390,7 +407,7 @@ public class Stock {
         }
         String resultString = "";
         for(StrategyResult strategyResult : this.mStrategyResultList){
-            resultString += strategyResult.toString() + "\n";
+            resultString += strategyResult.toLongString() + "\n";
         }
         return resultString;
 
@@ -435,5 +452,9 @@ public class Stock {
 
     public List<Float> getPreviousFourDayPriceList() {
         return previousFourDayPriceList;
+    }
+
+    public float getmFiveDayHighestEndPrice() {
+        return mFiveDayHighestEndPrice;
     }
 }

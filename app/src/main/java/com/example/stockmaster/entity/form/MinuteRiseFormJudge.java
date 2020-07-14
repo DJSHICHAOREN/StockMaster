@@ -24,8 +24,10 @@ public class MinuteRiseFormJudge extends BaseFormJudge {
         if(lastMaState1.getMinPriceInOneHour() == -1){
             return null;
         }
-        if(lastMaState1.getPrice() >= lastMaState1.getMinPriceInOneHour() * 1.03){
-            return new StockForm(stockId, getFormId(), kLevel, lastMaState1.getTime(), 0, lastMaState1.getPrice());
+        if(lastMaState1.getPrice() >= lastMaState1.getMinPriceInOneHour() * 1.04){
+            if(lastMaState1.getPrice() > stock.getFiveDayHighestPrice() * 1.001){
+                return new StockForm(stockId, getFormId(), kLevel, lastMaState1.getTime(), 0, lastMaState1.getPrice());
+            }
         }
         return null;
     }
