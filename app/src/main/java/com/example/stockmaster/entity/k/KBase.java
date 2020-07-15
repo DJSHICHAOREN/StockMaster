@@ -8,14 +8,13 @@ import com.example.stockmaster.entity.form.StockForm;
 import com.example.stockmaster.entity.ma.MaState;
 import com.example.stockmaster.util.MaCalculater;
 import com.example.stockmaster.util.MaStateAnalyser;
-import com.example.stockmaster.util.StockManager;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
-import static com.example.stockmaster.util.DateUtil.convertDateToShortString;
+import static com.example.stockmaster.util.DateUtil.convertDateToShortMinuteString;
 
 public class KBase {
     public String TIME_POINT_STRING = "";
@@ -85,7 +84,7 @@ public class KBase {
     }
 
     public Date getNextKeyDate(Date stockPriceTime){
-        String shortPriceTime = convertDateToShortString(stockPriceTime);
+        String shortPriceTime = convertDateToShortMinuteString(stockPriceTime);
         int stockPriceIndex = TIME_POINT_STRING_LIST.indexOf(shortPriceTime);
         int nextStockPriceIndex=0;
         if(stockPriceIndex == TIME_POINT_STRING_LIST.size()-1){
@@ -243,7 +242,7 @@ public class KBase {
     }
 
     private boolean isDateTheKeyTime(Date time){
-        String minuteTime = convertDateToShortString(time);
+        String minuteTime = convertDateToShortMinuteString(time);
         if(TIME_POINT_STRING.indexOf(minuteTime) != -1){
             return true;
         }

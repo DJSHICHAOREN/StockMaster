@@ -1,6 +1,6 @@
 package com.example.stockmaster.entity.sina;
 
-public class SinaStockPrice {
+public class NDaysSinaStockPrice {
     private String m;
     private String price;
     private String volume;

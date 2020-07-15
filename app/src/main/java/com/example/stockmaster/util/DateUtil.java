@@ -26,11 +26,27 @@ public class DateUtil {
     }
 
     /**
-     * 将Date对象转为可以对比的字符串
+     * 将Date对象转为可以分时字符串
      * @param time
      * @return
      */
-    public static String convertDateToShortString(Date time){
+    public static String convertDateToShortDayString(Date time){
+        String dayTime = "";
+        if(time != null){
+            String year = getDoubleNumString(time.getYear() + 1900);
+            String month = getDoubleNumString(time.getMonth());
+            String day = getDoubleNumString(time.getDate());
+            dayTime = year + "-" + month + "-" + day;
+        }
+        return dayTime;
+    }
+
+    /**
+     * 将Date对象转为分时字符串
+     * @param time
+     * @return
+     */
+    public static String convertDateToShortMinuteString(Date time){
         String minuteTime = "";
         if(time != null){
             String hour = getDoubleNumString(time.getHours());

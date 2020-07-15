@@ -167,31 +167,21 @@ public class StockManager {
 
     /**
      * 添加股票价格到股票对象
-     * @param stockPriceEveryDayList
+     * @param stockPriceList
      * @return stockId 获取成功的股票Id
      */
-    public static void addOneDayStockPriceList(List<List<StockPrice>> stockPriceEveryDayList, String stockId, boolean isClearBeforeData){
+    public static void addOneDayStockPriceList(List<StockPrice> stockPriceList, String stockId, boolean isClearBeforeData){
         int stockIndex = mStockIdList.indexOf(stockId);
         Stock stock = mStockList.get(stockIndex);
-        if(stock != null && stockPriceEveryDayList.size() > 0){
+        if(stock != null && stockPriceList.size() > 0){
             // 在添加今天的数据之前要清空之前的价格数据
             if(isClearBeforeData){
                 stock.clearPriceList();
             }
-            List<StockPrice> allStockPrice = new ArrayList<>();
-            for(List<StockPrice> stockPriceList : stockPriceEveryDayList){
-                for(StockPrice stockPrice : stockPriceList){
-                    allStockPrice.add(stockPrice);
-//                    if(stock.addToTodayStockPriceList(stockPrice)){
-//                        mShortSwingAnalyser.analyse(stock);
-//                    }
-                }
-            }
             if(stock.isReceivedTodayData){
-                stock.updateWholeStockPriceList(allStockPrice);
-                Log.d("lwd", String.format("%s 一日数据更新完毕", stockId));
+                stock.updateWholeStockPriceList(stockPriceList);
+                Log.d("lwd", String.format("%s 今日数据更新完毕", stockId));
             }
-            Log.d("lwd", String.format("%s 开盘到当前数据加载完毕", stockId));
         }
     }
 

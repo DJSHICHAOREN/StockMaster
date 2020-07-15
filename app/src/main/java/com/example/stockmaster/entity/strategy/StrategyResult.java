@@ -102,7 +102,7 @@ public class StrategyResult {
                 break;
             }
         }
-        return String.format("%s %s，时间：%s，价格：%f, stockId:%s", strategyType, saleType, DateUtil.convertDateToShortString(time), getPrice(), getStockId());
+        return String.format("%s %s，时间：%s，价格：%f, stockId:%s", strategyType, saleType, DateUtil.convertDateToShortMinuteString(time), getPrice(), getStockId());
     }
 
     public String toLongString(){

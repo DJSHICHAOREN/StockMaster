@@ -73,10 +73,10 @@ public class SinaDataQueryer {
      * 查询股票今天的价格
      * @param stockId
      */
-    public void queryStocksTodayPrice(String stockId){
-        Log.d("lwd", String.format("%s 开始请求今天数据", stockId));
-        queryStocksNDayPrice(stockId, 1, false);
-    }
+//    public void queryStocksTodayPrice(String stockId){
+//        Log.d("lwd", String.format("%s 开始请求今天数据", stockId));
+//        queryStocksNDayPrice(stockId, 1, false);
+//    }
 
     /**
      * 查询股票的五日均价
@@ -109,13 +109,13 @@ public class SinaDataQueryer {
                     @Override
                     public void onResponse(String response) {
                         try{
-                            if(dayCount == 1){
-                                List<List<StockPrice>> stockPriceEveryDayList = mResponseStringToObject.sinaTodayPriceResponseToObjectList(response, false, StockPrice.QueryType.TODAY);
-                                StockManager.addOneDayStockPriceList(stockPriceEveryDayList, stockId, true);
-
-                            }
+//                            if(dayCount == 1){
+//                                List<List<StockPrice>> stockPriceEveryDayList = mResponseStringToObject.sinaTodayPriceResponseToObjectList(response, StockPrice.QueryType.TODAY);
+//                                StockManager.addOneDayStockPriceList(stockPriceEveryDayList, stockId, true);
+//
+//                            }
                             if(dayCount == 5){
-                                List<List<StockPrice>> stockPriceEveryDayList = mResponseStringToObject.sinaTodayPriceResponseToObjectList(response, false, StockPrice.QueryType.FIVEDAY);
+                                List<List<StockPrice>> stockPriceEveryDayList = mResponseStringToObject.sinaNDaysPriceResponseToObjectList(response, false, StockPrice.QueryType.FIVEDAY);
                                 List<Date> dateList = TextUtil.convertStringToDateList(response);
 
                                 // 为了求五日均线,得到收盘价列表
@@ -140,6 +140,50 @@ public class SinaDataQueryer {
                         queryStocksTodayPrice(stockId);
 //                        Toast.makeText(mContext,"数据请求失败", Toast.LENGTH_LONG).show();
                         Log.e("lwd",String.format("%s请求%s天数据失败", stockId, dayCount));
+                        Log.e("lwd", "异常信息：" + error.getMessage());
+                    }
+                });
+
+        mQueue.add(stringRequest);
+    }
+
+    /**
+     * 查询股票N天的价格
+     * https://stock.finance.sina.com.cn/hkstock/api/openapi.php/HK_StockService.getHKMinline?symbol=02400&random=1594780810111&callback=var%20t1hk02400=
+     * @param stockIdCode
+     */
+    public void queryStocksTodayPrice(String stockIdCode){
+        if(mQueue ==null)
+            mQueue = Volley.newRequestQueue(mContext);
+        // 为stockId添加hk
+        final String stockId = addHKToStockId(stockIdCode);
+
+        String url = "https://stock.finance.sina.com.cn/hkstock/api/openapi.php/HK_StockService.getHKMinline?symbol=" + stockId.replace("hk", "")
+                + "" + "&callback=:::" + stockId + ":::";
+
+        // Request a string response from the provided URL.
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        try{
+                            List<StockPrice> stockPriceList = mResponseStringToObject.sinaTodayPriceResponseToObjectList(response, StockPrice.QueryType.TODAY);
+                            StockManager.addOneDayStockPriceList(stockPriceList, stockId, true);
+                            Log.d("lwd", String.format("%s 今日最准数据添加完毕", stockId));
+                        }
+                        // 得到的时间为空字符串，则抛出异常
+                        catch (NumberFormatException ex){
+                            Log.e("lwd","得到空的时间字符串");
+                            queryStocksTodayPrice(stockId);
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        queryStocksTodayPrice(stockId);
+//                        Toast.makeText(mContext,"数据请求失败", Toast.LENGTH_LONG).show();
+                        Log.e("lwd",String.format("%s请求今日最准数据失败", stockId));
                         Log.e("lwd", "异常信息：" + error.getMessage());
                     }
                 });
@@ -214,6 +258,13 @@ public class SinaDataQueryer {
                 });
 
         mQueue.add(stringRequest);
+    }
+
+    private String addHKToStockId(String stockId){
+        if(!stockId.contains("hk")){
+            stockId = "hk" + stockId;
+        }
+        return stockId;
     }
 
 }

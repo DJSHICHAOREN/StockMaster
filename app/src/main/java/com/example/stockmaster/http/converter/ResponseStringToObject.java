@@ -1,18 +1,20 @@
 package com.example.stockmaster.http.converter;
 
-import android.app.DownloadManager;
 import android.util.Log;
 
 import com.example.stockmaster.entity.StockPrice;
-import com.example.stockmaster.entity.sina.SinaResponse;
-import com.example.stockmaster.entity.sina.SinaStockPrice;
+import com.example.stockmaster.entity.sina.NDaysSinaResponse;
+import com.example.stockmaster.entity.sina.NDaysSinaStockPrice;
+import com.example.stockmaster.entity.sina.TodaySinaResponse;
+import com.example.stockmaster.entity.sina.TodaySinaStockPrice;
+import com.example.stockmaster.util.DateUtil;
+import com.example.stockmaster.util.StockManager;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.reflect.TypeToken;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -69,7 +71,7 @@ public class ResponseStringToObject {
      * @param response
      * @return
      */
-    public List<List<StockPrice>> sinaTodayPriceResponseToObjectList(String response, boolean isUseTimePoint, StockPrice.QueryType queryType){
+    public List<List<StockPrice>> sinaNDaysPriceResponseToObjectList(String response, boolean isUseTimePoint, StockPrice.QueryType queryType){
         response = response.replaceAll("\n", "");
         String[] stockStr = response.split(":::");
 
@@ -79,13 +81,13 @@ public class ResponseStringToObject {
         JsonObject jsonObject = new JsonParser().parse(stockPriceJsonStr).getAsJsonObject();
         // 将jsonObject转为SinaResponse对象
         Gson gson = new Gson();
-        SinaResponse sinaResponse = gson.fromJson(jsonObject, new TypeToken<SinaResponse>(){}.getType());
+        NDaysSinaResponse NDaysSinaResponse = gson.fromJson(jsonObject, new TypeToken<NDaysSinaResponse>(){}.getType());
         // 将SinaResponse转为List<StockPrice>
         // 存储每天的股票价格列表
         List<List<StockPrice>> stockPriceEveryDayList = new ArrayList<>();
-        if(sinaResponse != null && sinaResponse.getResult() != null && sinaResponse.getResult().getData() != null){
-            List<List<SinaStockPrice>> data = sinaResponse.getResult().getData();
-            for(List<SinaStockPrice> oneDaySinaStockPrice : data){
+        if(NDaysSinaResponse != null && NDaysSinaResponse.getResult() != null && NDaysSinaResponse.getResult().getData() != null){
+            List<List<NDaysSinaStockPrice>> data = NDaysSinaResponse.getResult().getData();
+            for(List<NDaysSinaStockPrice> oneDaySinaStockPrice : data){
                 List<StockPrice> stockPriceList = new ArrayList<>();
                 stockPriceEveryDayList.add(stockPriceList);
                 // 得到这一天的日期
@@ -94,7 +96,7 @@ public class ResponseStringToObject {
                     date = oneDaySinaStockPrice.get(0).getDate();
                 }
                 // 添加这一天特定时间的股票价格
-                for(SinaStockPrice sinaStockPrice : oneDaySinaStockPrice){
+                for(NDaysSinaStockPrice sinaStockPrice : oneDaySinaStockPrice){
                     if(date == null || date.equals("")){
                         Log.e("lwd", "sinaTodayPriceResponseToObjectList not get date");
                         return null;
@@ -130,5 +132,46 @@ public class ResponseStringToObject {
             }
         }
         return stockPriceEveryDayList;
+    }
+
+    /**
+     * 将今天的价格转换为对象列表
+     * @param response
+     * @return
+     */
+    public List<StockPrice> sinaTodayPriceResponseToObjectList(String response, StockPrice.QueryType queryType){
+        response = response.replaceAll("\n", "");
+        String[] stockStr = response.split(":::");
+
+        String stockId = stockStr[1];
+        String stockPriceJsonStr = stockStr[2].replaceAll("\\(", "").replaceAll("\\)", "");
+        // 将字符串转为jsonObject
+        JsonObject jsonObject = new JsonParser().parse(stockPriceJsonStr).getAsJsonObject();
+        // 将jsonObject转为SinaResponse对象
+        Gson gson = new Gson();
+        TodaySinaResponse todaySinaResponse = gson.fromJson(jsonObject, new TypeToken<TodaySinaResponse>(){}.getType());
+        // 将SinaResponse转为List<StockPrice>
+        // 股票价格列表
+        List<StockPrice> stockPriceList = new ArrayList<>();
+        if(todaySinaResponse != null && todaySinaResponse.getResult() != null && todaySinaResponse.getResult().getData() != null){
+            for(TodaySinaStockPrice sinaStockPrice : todaySinaResponse.getResult().getData()){
+
+                if(sinaStockPrice.getM() == null || sinaStockPrice.getM().equals("")){
+                    return null;
+                }
+                // 过滤时间在09:20:00
+                String[] timeArray = sinaStockPrice.getM().split(":");
+                int hour = Integer.parseInt(timeArray[0]);
+                int minutes = Integer.parseInt(timeArray[1]);
+                if(hour < 9 || (hour == 9 && minutes <20)){
+                    continue;
+                }
+
+                String completeDate = DateUtil.convertDateToShortDayString(StockManager.getLastDealDate())  + " " +sinaStockPrice.getM();
+                StockPrice stockPrice = new StockPrice(stockId, completeDate, sinaStockPrice.getP(), queryType);
+                stockPriceList.add(stockPrice);
+            }
+        }
+        return stockPriceList;
     }
 }
