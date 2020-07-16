@@ -4,14 +4,10 @@ import android.util.Log;
 
 import com.example.stockmaster.entity.Stock;
 import com.example.stockmaster.entity.StockPrice;
-import com.example.stockmaster.entity.form.StockForm;
 import com.example.stockmaster.entity.ma.DayMaPrice;
-import com.example.stockmaster.entity.strategy.BaseStrategy;
-import com.example.stockmaster.entity.strategy.VBBStrategy;
 import com.example.stockmaster.entity.strategy.StrategyResult;
 import com.example.stockmaster.service.BrainService;
 import com.example.stockmaster.ui.activity.base.UIManager;
-import com.example.stockmaster.ui.activity.main.MainActivity;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -155,7 +151,7 @@ public class StockManager {
 //                if(stock.addToTodayStockPriceList(stockPrice)){
 //                    mShortSwingAnalyser.analyse(stock);
 //                }
-                List<StrategyResult> strategyResultList = stock.addToWholeStockPriceList(stockPrice);
+                List<StrategyResult> strategyResultList = stock.addToWholeStockPriceListTemp(stockPrice);
                 for(StrategyResult strategyResult : strategyResultList){
                     Log.d("lwd", "addMinuteStockPrice" + strategyResultList.toString());
                     mBrainService.sendNotification(strategyResult.getNotificationId(),

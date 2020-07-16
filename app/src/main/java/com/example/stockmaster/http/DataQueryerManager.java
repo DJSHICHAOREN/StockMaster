@@ -89,7 +89,6 @@ public class DataQueryerManager {
      * 请求分时股票数据为了得到股票名称
      */
     public void queryAllOnce(){
-
         // 请求最近交易时间
         mSinaDataQueryer.queryLastDealDate();
 
@@ -200,7 +199,7 @@ public class DataQueryerManager {
                 mSinaDataQueryer.queryLastDealDate();
 
             }
-        }, 0, 1000*60*20);
+        }, 0, 1000*60*10);
     }
 
 

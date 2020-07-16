@@ -6,6 +6,7 @@ import com.example.stockmaster.entity.Stock;
 import com.example.stockmaster.entity.StockPrice;
 import com.example.stockmaster.entity.form.StockForm;
 import com.example.stockmaster.entity.ma.MaState;
+import com.example.stockmaster.util.DateUtil;
 import com.example.stockmaster.util.MaCalculater;
 import com.example.stockmaster.util.MaStateAnalyser;
 
@@ -37,6 +38,42 @@ public class KBase {
     /**
      * 更新最后一个价格后重新计算
      * 由于五日线虽然滞后，但也不是滞后非常多，所以直接忽略中间缺少的maState
+     * @param tempWholeStockPriceList
+     */
+    public List<StockForm> updateLastStockPriceTemp(List<StockPrice> tempWholeStockPriceList){
+        if(tempWholeStockPriceList == null){
+            Log.e("lwd", "upDateLastStockPrice tempWholeStockPriceList 为null");
+        }
+
+        // 得到关键数据
+        ArrayList<StockPrice> updatedStockPriceList = new ArrayList<>();
+        updatedStockPriceList.addAll(mKeyStockPriceList);
+        updatedStockPriceList.add(tempWholeStockPriceList.get(tempWholeStockPriceList.size()-1));
+
+        // 得到最新的maState
+        MaState newMaState = MaCalculater.calMaState(updatedStockPriceList);
+
+        // 创建临时列表
+        List<MaState> tempMaStateList = new ArrayList<>();
+        tempMaStateList.addAll(maStateList);
+        // 得到存储的最后一个maState
+        MaState lastMaState = tempMaStateList.get(tempMaStateList.size() - 1);
+        // 在临时列表中添加新的maState
+        if(newMaState.getTime().after(lastMaState.getTime())){
+            tempMaStateList.add(newMaState);
+        }
+        else if(DateUtil.isDateEqual(newMaState.getTime(), lastMaState.getTime())){
+            tempMaStateList.remove(tempMaStateList.size()-1);
+            tempMaStateList.add(newMaState);
+        }
+
+        List<StockForm> stockFormList = maStateAnalyser.analyse(mStockId, maStateList, mKLevel, TIME_POINT_STRING, mStock, tempWholeStockPriceList);
+        return stockFormList;
+    }
+
+    /**
+     * 更新最后一个价格后重新计算
+     * 由于五日线虽然滞后，但也不是滞后非常多，所以直接忽略中间缺少的maState
      * @param wholeStockPriceList
      */
     public List<StockForm> updateLastStockPrice(List<StockPrice> wholeStockPriceList){
@@ -53,6 +90,10 @@ public class KBase {
         MaState lastMaState = maStateList.get(maStateList.size() - 1);
         // 当最新的maState在最后一个maState之后时，将其加入
         if(newMaState.getTime().after(lastMaState.getTime())){
+            maStateList.add(newMaState);
+        }
+        else if(DateUtil.isDateEqual(newMaState.getTime(), lastMaState.getTime())){
+            maStateList.remove(maStateList.size()-1);
             maStateList.add(newMaState);
         }
         List<StockForm> stockFormList = maStateAnalyser.analyse(mStockId, maStateList, mKLevel, TIME_POINT_STRING, mStock, wholeStockPriceList);

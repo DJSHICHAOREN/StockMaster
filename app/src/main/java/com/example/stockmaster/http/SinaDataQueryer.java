@@ -109,20 +109,14 @@ public class SinaDataQueryer {
                     @Override
                     public void onResponse(String response) {
                         try{
-//                            if(dayCount == 1){
-//                                List<List<StockPrice>> stockPriceEveryDayList = mResponseStringToObject.sinaTodayPriceResponseToObjectList(response, StockPrice.QueryType.TODAY);
-//                                StockManager.addOneDayStockPriceList(stockPriceEveryDayList, stockId, true);
-//
-//                            }
                             if(dayCount == 5){
                                 List<List<StockPrice>> stockPriceEveryDayList = mResponseStringToObject.sinaNDaysPriceResponseToObjectList(response, false, StockPrice.QueryType.FIVEDAY);
                                 List<Date> dateList = TextUtil.convertStringToDateList(response);
 
                                 // 为了求五日均线,得到收盘价列表
-                                List<Float> fiveDayPriceList = mMaGenerator.generateDayMA5(response);
-                                StockManager.setPreviousFourDayPriceList(fiveDayPriceList.subList(1, fiveDayPriceList.size()), stockId);
-                                // 请求均价
-//                                queryStocksMAPrice(stockId);
+                                List<Float> fiveDayClosePriceList = mMaGenerator.generateDayMA5(response);
+                                StockManager.setPreviousFourDayPriceList(fiveDayClosePriceList.subList(1, fiveDayClosePriceList.size()), stockId);
+
                                 StockManager.addFiveDayStockPriceList(stockPriceEveryDayList, stockId, isNewStock);
                             }
                             Log.d("lwd", String.format("%s %d日数据添加完毕", stockId, dayCount));
@@ -148,7 +142,7 @@ public class SinaDataQueryer {
     }
 
     /**
-     * 查询股票N天的价格
+     * 查询股票今天的价格
      * https://stock.finance.sina.com.cn/hkstock/api/openapi.php/HK_StockService.getHKMinline?symbol=02400&random=1594780810111&callback=var%20t1hk02400=
      * @param stockIdCode
      */

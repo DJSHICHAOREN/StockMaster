@@ -18,8 +18,8 @@ public class DateUtil {
         return null;
     }
 
-    public static boolean isMinuteEqual(Date time1, Date time2){
-        if(time1.getMinutes() == time2.getTime()){
+    public static boolean isDateEqual(Date time1, Date time2){
+        if(time1.compareTo(time2) == 0){
             return true;
         }
         return false;

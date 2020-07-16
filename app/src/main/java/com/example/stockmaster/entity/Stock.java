@@ -91,16 +91,46 @@ public class Stock {
      * 加入全部价格列表
      * @param stockPrice
      */
-    public List<StrategyResult> addToWholeStockPriceList(StockPrice stockPrice){
+    public List<StrategyResult> addToWholeStockPriceListTemp(StockPrice stockPrice){
         List<StrategyResult> strategyResultList = new ArrayList<>();
         if(!wholeStockPriceList.isEmpty()){
             StockPrice lastStockPrice  = wholeStockPriceList.get(wholeStockPriceList.size()-1);
-            if(DateUtil.isMinuteEqual(stockPrice.getTime(), lastStockPrice.getTime()) && lastStockPrice.price != stockPrice.price){
+            if(DateUtil.isDateEqual(stockPrice.getTime(), lastStockPrice.getTime()) && lastStockPrice.price != stockPrice.price){
                 wholeStockPriceList.remove(todayStockPriceList.size()-1);
                 wholeStockPriceList.add(stockPrice);
             }
             // 比列表靠后的时间，添加进列表
             else if(stockPrice.time.after(lastStockPrice.time)){
+                wholeStockPriceList.add(stockPrice);
+                // 得到形态
+                List<StockForm> stockFormList = new ArrayList<>();
+                for(KBase kBase : mKBaseList){
+                    stockFormList.addAll(kBase.updateLastStockPriceTemp(wholeStockPriceList));
+                }
+                // 得到策略
+                for(StockForm stockForm : stockFormList){
+                    strategyResultList.addAll(analyse(stockForm));
+                }
+
+            }
+        }
+        return strategyResultList;
+    }
+
+    /**
+     * 加入全部价格列表
+     * @param stockPrice
+     */
+    public List<StrategyResult> addToWholeStockPriceList(StockPrice stockPrice){
+        List<StrategyResult> strategyResultList = new ArrayList<>();
+        if(!wholeStockPriceList.isEmpty()){
+            StockPrice lastStockPrice  = wholeStockPriceList.get(wholeStockPriceList.size()-1);
+            if(DateUtil.isDateEqual(stockPrice.getTime(), lastStockPrice.getTime()) && lastStockPrice.price != stockPrice.price){
+                wholeStockPriceList.remove(todayStockPriceList.size()-1);
+                wholeStockPriceList.add(stockPrice);
+            }
+            // 比列表靠后的时间，添加进列表
+            else{
                 wholeStockPriceList.add(stockPrice);
                 // 得到形态
                 List<StockForm> stockFormList = new ArrayList<>();
@@ -111,7 +141,6 @@ public class Stock {
                 for(StockForm stockForm : stockFormList){
                     strategyResultList.addAll(analyse(stockForm));
                 }
-
             }
         }
         return strategyResultList;
@@ -185,22 +214,39 @@ public class Stock {
      * @param stockPriceList
      */
     public void updateWholeStockPriceList(List<StockPrice> stockPriceList){
-        if(stockPriceList.size() > 0){
-            StockPrice stockPrice = stockPriceList.get(0);
-            int stockPriceIndex = 0;
-            for(int i=0; i<wholeStockPriceList.size(); i++){
-                if(stockPrice.getTime().compareTo(wholeStockPriceList.get(i).getTime()) == 0){
+        // 查找wholeStockPriceList中的最后一个，在stockPriceList中的位置，将stockPriceList中新的价格添加
+        if(wholeStockPriceList != null && wholeStockPriceList.size() > 0){
+            StockPrice lastWholeStockPrice = wholeStockPriceList.get(wholeStockPriceList.size()-1);
+            int newPriceIndex = 0;
+            for(; newPriceIndex<stockPriceList.size(); newPriceIndex++){
+                if(lastWholeStockPrice.getTime().compareTo(wholeStockPriceList.get(newPriceIndex).getTime()) >= 0){
                     break;
                 }
-                stockPriceIndex++;
             }
-            wholeStockPriceList = wholeStockPriceList.subList(0, stockPriceIndex);
-            wholeStockPriceList.addAll(stockPriceList);
+            // 添加新的价格列表
+            List<StockPrice> newStockPriceList = stockPriceList.subList(newPriceIndex, stockPriceList.size()-1);
+            for(StockPrice stockPrice : newStockPriceList){
+                addToWholeStockPriceListTemp(stockPrice);
+            }
+        }
 
-        }
-        else{
-            Log.d("lwd", "更新全部价格列表得到了空数据");
-        }
+//        // 找到价格列表中的第一个在原列表的什么位置
+//        if(stockPriceList.size() > 0){
+//            StockPrice stockPrice = stockPriceList.get(0);
+//            int stockPriceIndex = 0;
+//            for(int i=0; i<wholeStockPriceList.size(); i++){
+//                if(stockPrice.getTime().compareTo(wholeStockPriceList.get(i).getTime()) == 0){
+//                    break;
+//                }
+//                stockPriceIndex++;
+//            }
+//            wholeStockPriceList = wholeStockPriceList.subList(0, stockPriceIndex);
+//            wholeStockPriceList.addAll(stockPriceList);
+//
+//        }
+//        else{
+//            Log.d("lwd", "更新全部价格列表得到了空数据");
+//        }
     }
 
     /**
