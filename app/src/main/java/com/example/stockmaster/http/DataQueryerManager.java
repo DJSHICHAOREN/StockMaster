@@ -67,7 +67,7 @@ public class DataQueryerManager {
                 Calendar calendar = Calendar.getInstance();
                 //获取系统时间
                 int hour = calendar.get(Calendar.HOUR_OF_DAY);
-                if(hour < 9 || hour > 24){
+                if(hour < 9 || hour > 16){
                     return;
                 }
                 for(final String stockId : StockManager.getDefaultStockMonitorStockIdList()) {
