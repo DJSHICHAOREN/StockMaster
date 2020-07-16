@@ -171,9 +171,6 @@ public class StockManager {
         Stock stock = mStockList.get(stockIndex);
         if(stock != null && stockPriceList.size() > 0){
             // 在添加今天的数据之前要清空之前的价格数据
-            if(isClearBeforeData){
-                stock.clearPriceList();
-            }
             if(stock.isReceivedTodayData){
                 stock.updateWholeStockPriceList(stockPriceList);
                 Log.d("lwd", String.format("%s 今日数据更新完毕", stockId));

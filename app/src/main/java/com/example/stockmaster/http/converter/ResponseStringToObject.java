@@ -15,6 +15,7 @@ import com.google.gson.JsonParser;
 import com.google.gson.reflect.TypeToken;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 /**
@@ -150,8 +151,19 @@ public class ResponseStringToObject {
         // 将jsonObject转为SinaResponse对象
         Gson gson = new Gson();
         TodaySinaResponse todaySinaResponse = gson.fromJson(jsonObject, new TypeToken<TodaySinaResponse>(){}.getType());
+
+        // 判断今天日期
+        String dateString = DateUtil.convertDateToShortDayString(StockManager.getLastDealDate());
+        if(todaySinaResponse.getResult().getData().size()<100){
+            Calendar calendar = Calendar.getInstance();
+            //获取系统时间
+            int year = calendar.get(Calendar.YEAR);
+            int month = calendar.get(Calendar.MONTH);
+            int day = calendar.get(Calendar.DAY_OF_MONTH);
+            dateString = year + "-" + month + "-" + day;
+        }
+
         // 将SinaResponse转为List<StockPrice>
-        // 股票价格列表
         List<StockPrice> stockPriceList = new ArrayList<>();
         if(todaySinaResponse != null && todaySinaResponse.getResult() != null && todaySinaResponse.getResult().getData() != null){
             for(TodaySinaStockPrice sinaStockPrice : todaySinaResponse.getResult().getData()){
@@ -167,7 +179,7 @@ public class ResponseStringToObject {
                     continue;
                 }
 
-                String completeDate = DateUtil.convertDateToShortDayString(StockManager.getLastDealDate())  + " " +sinaStockPrice.getM();
+                String completeDate = dateString + " " +sinaStockPrice.getM();
                 StockPrice stockPrice = new StockPrice(stockId, completeDate, sinaStockPrice.getP(), queryType);
                 stockPriceList.add(stockPrice);
             }

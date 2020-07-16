@@ -219,15 +219,18 @@ public class Stock {
             StockPrice lastWholeStockPrice = wholeStockPriceList.get(wholeStockPriceList.size()-1);
             int newPriceIndex = 0;
             for(; newPriceIndex<stockPriceList.size(); newPriceIndex++){
-                if(lastWholeStockPrice.getTime().compareTo(wholeStockPriceList.get(newPriceIndex).getTime()) >= 0){
+                if(stockPriceList.get(newPriceIndex).getTime().compareTo(lastWholeStockPrice.getTime()) >= 0){
                     break;
                 }
             }
             // 添加新的价格列表
-            List<StockPrice> newStockPriceList = stockPriceList.subList(newPriceIndex, stockPriceList.size()-1);
-            for(StockPrice stockPrice : newStockPriceList){
-                addToWholeStockPriceListTemp(stockPrice);
+            if(newPriceIndex < stockPriceList.size()){
+                List<StockPrice> newStockPriceList = stockPriceList.subList(newPriceIndex, stockPriceList.size()-1);
+                for(StockPrice stockPrice : newStockPriceList){
+                    addToWholeStockPriceList(stockPrice);
+                }
             }
+
         }
 
 //        // 找到价格列表中的第一个在原列表的什么位置

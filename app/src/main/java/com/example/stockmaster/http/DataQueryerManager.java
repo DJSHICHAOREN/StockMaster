@@ -67,7 +67,7 @@ public class DataQueryerManager {
                 Calendar calendar = Calendar.getInstance();
                 //获取系统时间
                 int hour = calendar.get(Calendar.HOUR_OF_DAY);
-                if(hour < 9 || hour > 16){
+                if(hour < 9 || hour > 24){
                     return;
                 }
                 for(final String stockId : StockManager.getDefaultStockMonitorStockIdList()) {
@@ -80,7 +80,7 @@ public class DataQueryerManager {
                     mCachedThreadPool.execute(runnable);
                 }
             }
-        }, 0, 1000*60*10); // 1 seconds
+        }, 0, 1000*60*2); // 1 seconds
     }
 
     /**
@@ -94,19 +94,19 @@ public class DataQueryerManager {
 
         Calendar calendar = Calendar.getInstance();
         //获取系统时间
-        int hour = calendar.get(Calendar.HOUR_OF_DAY);
-        if(hour < 9 || hour > 16){
-            // 请求一天股票数据
-            for(final String stockId : StockManager.getDefaultStockMonitorStockIdList()) {
-                Runnable runnable = new Runnable() {
-                    @Override
-                    public void run() {
-                        mSinaDataQueryer.queryStocksTodayPrice(stockId);
-                    }
-                };
-                mCachedThreadPool.execute(runnable);
-            }
-        }
+//        int hour = calendar.get(Calendar.HOUR_OF_DAY);
+//        if(hour < 9 || hour > 16){
+//            // 请求一天股票数据
+//            for(final String stockId : StockManager.getDefaultStockMonitorStockIdList()) {
+//                Runnable runnable = new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        mSinaDataQueryer.queryStocksTodayPrice(stockId);
+//                    }
+//                };
+//                mCachedThreadPool.execute(runnable);
+//            }
+//        }
         // 请求分时股票数据
         String stockIdStr = "";
         for(String stockId : StockManager.getDefaultStockMonitorStockIdList()) {
