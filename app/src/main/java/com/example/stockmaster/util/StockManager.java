@@ -173,7 +173,6 @@ public class StockManager {
             // 在添加今天的数据之前要清空之前的价格数据
             if(stock.isReceivedTodayData){
                 stock.updateWholeStockPriceList(stockPriceList);
-                Log.d("lwd", String.format("%s 今日数据更新完毕", stockId));
             }
         }
     }
@@ -235,7 +234,16 @@ public class StockManager {
         return mPriceMonitorStockList.get(stockIndex).getDealStockPriceList();
     }
 
-    public static void setPreviousFourDayPriceList(List<Float> previousFourDayPriceList, String stockId) {
+    public static void setPreviousFourDayPriceList(List<Float> fiveDayClosePriceList, String stockId) {
+        // 得到前四日收盘价
+        List<Float> previousFourDayPriceList = null;
+        if(fiveDayClosePriceList.size() == 5){
+            previousFourDayPriceList = fiveDayClosePriceList.subList(1, fiveDayClosePriceList.size());
+        }
+        else{
+            previousFourDayPriceList = fiveDayClosePriceList;
+        }
+
         int stockIndex = mStockIdList.indexOf(stockId);
         Stock stock = mStockList.get(stockIndex);
         if(stock != null){

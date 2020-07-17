@@ -11,7 +11,7 @@ import static com.example.stockmaster.util.DateUtil.calculateMinutesGap;
 
 public class MinuteRiseStrategy extends BaseStrategy {
     private Date previousBuyFormTime;
-
+    private boolean hasLongToArrangeFormBefore = false;
     public MinuteRiseStrategy() {
         super(R.integer.strategyMinuteRise);
     }
@@ -26,7 +26,7 @@ public class MinuteRiseStrategy extends BaseStrategy {
             return null;
         }
         StrategyResult strategyResult = null;
-        if(stockForm.getFormId() == R.integer.formMinuteRise){
+        if(stockForm.getFormId() == R.integer.formMinuteRise && hasLongToArrangeFormBefore){
             if(previousBuyFormTime==null || calculateMinutesGap(previousBuyFormTime, stockForm.getTime()) > 5){
                 strategyResult = new StrategyResult(stockId, stockForm.getPrice(), getStrategyId(), stockForm.getTime(), 0);
                 mStrategyResultList.add(strategyResult);
@@ -34,6 +34,9 @@ public class MinuteRiseStrategy extends BaseStrategy {
                 Log.d("lwd", strategyResult.toLongString());
             }
             previousBuyFormTime = stockForm.getTime();
+        }
+        else if(stockForm.getFormId() == R.integer.formLongToArrange){
+            hasLongToArrangeFormBefore = true;
         }
         return strategyResult;
     }

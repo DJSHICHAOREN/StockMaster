@@ -115,7 +115,7 @@ public class SinaDataQueryer {
 
                                 // 为了求五日均线,得到收盘价列表
                                 List<Float> fiveDayClosePriceList = mMaGenerator.generateDayMA5(response);
-                                StockManager.setPreviousFourDayPriceList(fiveDayClosePriceList.subList(1, fiveDayClosePriceList.size()), stockId);
+                                StockManager.setPreviousFourDayPriceList(fiveDayClosePriceList, stockId);
 
                                 StockManager.addFiveDayStockPriceList(stockPriceEveryDayList, stockId, isNewStock);
                             }
