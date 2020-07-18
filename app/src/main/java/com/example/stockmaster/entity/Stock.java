@@ -503,7 +503,7 @@ public class Stock {
         return previousFourDayPriceList;
     }
 
-    public float getmFiveDayHighestEndPrice() {
+    public float getFiveDayHighestEndPrice() {
         return mFiveDayHighestEndPrice;
     }
 }

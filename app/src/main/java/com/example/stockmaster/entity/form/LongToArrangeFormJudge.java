@@ -1,12 +1,9 @@
 package com.example.stockmaster.entity.form;
 
-import android.util.Log;
-
 import com.example.stockmaster.R;
 import com.example.stockmaster.entity.Stock;
 import com.example.stockmaster.entity.StockPrice;
 import com.example.stockmaster.entity.ma.MaState;
-import com.example.stockmaster.util.StockManager;
 
 import java.util.Date;
 import java.util.List;
@@ -116,7 +113,7 @@ public class LongToArrangeFormJudge extends BaseFormJudge {
         }
 
         // 判断是否比前四日的价格高
-        if(lastMaState1.getPrice() > stock.getFiveDayHighestPrice() * 1.001){
+        if(lastMaState1.getPrice() > stock.getFiveDayHighestEndPrice() * 1.001){
             isHigherThanBeforeDays = true;
         }
 
