@@ -174,7 +174,13 @@ public class StockManager {
             if(stock.isReceivedTodayData){
                 stock.updateWholeStockPriceList(stockPriceList);
             }
+
+            if(mMainActivityUIManager != null){
+                mMainActivityUIManager.flushLoadProgress(String.format("获取一日准确数据，time：%s",
+                        stockPriceList.get(stockPriceList.size()-1).getTime()));
+            }
         }
+
     }
 
     /**
@@ -259,6 +265,10 @@ public class StockManager {
         if(stock != null){
             stock.setDayMaPrice(dayMaPrice);
             Log.d("lwd", String.format("%s 加载均线数据数据", stockId));
+        }
+
+        if(mMainActivityUIManager != null){
+            mMainActivityUIManager.flushLoadProgress(String.format("获取日均线数据，stockId：%s", stockId));
         }
     }
 
