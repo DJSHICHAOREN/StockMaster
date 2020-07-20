@@ -18,11 +18,29 @@ public class DateUtil {
         return null;
     }
 
+    /**
+     * 判断小时和分钟是否相等
+     * @param time1
+     * @param time2
+     * @return
+     */
     public static boolean isDateEqual(Date time1, Date time2){
-        if(time1.compareTo(time2) == 0){
+        if(time1.getHours() == time2.getHours() && time1.getMinutes() == time2.getMinutes()){
             return true;
         }
-        return false;
+        else{
+            return false;
+        }
+    }
+
+    public static boolean isDateAfter(Date time1, Date time2){
+        if(time1.getHours() > time2.getHours() ||
+                (time1.getHours() == time2.getHours() && time1.getMinutes() > time2.getMinutes()) ){
+            return true;
+        }
+        else{
+            return false;
+        }
     }
 
     /**

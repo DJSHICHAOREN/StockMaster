@@ -24,9 +24,11 @@ public class KBase {
     private MaStateAnalyser maStateAnalyser = MaStateAnalyser.getInstance();
     private List<StockPrice> qualifiedPricePointList = new ArrayList<>();
     private List<StockPrice> mKeyStockPriceList = new ArrayList<>();
+
     private int mKLevel = 0; // K线的级别
     private String mStockId;
     private Stock mStock;
+
     public KBase(Stock stock, String TIME_POINT_STRING, int kLevel){
         this.TIME_POINT_STRING = TIME_POINT_STRING;
         TIME_POINT_STRING_LIST = Arrays.asList(TIME_POINT_STRING.split(","));
@@ -59,16 +61,26 @@ public class KBase {
         // 得到存储的最后一个maState
         MaState lastMaState = tempMaStateList.get(tempMaStateList.size() - 1);
         // 在临时列表中添加新的maState
-        if(newMaState.getTime().after(lastMaState.getTime())){
+        if(DateUtil.isDateAfter(newMaState.getTime(), lastMaState.getTime())){
             tempMaStateList.add(newMaState);
         }
-        else if(DateUtil.isDateEqual(newMaState.getTime(), lastMaState.getTime())){
+        else if(DateUtil.isDateEqual(newMaState.getTime(), lastMaState.getTime()) &&
+            newMaState.getPrice() != lastMaState.getPrice()){
             tempMaStateList.remove(tempMaStateList.size()-1);
             tempMaStateList.add(newMaState);
         }
 
         List<StockForm> stockFormList = maStateAnalyser.analyse(mStockId, maStateList, mKLevel, TIME_POINT_STRING, mStock, tempWholeStockPriceList);
         return stockFormList;
+    }
+
+    /**
+     * 添加新的股票价格
+     * @param stockPrice
+     * @return
+     */
+    public List<StockForm> addStockPrice(StockPrice stockPrice){
+
     }
 
     /**
@@ -82,8 +94,8 @@ public class KBase {
         }
         // 得到关键数据
         ArrayList<StockPrice> updatedStockPriceList = new ArrayList<>();
-
         addAndFilterKeyStockPrice(wholeStockPriceList.get(wholeStockPriceList.size()-1));
+
         updatedStockPriceList.addAll(mKeyStockPriceList);
         updatedStockPriceList.add(wholeStockPriceList.get(wholeStockPriceList.size()-1));
         // 得到最新的maState
@@ -91,10 +103,11 @@ public class KBase {
         // 得到存储的最后一个maState
         MaState lastMaState = maStateList.get(maStateList.size() - 1);
         // 当最新的maState在最后一个maState之后时，将其加入
-        if(newMaState.getTime().after(lastMaState.getTime())){
+        if(DateUtil.isDateAfter(newMaState.getTime(), lastMaState.getTime())){
             maStateList.add(newMaState);
         }
-        else if(DateUtil.isDateEqual(newMaState.getTime(), lastMaState.getTime())){
+        else if(DateUtil.isDateEqual(newMaState.getTime(), lastMaState.getTime()) &&
+        newMaState.getPrice() != lastMaState.getPrice()){
             maStateList.remove(maStateList.size()-1);
             maStateList.add(newMaState);
         }
@@ -123,7 +136,7 @@ public class KBase {
 
             MaState maState = MaCalculater.calMaState( filterPreviousKeyStockPrice(stockPriceList.subList(0, i), filteredStockPriceList));
             if(i > 60){
-                maState.setMinPriceInOneHour(calMinutePriceInPriceList(stockPriceList.subList(i-60, i)));
+                maState.setMinPriceInOneHour(calMinimumPriceInPriceList(stockPriceList.subList(i-60, i)));
             }
             if(maState != null && maState.getMa5() != 0){
                 maStateList.add(maState);
@@ -132,12 +145,6 @@ public class KBase {
                 continue;
             }
             calLastMaStateCandleArgs(maStateList);
-
-            // 蜡烛图日志
-//            if(isDateTheKeyTime(maState.getTime())){
-//                Log.d("lwd", String.format("level:%d %s", mKLevel, maState.toCandleString()));
-//            }
-
 
             stockFormList.addAll(maStateAnalyser.analyse(mStockId, maStateList, mKLevel, TIME_POINT_STRING, mStock, stockPriceList.subList(0, i)));
         }
@@ -149,7 +156,7 @@ public class KBase {
      * @param stockPriceList
      * @return
      */
-    private float calMinutePriceInPriceList(List<StockPrice> stockPriceList){
+    private float calMinimumPriceInPriceList(List<StockPrice> stockPriceList){
         float minPrice = stockPriceList.get(0).getPrice();
         for(StockPrice stockPrice : stockPriceList){
             if(stockPrice.getPrice() < minPrice){
@@ -204,6 +211,11 @@ public class KBase {
                 lastMaState.setSupportPrice(previousMaState.getSupportPrice());
             }
         }
+
+        // 蜡烛图日志
+//            if(isDateTheKeyTime(maState.getTime())){
+//                Log.d("lwd", String.format("level:%d %s", mKLevel, maState.toCandleString()));
+//            }
     }
 
 
@@ -230,7 +242,7 @@ public class KBase {
     private void addAndFilterKeyStockPrice(StockPrice stockPrice){
         if(isDateTheKeyTime(stockPrice.getTime()) ){
             if(mKeyStockPriceList.size() > 0 ){
-                if(stockPrice.getTime().after(mKeyStockPriceList.get(mKeyStockPriceList.size()-1).getTime())){
+                if(DateUtil.isDateAfter(stockPrice.getTime(), mKeyStockPriceList.get(mKeyStockPriceList.size()-1).getTime())){
                     mKeyStockPriceList.add(stockPrice);
                 }
                 else if(DateUtil.isDateEqual(stockPrice.getTime(), mKeyStockPriceList.get(mKeyStockPriceList.size()-1).getTime())

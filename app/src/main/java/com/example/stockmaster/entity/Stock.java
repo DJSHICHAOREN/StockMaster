@@ -40,14 +40,13 @@ public class Stock {
     public List<KBase> mKBaseList;
     public List<StrategyResult> mStrategyResultList = new ArrayList<>();
 
-    public boolean isReceivedTodayData = false; //在为true时，才可以接收分钟的数据
+    public boolean isReceiveTodayData = false; //在为true时，才可以接收分钟的数据
     public List<StockPrice> todayStockPriceList = new ArrayList<>();
     public List<StockPrice> lowerStockPriceList = new ArrayList<>();
     public List<StockPrice> higherStockPriceList = new ArrayList<>();
     public List<StockPrice> buyStockPriceList = new ArrayList<>();
     public List<StockPrice> saleStockPriceList = new ArrayList<>();
     public List<StockPrice> dealPriceList = new ArrayList<>(); // 用来在detail页面显示全部交易列表
-    private List<StockPrice> mKeyStockPriceList = new ArrayList<>();
     public enum DealType{SALE, BUY, NULL}
     private DealType previousDealType = DealType.NULL;
     private List<Float> previousFourDayPriceList;
@@ -55,22 +54,26 @@ public class Stock {
     private float mFiveDayHighestPrice;
     private float mFiveDayHighestEndPrice;
     private List<BaseStrategy> mStrategyList = Arrays.asList(new VBBStrategy(), new MinuteRiseStrategy());
-    public Stock(){
 
+    private List<StockPrice> mStockPriceList = new ArrayList<>();
+    private int mLastExactStockPriceIndex = -1;
+
+    public Stock(){
+        this.mKBaseList = Arrays.asList(new K30Minutes(this));
     }
 
     public Stock(String id, String name, int monitorType){
         this.id = id;
         this.name = name;
         this.monitorType = monitorType;
-        this.mKBaseList = Arrays.asList(new K5Minutes(this), new K15Minutes(this), new K30Minutes(this), new K60Minutes(this));
+        this.mKBaseList = Arrays.asList(new K30Minutes(this));
     }
 
     public Stock(String id, String name, int monitorType, DayMaPrice dayMaPrice, List<Float> previousFourDayPriceList){
         this.id = id;
         this.name = name;
         this.monitorType = monitorType;
-        this.mKBaseList = Arrays.asList(new K5Minutes(this), new K15Minutes(this), new K30Minutes(this), new K60Minutes(this));
+        this.mKBaseList = Arrays.asList(new K30Minutes(this));
         this.mDayMaPrice = dayMaPrice;
         this.previousFourDayPriceList = previousFourDayPriceList;
     }
@@ -88,7 +91,7 @@ public class Stock {
     }
 
     /**
-     * 加入全部价格列表
+     * 将价格加入全部列表
      * @param stockPrice
      */
     public List<StrategyResult> addToWholeStockPriceListTemp(StockPrice stockPrice){
@@ -96,11 +99,11 @@ public class Stock {
         if(!wholeStockPriceList.isEmpty()){
             StockPrice lastStockPrice  = wholeStockPriceList.get(wholeStockPriceList.size()-1);
             if(DateUtil.isDateEqual(stockPrice.getTime(), lastStockPrice.getTime()) && lastStockPrice.price != stockPrice.price){
-                wholeStockPriceList.remove(todayStockPriceList.size()-1);
+                wholeStockPriceList.remove(wholeStockPriceList.size()-1);
                 wholeStockPriceList.add(stockPrice);
             }
             // 比列表靠后的时间，添加进列表
-            else if(stockPrice.time.after(lastStockPrice.time)){
+            else if(DateUtil.isDateAfter(stockPrice.getTime(), lastStockPrice.getTime())){
                 wholeStockPriceList.add(stockPrice);
                 // 得到形态
                 List<StockForm> stockFormList = new ArrayList<>();
@@ -147,69 +150,6 @@ public class Stock {
     }
 
     /**
-     * 加入今天的股票价格
-     * @param stockPrice
-     * @return 如果成功加入，则返回true，否则返回false
-     */
-    public boolean addToTodayStockPriceList(StockPrice stockPrice){
-        currentPrice = stockPrice;
-        if(!todayStockPriceList.isEmpty()){
-            StockPrice lastStockPrice  = todayStockPriceList.get(todayStockPriceList.size()-1);
-            // 对于同一分钟的价格，去掉旧的，加入新的
-            if(stockPrice.time.compareTo(lastStockPrice.time) == 0 && lastStockPrice.price != stockPrice.price){
-                todayStockPriceList.remove(todayStockPriceList.size()-1);
-                todayStockPriceList.add(stockPrice);
-                return true;
-            }
-            // 比列表靠后的时间，添加进列表
-            else if(stockPrice.time.after(lastStockPrice.time)){
-                todayStockPriceList.add(stockPrice);
-                return true;
-            }
-        }
-        // 如果价格列表为空，则直接加入
-        else{
-            todayStockPriceList.add(stockPrice);
-            return true;
-        }
-
-        return false;
-    }
-
-    /**
-     * 计算前四日的最高价
-     * @param stockPriceEveryDayList
-     */
-    private void calFiveDayHighestPrice(List<List<StockPrice>> stockPriceEveryDayList){
-        for(int i=0; i<stockPriceEveryDayList.size(); i++){
-            if(i == stockPriceEveryDayList.size()-1){
-                break;
-            }
-            List<StockPrice> stockPriceList = stockPriceEveryDayList.get(i);
-            for(StockPrice stockPrice : stockPriceList){
-                if(stockPrice.getPrice() > mFiveDayHighestPrice){
-                    mFiveDayHighestPrice = stockPrice.getPrice();
-                }
-            }
-        }
-    }
-
-    private void calFiveDayHighestEndPrice(List<List<StockPrice>> stockPriceEveryDayList){
-        for(int i=0; i<stockPriceEveryDayList.size(); i++){
-            if(i == stockPriceEveryDayList.size()-1){
-                break;
-            }
-            List<StockPrice> stockPriceList = stockPriceEveryDayList.get(i);
-            if(stockPriceList != null && stockPriceList.size() > 0){
-                Float lastPrice = stockPriceList.get(stockPriceList.size()-1).getPrice();
-                if(mFiveDayHighestEndPrice < lastPrice){
-                    mFiveDayHighestEndPrice = lastPrice;
-                }
-            }
-        }
-    }
-
-    /**
      * 使用一天的价格列表更新全部价格列表
      * @param stockPriceList
      */
@@ -219,7 +159,9 @@ public class Stock {
             StockPrice lastWholeStockPrice = wholeStockPriceList.get(wholeStockPriceList.size()-1);
             int newPriceIndex = 0;
             for(; newPriceIndex<stockPriceList.size(); newPriceIndex++){
-                if(stockPriceList.get(newPriceIndex).getTime().compareTo(lastWholeStockPrice.getTime()) >= 0){
+                if(DateUtil.isDateAfter(stockPriceList.get(newPriceIndex).getTime(), lastWholeStockPrice.getTime())
+                        || (DateUtil.isDateEqual(stockPriceList.get(newPriceIndex).getTime(), lastWholeStockPrice.getTime())
+                        && stockPriceList.get(newPriceIndex).getPrice() != lastWholeStockPrice.getPrice())){
                     break;
                 }
             }
@@ -232,24 +174,6 @@ public class Stock {
             }
 
         }
-
-//        // 找到价格列表中的第一个在原列表的什么位置
-//        if(stockPriceList.size() > 0){
-//            StockPrice stockPrice = stockPriceList.get(0);
-//            int stockPriceIndex = 0;
-//            for(int i=0; i<wholeStockPriceList.size(); i++){
-//                if(stockPrice.getTime().compareTo(wholeStockPriceList.get(i).getTime()) == 0){
-//                    break;
-//                }
-//                stockPriceIndex++;
-//            }
-//            wholeStockPriceList = wholeStockPriceList.subList(0, stockPriceIndex);
-//            wholeStockPriceList.addAll(stockPriceList);
-//
-//        }
-//        else{
-//            Log.d("lwd", "更新全部价格列表得到了空数据");
-//        }
     }
 
     /**
@@ -259,8 +183,6 @@ public class Stock {
     public void setWholeStockPriceList(List<List<StockPrice>> stockPriceEveryDayList) {
         // 由于在数据库中读取的stock不会经过构造函数，所以mKBaseList可能为空
         if(mKBaseList == null){
-//            this.mKBaseList = Arrays.asList(new K5Minutes(id), new K15Minutes(id), new K30Minutes(id), new K60Minutes(id));
-//            this.mKBaseList = Arrays.asList(new K30Minutes(this), new K60Minutes(this));
             this.mKBaseList = Arrays.asList(new K30Minutes(this));
         }
 
@@ -288,7 +210,115 @@ public class Stock {
                 analyse(stockForm);
             }
         }
+    }
 
+    /**
+     * 添加关键价格
+     * 只对自己级别的准确度负责
+     * @param stockPrice
+     */
+    public void addStockPrice(StockPrice stockPrice, boolean isCheckLastStockPrice){
+        boolean isUpdateStockPrice = false;
+        if(isCheckLastStockPrice && mStockPriceList.size() > 1){
+            // 判断是否比价格列表中的最后一个价格新
+            StockPrice lastStockPrice = mStockPriceList.get(mStockPriceList.size()-1);
+            if(DateUtil.isDateAfter(stockPrice.getTime(), lastStockPrice.getTime())
+                    || (DateUtil.isDateEqual(stockPrice.getTime(), lastStockPrice.getTime()) &&
+                    stockPrice.getPrice() != lastStockPrice.getPrice())){
+                mStockPriceList = mStockPriceList.subList(0, mStockPriceList.size()-1);
+                mStockPriceList.add(stockPrice);
+                isUpdateStockPrice = true;
+            }
+        }
+        else{
+            mStockPriceList.add(stockPrice);
+            isUpdateStockPrice = true;
+        }
+        // 若股票价格有更新，则进行形态、策略分析
+        if(isUpdateStockPrice){
+            // 得到形态
+            List<StockForm> stockFormList = new ArrayList<>();
+            for(KBase kBase : mKBaseList){
+                stockFormList.addAll(kBase.addStockPrice(stockPrice));
+            }
+            // 分析形态
+            if(stockFormList != null){
+                for(StockForm stockForm : stockFormList){
+                    analyse(stockForm);
+                }
+            }
+        }
+    }
+
+    /**
+     * 添加关键价格列表
+     * @param stockPriceList
+     */
+    public void addStockPriceList(List<StockPrice> stockPriceList){
+        List<StockPrice> newPartStockPriceList = new ArrayList<>();
+        // 删除老的价格段
+        // 寻找新的价格段
+        if(mLastExactStockPriceIndex != -1){
+            StockPrice lastExactStockPrice = mStockPriceList.get(mLastExactStockPriceIndex);
+            for(int i=0; i < stockPriceList.size(); i++){
+                // 当出现新的价格时
+                if(DateUtil.isDateAfter(stockPriceList.get(i).getTime(), lastExactStockPrice.getTime())
+                || (DateUtil.isDateEqual(stockPriceList.get(i).getTime(), lastExactStockPrice.getTime()) &&
+                        stockPriceList.get(i).getPrice() != lastExactStockPrice.getPrice())){
+                    // 删除老的价格段
+                    mStockPriceList = mStockPriceList.subList(0, mLastExactStockPriceIndex);
+                    // 截取新的价格段
+                    newPartStockPriceList = stockPriceList.subList(i, stockPriceList.size());
+                }
+            }
+        }
+        // 添加新的价格段
+        for(StockPrice stockPrice : newPartStockPriceList){
+            addStockPrice(stockPrice, false);
+        }
+    }
+
+    /**
+     * 添加关键价格列表的列表
+     * @param stockPriceListList
+     */
+    public void addStockPriceListList(List<List<StockPrice>> stockPriceListList) {
+        for(List<StockPrice> stockPriceList : stockPriceListList){
+            addStockPriceList(stockPriceList);
+        }
+    }
+
+    /**
+     * 计算前四日的最高价
+     * @param stockPriceEveryDayList
+     */
+    public void calFiveDayHighestPrice(List<List<StockPrice>> stockPriceEveryDayList){
+        for(int i=0; i<stockPriceEveryDayList.size(); i++){
+            if(i == stockPriceEveryDayList.size()-1){
+                break;
+            }
+            List<StockPrice> stockPriceList = stockPriceEveryDayList.get(i);
+            for(StockPrice stockPrice : stockPriceList){
+                if(stockPrice.getPrice() > mFiveDayHighestPrice){
+                    mFiveDayHighestPrice = stockPrice.getPrice();
+                }
+            }
+        }
+    }
+
+    public void calFiveDayHighestEndPrice(List<List<StockPrice>> stockPriceEveryDayList){
+        for(int i=0; i<stockPriceEveryDayList.size(); i++){
+            if(i == stockPriceEveryDayList.size()-1){
+                break;
+            }
+            List<StockPrice> stockPriceList = stockPriceEveryDayList.get(i);
+            if(stockPriceList != null && stockPriceList.size() > 0){
+                Float lastPrice = stockPriceList.get(stockPriceList.size()-1).getPrice();
+                if(mFiveDayHighestEndPrice < lastPrice){
+                    mFiveDayHighestEndPrice = lastPrice;
+                }
+            }
+        }
     }
 
     /**
@@ -330,30 +360,59 @@ public class Stock {
         return dealTip;
     }
 
-
+    /**
+     * 设置是否接收一日价格
+     */
     public void receiveTodayData(){
-        isReceivedTodayData = true;
+        isReceiveTodayData = true;
     }
 
-    public float getCurrentPrice(){
-        if(currentPrice != null){
-            return currentPrice.price;
+    /**
+     * 分析每一个价格
+     * @param
+     * @param
+     * @return
+     */
+    public List<StrategyResult> analyse(StockForm stockForm){
+        List<StrategyResult> strategyResultList = new ArrayList<>();
+        if(stockForm != null) {
+            for (BaseStrategy baseStrategy : mStrategyList) {
+                StrategyResult strategyResult = baseStrategy.analyse(stockForm, getId());
+                if (strategyResult != null) {
+                    strategyResultList.add(strategyResult);
+                    mStrategyResultList.add(strategyResult);
+                }
+            }
         }
-        return -1;
-    }
 
-    public List<StockPrice> getDealStockPriceList() {
-        return dealPriceList;
-    }
-
-    @NonNull
-    @Override
-    public String toString() {
-        if(id != null && name != null && currentPrice != null){
-            return String.format("id:%s, name:%s, current_price:%s", id, name, currentPrice.toString());
+        // 打印买卖点信息
+        for(StrategyResult strategyResult : strategyResultList){
+            Log.d("lwd", strategyResult.toString());
         }
-        return super.toString();
+        return strategyResultList;
     }
+
+    public int getStrategyResultListSize(){
+        return mStrategyResultList.size();
+    }
+
+    public float getFiveDayHighestPrice() {
+        return mFiveDayHighestPrice;
+    }
+
+    public void setFiveDayHighestPrice(float mFiveDayHighestPrice) {
+        this.mFiveDayHighestPrice = mFiveDayHighestPrice;
+    }
+
+    public List<Float> getPreviousFourDayPriceList() {
+        return previousFourDayPriceList;
+    }
+
+    public float getFiveDayHighestEndPrice() {
+        return mFiveDayHighestEndPrice;
+    }
+
+
 
     public void setPreviousFourDayPriceList(List<Float> previousFourDayPriceList) {
         this.previousFourDayPriceList = previousFourDayPriceList;
@@ -413,8 +472,6 @@ public class Stock {
         this.monitorType = monitorType;
     }
 
-
-
     /**
      * 打印挑选出的时间点
      * @param stockPriceList
@@ -434,12 +491,12 @@ public class Stock {
         this.currentPrice = currentPrice;
     }
 
-    public boolean isReceivedTodayData() {
-        return isReceivedTodayData;
+    public boolean isReceiveTodayData() {
+        return isReceiveTodayData;
     }
 
-    public void setReceivedTodayData(boolean receivedTodayData) {
-        isReceivedTodayData = receivedTodayData;
+    public void setReceiveTodayData(boolean receiveTodayData) {
+        isReceiveTodayData = receiveTodayData;
     }
 
     public List<StrategyResult> getStrategyAnalyseResultList() {
@@ -448,6 +505,42 @@ public class Stock {
 
     public void setStrategyAnalyseResultList(List<StrategyResult> mStockFormList) {
         this.mStrategyResultList = mStockFormList;
+    }
+
+    public float getCurrentPrice(){
+        if(currentPrice != null){
+            return currentPrice.price;
+        }
+        return -1;
+    }
+
+    public List<StockPrice> getDealStockPriceList() {
+        return dealPriceList;
+    }
+
+    public int getLastExactStockPriceIndex() {
+        return mLastExactStockPriceIndex;
+    }
+
+    public void setLastExactStockPriceIndex(int mLastExactStockPriceIndex) {
+        this.mLastExactStockPriceIndex = mLastExactStockPriceIndex;
+    }
+
+    public List<StockPrice> getStockPriceList() {
+        return mStockPriceList;
+    }
+
+    public void setStockPriceList(List<StockPrice> mStockPriceList) {
+        this.mStockPriceList = mStockPriceList;
+    }
+
+    @NonNull
+    @Override
+    public String toString() {
+        if(id != null && name != null && currentPrice != null){
+            return String.format("id:%s, name:%s, current_price:%s", id, name, currentPrice.toString());
+        }
+        return super.toString();
     }
 
     public String getStrategyAnalyseDescribeString(){
@@ -460,50 +553,5 @@ public class Stock {
         }
         return resultString;
 
-    }
-
-    /**
-     * 分析每一个价格
-     * @param
-     * @param
-     * @return
-     */
-    public List<StrategyResult> analyse(StockForm stockForm){
-        List<StrategyResult> strategyResultList = new ArrayList<>();
-        if(stockForm != null) {
-            for (BaseStrategy baseStrategy : mStrategyList) {
-                StrategyResult strategyResult = baseStrategy.analyse(stockForm, getId());
-                if (strategyResult != null) {
-                    strategyResultList.add(strategyResult);
-                    mStrategyResultList.add(strategyResult);
-                }
-            }
-        }
-
-        // 打印买卖点信息
-        for(StrategyResult strategyResult : strategyResultList){
-            Log.d("lwd", strategyResult.toString());
-        }
-        return strategyResultList;
-    }
-
-    public int getStrategyResultListSize(){
-        return mStrategyResultList.size();
-    }
-
-    public float getFiveDayHighestPrice() {
-        return mFiveDayHighestPrice;
-    }
-
-    public void setFiveDayHighestPrice(float mFiveDayHighestPrice) {
-        this.mFiveDayHighestPrice = mFiveDayHighestPrice;
-    }
-
-    public List<Float> getPreviousFourDayPriceList() {
-        return previousFourDayPriceList;
-    }
-
-    public float getFiveDayHighestEndPrice() {
-        return mFiveDayHighestEndPrice;
     }
 }
