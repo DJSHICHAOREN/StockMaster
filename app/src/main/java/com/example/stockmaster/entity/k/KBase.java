@@ -1,7 +1,5 @@
 package com.example.stockmaster.entity.k;
 
-import android.util.Log;
-
 import com.example.stockmaster.entity.Stock;
 import com.example.stockmaster.entity.StockPrice;
 import com.example.stockmaster.entity.form.StockForm;
@@ -20,9 +18,10 @@ import static com.example.stockmaster.util.DateUtil.convertDateToShortMinuteStri
 public class KBase {
     public String TIME_POINT_STRING = "";
     public List<String> TIME_POINT_STRING_LIST;
-    private List<MaState> maStateList = new ArrayList<>();
     private MaStateAnalyser maStateAnalyser = MaStateAnalyser.getInstance();
     private List<StockPrice> qualifiedPricePointList = new ArrayList<>();
+
+    private List<MaState> maStateList = new ArrayList<>();
     private List<StockPrice> mKeyStockPriceList = new ArrayList<>();
 
     private int mKLevel = 0; // K线的级别
@@ -37,42 +36,6 @@ public class KBase {
         mStock = stock;
     }
 
-    /**
-     * 更新最后一个价格后重新计算
-     * 由于五日线虽然滞后，但也不是滞后非常多，所以直接忽略中间缺少的maState
-     * @param tempWholeStockPriceList
-     */
-    public List<StockForm> updateLastStockPriceTemp(List<StockPrice> tempWholeStockPriceList){
-        if(tempWholeStockPriceList == null){
-            Log.e("lwd", "upDateLastStockPrice tempWholeStockPriceList 为null");
-        }
-
-        // 得到关键数据
-        ArrayList<StockPrice> updatedStockPriceList = new ArrayList<>();
-        updatedStockPriceList.addAll(mKeyStockPriceList);
-        updatedStockPriceList.add(tempWholeStockPriceList.get(tempWholeStockPriceList.size()-1));
-
-        // 得到最新的maState
-        MaState newMaState = MaCalculater.calMaState(updatedStockPriceList);
-
-        // 创建临时列表
-        List<MaState> tempMaStateList = new ArrayList<>();
-        tempMaStateList.addAll(maStateList);
-        // 得到存储的最后一个maState
-        MaState lastMaState = tempMaStateList.get(tempMaStateList.size() - 1);
-        // 在临时列表中添加新的maState
-        if(DateUtil.isDateAfter(newMaState.getTime(), lastMaState.getTime())){
-            tempMaStateList.add(newMaState);
-        }
-        else if(DateUtil.isDateEqual(newMaState.getTime(), lastMaState.getTime()) &&
-            newMaState.getPrice() != lastMaState.getPrice()){
-            tempMaStateList.remove(tempMaStateList.size()-1);
-            tempMaStateList.add(newMaState);
-        }
-
-        List<StockForm> stockFormList = maStateAnalyser.analyse(mStockId, maStateList, mKLevel, TIME_POINT_STRING, mStock, tempWholeStockPriceList);
-        return stockFormList;
-    }
 
     /**
      * 添加新的股票价格
@@ -80,93 +43,63 @@ public class KBase {
      * @return
      */
     public List<StockForm> addStockPrice(StockPrice stockPrice){
-
-    }
-
-    /**
-     * 更新最后一个价格后重新计算
-     * 由于五日线虽然滞后，但也不是滞后非常多，所以直接忽略中间缺少的maState
-     * @param wholeStockPriceList
-     */
-    public List<StockForm> updateLastStockPrice(List<StockPrice> wholeStockPriceList){
-        if(wholeStockPriceList == null){
-            Log.e("lwd", "upDateLastStockPrice wholeStockPriceList 为null");
-        }
-        // 得到关键数据
-        ArrayList<StockPrice> updatedStockPriceList = new ArrayList<>();
-        addAndFilterKeyStockPrice(wholeStockPriceList.get(wholeStockPriceList.size()-1));
-
-        updatedStockPriceList.addAll(mKeyStockPriceList);
-        updatedStockPriceList.add(wholeStockPriceList.get(wholeStockPriceList.size()-1));
-        // 得到最新的maState
-        MaState newMaState = MaCalculater.calMaState(updatedStockPriceList);
-        // 得到存储的最后一个maState
-        MaState lastMaState = maStateList.get(maStateList.size() - 1);
-        // 当最新的maState在最后一个maState之后时，将其加入
-        if(DateUtil.isDateAfter(newMaState.getTime(), lastMaState.getTime())){
-            maStateList.add(newMaState);
-        }
-        else if(DateUtil.isDateEqual(newMaState.getTime(), lastMaState.getTime()) &&
-        newMaState.getPrice() != lastMaState.getPrice()){
-            maStateList.remove(maStateList.size()-1);
-            maStateList.add(newMaState);
-        }
-        List<StockForm> stockFormList = maStateAnalyser.analyse(mStockId, maStateList, mKLevel, TIME_POINT_STRING, mStock, wholeStockPriceList);
-        return stockFormList;
-    }
-
-    /**
-     * 添加关键价格列表
-     * @param stockPriceList
-     */
-    public List<StockForm> setKeyStockPriceList(List<StockPrice> stockPriceList) {
-        if(stockPriceList == null){
-            Log.e("lwd", "setKeyStockPriceList stockPriceList 为null");
-        }
-        List<StockPrice> filteredStockPriceList = addAndFilterKeyStockPriceList(stockPriceList);
-        Log.d("lwd", String.format("%d分钟K线分析_stockId:%s", mKLevel, mStockId));
-        List<StockForm> stockFormList = new ArrayList<>();
-        // 添加价格列表之后计算均值
-        for(int i=MaCalculater.getMinCountedDay(); i<stockPriceList.size(); i++){
-
-            // 只分析今天的数据开关
-//            if(stockPriceList.get(i).getTime().getDate() != StockManager.getLastDealDate().getDate()){
-//                continue;
-//            }
-
-            MaState maState = MaCalculater.calMaState( filterPreviousKeyStockPrice(stockPriceList.subList(0, i), filteredStockPriceList));
-            if(i > 60){
-                maState.setMinPriceInOneHour(calMinimumPriceInPriceList(stockPriceList.subList(i-60, i)));
-            }
-            if(maState != null && maState.getMa5() != 0){
-                maStateList.add(maState);
+        // 删除要添加的stockPrice之前的state和keyPrice
+        while (maStateList.size() > 0){
+            // 得到最后一个状态
+            MaState lastMaState = maStateList.get(maStateList.size() - 1);
+            if(DateUtil.isDateAfter(lastMaState.getTime(), stockPrice.getTime()) ||
+            DateUtil.isDateEqual(lastMaState.getTime(), stockPrice.getTime())){
+                maStateList = maStateList.subList(0, maStateList.size()-1);
             }
             else{
-                continue;
+                break;
             }
-            calLastMaStateCandleArgs(maStateList);
-
-            stockFormList.addAll(maStateAnalyser.analyse(mStockId, maStateList, mKLevel, TIME_POINT_STRING, mStock, stockPriceList.subList(0, i)));
         }
+        while (mKeyStockPriceList.size() > 0){
+            StockPrice lastKeyStockPrice = mKeyStockPriceList.get(mKeyStockPriceList.size() - 1);
+            if(DateUtil.isDateAfter(lastKeyStockPrice.getTime(), stockPrice.getTime()) ||
+                    DateUtil.isDateEqual(lastKeyStockPrice.getTime(), stockPrice.getTime())){
+                mKeyStockPriceList = mKeyStockPriceList.subList(0, mKeyStockPriceList.size()-1);
+            }
+            else{
+                break;
+            }
+        }
+        // 计算Form
+        // 求关键价格列表
+        List<StockPrice> filteredStockPriceList = filterKeyStockPrice(stockPrice);
+        MaState maState = MaCalculater.calMaState(filteredStockPriceList);
+
+        if(maState != null && maState.getMa5() != 0){
+            maStateList.add(maState);
+        }
+
+        calCandleArgs(maStateList);
+
+        List<StockForm> stockFormList = maStateAnalyser.analyse(mStock, maStateList, mKLevel);
+
         return stockFormList;
     }
 
     /**
-     * 计算价格列表中的最小价格
-     * @param stockPriceList
-     * @return
+     * 得到关键价格列表，总以最新价格结尾
+     * 关键价格列表+最新价格
+     * @param stockPrice
      */
-    private float calMinimumPriceInPriceList(List<StockPrice> stockPriceList){
-        float minPrice = stockPriceList.get(0).getPrice();
-        for(StockPrice stockPrice : stockPriceList){
-            if(stockPrice.getPrice() < minPrice){
-                minPrice = stockPrice.getPrice();
-            }
+    private List<StockPrice> filterKeyStockPrice(StockPrice stockPrice){
+        if(isDateTheKeyTime(stockPrice.getTime())){
+            mKeyStockPriceList.add(stockPrice);
+            return mKeyStockPriceList;
         }
-        return minPrice;
+        else{
+            List<StockPrice> stockPriceList = new ArrayList<>();
+            stockPriceList.addAll(mKeyStockPriceList);
+            stockPriceList.add(stockPrice);
+            return stockPriceList;
+        }
     }
 
-    private void calLastMaStateCandleArgs(List<MaState> maStateList){
+    private void calCandleArgs(List<MaState> maStateList){
         if(maStateList.size() < 1){
             return;
         }
@@ -218,59 +151,6 @@ public class KBase {
 //            }
     }
 
-
-    /**
-     * 最后一个stockPrice不变，他的时间代表
-     * 其他的找前面的最近的keyStockPrice
-     * @param stockPriceList
-     * @return
-     */
-    private List<StockPrice> filterPreviousKeyStockPrice(List<StockPrice> stockPriceList, List<StockPrice> filteredStockPriceList){
-        List<StockPrice> resultStockPriceList = new ArrayList<>();
-        StockPrice lastStockPrice = stockPriceList.get(stockPriceList.size()-1);
-        // 将最后一个价格之前的关键价格加入列表
-        for(StockPrice stockPrice : filteredStockPriceList){
-            if(stockPrice.getTime().before(lastStockPrice.getTime())){
-                resultStockPriceList.add(stockPrice);
-            }
-        }
-        // 将最后一个价格加入列表
-        resultStockPriceList.add(lastStockPrice);
-        return resultStockPriceList;
-    }
-
-    private void addAndFilterKeyStockPrice(StockPrice stockPrice){
-        if(isDateTheKeyTime(stockPrice.getTime()) ){
-            if(mKeyStockPriceList.size() > 0 ){
-                if(DateUtil.isDateAfter(stockPrice.getTime(), mKeyStockPriceList.get(mKeyStockPriceList.size()-1).getTime())){
-                    mKeyStockPriceList.add(stockPrice);
-                }
-                else if(DateUtil.isDateEqual(stockPrice.getTime(), mKeyStockPriceList.get(mKeyStockPriceList.size()-1).getTime())
-                        && stockPrice.getPrice() != mKeyStockPriceList.get(mKeyStockPriceList.size()-1).getPrice()){
-                    mKeyStockPriceList.remove(mKeyStockPriceList.size() -1);
-                    mKeyStockPriceList.add(stockPrice);
-                }
-            }
-            else if(mKeyStockPriceList.size() == 0){
-                mKeyStockPriceList.add(stockPrice);
-            }
-        }
-    }
-
-
-    /**
-     * 过滤股票价格
-     * @param keyStockPriceList
-     * @return
-     */
-    private List<StockPrice> addAndFilterKeyStockPriceList(List<StockPrice> keyStockPriceList){
-        // 过滤股票价格
-        for(StockPrice stockPrice : keyStockPriceList){
-            addAndFilterKeyStockPrice(stockPrice);
-        }
-        return mKeyStockPriceList;
-    }
-
     private boolean isDateTheKeyTime(Date time){
         String minuteTime = convertDateToShortMinuteString(time);
         if(TIME_POINT_STRING.indexOf(minuteTime) != -1){
@@ -278,7 +158,6 @@ public class KBase {
         }
         return false;
     }
-
 
 
     public void setTIME_POINT_STRING(String TIME_POINT_STRING) {

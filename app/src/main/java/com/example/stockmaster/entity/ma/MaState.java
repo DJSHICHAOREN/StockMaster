@@ -179,12 +179,4 @@ public class MaState {
         setHighestPrice(highestPrice);
         setLowestPrice(lowestPrice);
     }
-
-    public float getMinPriceInOneHour() {
-        return minPriceInOneHour;
-    }
-
-    public void setMinPriceInOneHour(float minPriceInOneHour) {
-        this.minPriceInOneHour = minPriceInOneHour;
-    }
 }

@@ -90,134 +90,13 @@ public class Stock {
         dealPriceList.clear();
     }
 
-    /**
-     * 将价格加入全部列表
-     * @param stockPrice
-     */
-    public List<StrategyResult> addToWholeStockPriceListTemp(StockPrice stockPrice){
-        List<StrategyResult> strategyResultList = new ArrayList<>();
-        if(!wholeStockPriceList.isEmpty()){
-            StockPrice lastStockPrice  = wholeStockPriceList.get(wholeStockPriceList.size()-1);
-            if(DateUtil.isDateEqual(stockPrice.getTime(), lastStockPrice.getTime()) && lastStockPrice.price != stockPrice.price){
-                wholeStockPriceList.remove(wholeStockPriceList.size()-1);
-                wholeStockPriceList.add(stockPrice);
-            }
-            // 比列表靠后的时间，添加进列表
-            else if(DateUtil.isDateAfter(stockPrice.getTime(), lastStockPrice.getTime())){
-                wholeStockPriceList.add(stockPrice);
-                // 得到形态
-                List<StockForm> stockFormList = new ArrayList<>();
-                for(KBase kBase : mKBaseList){
-                    stockFormList.addAll(kBase.updateLastStockPriceTemp(wholeStockPriceList));
-                }
-                // 得到策略
-                for(StockForm stockForm : stockFormList){
-                    strategyResultList.addAll(analyse(stockForm));
-                }
-
-            }
-        }
-        return strategyResultList;
-    }
-
-    /**
-     * 加入全部价格列表
-     * @param stockPrice
-     */
-    public List<StrategyResult> addToWholeStockPriceList(StockPrice stockPrice){
-        List<StrategyResult> strategyResultList = new ArrayList<>();
-        if(!wholeStockPriceList.isEmpty()){
-            StockPrice lastStockPrice  = wholeStockPriceList.get(wholeStockPriceList.size()-1);
-            if(DateUtil.isDateEqual(stockPrice.getTime(), lastStockPrice.getTime()) && lastStockPrice.price != stockPrice.price){
-                wholeStockPriceList.remove(todayStockPriceList.size()-1);
-                wholeStockPriceList.add(stockPrice);
-            }
-            // 比列表靠后的时间，添加进列表
-            else{
-                wholeStockPriceList.add(stockPrice);
-                // 得到形态
-                List<StockForm> stockFormList = new ArrayList<>();
-                for(KBase kBase : mKBaseList){
-                    stockFormList.addAll(kBase.updateLastStockPrice(wholeStockPriceList));
-                }
-                // 得到策略
-                for(StockForm stockForm : stockFormList){
-                    strategyResultList.addAll(analyse(stockForm));
-                }
-            }
-        }
-        return strategyResultList;
-    }
-
-    /**
-     * 使用一天的价格列表更新全部价格列表
-     * @param stockPriceList
-     */
-    public void updateWholeStockPriceList(List<StockPrice> stockPriceList){
-        // 查找wholeStockPriceList中的最后一个，在stockPriceList中的位置，将stockPriceList中新的价格添加
-        if(wholeStockPriceList != null && wholeStockPriceList.size() > 0){
-            StockPrice lastWholeStockPrice = wholeStockPriceList.get(wholeStockPriceList.size()-1);
-            int newPriceIndex = 0;
-            for(; newPriceIndex<stockPriceList.size(); newPriceIndex++){
-                if(DateUtil.isDateAfter(stockPriceList.get(newPriceIndex).getTime(), lastWholeStockPrice.getTime())
-                        || (DateUtil.isDateEqual(stockPriceList.get(newPriceIndex).getTime(), lastWholeStockPrice.getTime())
-                        && stockPriceList.get(newPriceIndex).getPrice() != lastWholeStockPrice.getPrice())){
-                    break;
-                }
-            }
-            // 添加新的价格列表
-            if(newPriceIndex < stockPriceList.size()){
-                List<StockPrice> newStockPriceList = stockPriceList.subList(newPriceIndex, stockPriceList.size()-1);
-                for(StockPrice stockPrice : newStockPriceList){
-                    addToWholeStockPriceList(stockPrice);
-                }
-            }
-
-        }
-    }
-
-    /**
-     * 添加关键价格列表
-     * @param stockPriceEveryDayList
-     */
-    public void setWholeStockPriceList(List<List<StockPrice>> stockPriceEveryDayList) {
-        // 由于在数据库中读取的stock不会经过构造函数，所以mKBaseList可能为空
-        if(mKBaseList == null){
-            this.mKBaseList = Arrays.asList(new K30Minutes(this));
-        }
-
-        calFiveDayHighestPrice(stockPriceEveryDayList);
-        calFiveDayHighestEndPrice(stockPriceEveryDayList);
-
-        List<StockPrice> keyStockPriceList = new ArrayList<>();
-        for(List<StockPrice> stockPriceList : stockPriceEveryDayList){
-            for(StockPrice stockPrice : stockPriceList){
-                keyStockPriceList.add(stockPrice);
-            }
-        }
-
-        List<StockForm> stockFormList = new ArrayList<>();
-        for(KBase kBase : mKBaseList){
-            stockFormList.addAll(kBase.setKeyStockPriceList(keyStockPriceList));
-        }
-
-        wholeStockPriceList = keyStockPriceList;
-
-        // 提取形态列表
-//        List<StockForm> stockFormList = DBUtil.getStockFormByStockId(getId());
-        if(stockFormList != null){
-            for(StockForm stockForm : stockFormList){
-                analyse(stockForm);
-            }
-        }
-    }
 
     /**
      * 添加关键价格
      * 只对自己级别的准确度负责
      * @param stockPrice
      */
-    public void addStockPrice(StockPrice stockPrice, boolean isCheckLastStockPrice){
+    public List<StrategyResult> addStockPrice(StockPrice stockPrice, boolean isCheckLastStockPrice){
         boolean isUpdateStockPrice = false;
         if(isCheckLastStockPrice && mStockPriceList.size() > 1){
             // 判断是否比价格列表中的最后一个价格新
@@ -235,19 +114,21 @@ public class Stock {
             isUpdateStockPrice = true;
         }
         // 若股票价格有更新，则进行形态、策略分析
-        if(isUpdateStockPrice){
+        List<StrategyResult> strategyResultList = new ArrayList<>();
+        if(isUpdateStockPrice) {
             // 得到形态
             List<StockForm> stockFormList = new ArrayList<>();
-            for(KBase kBase : mKBaseList){
+            for (KBase kBase : mKBaseList) {
                 stockFormList.addAll(kBase.addStockPrice(stockPrice));
             }
             // 分析形态
-            if(stockFormList != null){
-                for(StockForm stockForm : stockFormList){
-                    analyse(stockForm);
+            if (stockFormList != null) {
+                for (StockForm stockForm : stockFormList) {
+                    strategyResultList.addAll(analyse(stockForm));
                 }
             }
         }
+        return strategyResultList;
     }
 
     /**

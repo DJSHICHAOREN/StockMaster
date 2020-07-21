@@ -2,6 +2,7 @@ package com.example.stockmaster.http;
 
 import android.content.Context;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -54,29 +55,20 @@ public class SinaDataQueryer {
                     @Override
                     public void onResponse(String response) {
                         List<StockPrice> stockPriceList = mResponseStringToObject.sinaMinutePriceResponseToObjectList(response);
-                        StockManager.addMinuteStockPrice(stockPriceList);
+                        StockManager.addMinuteStockPriceNew(stockPriceList);
                     }
                 },
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         queryStocksNowPrice(list);
-//                        Toast.makeText(mContext,"数据请求失败", Toast.LENGTH_LONG).show();
+                        Toast.makeText(mContext,"数据请求失败", Toast.LENGTH_SHORT).show();
                         Log.e("lwd",String.format("请求分时数据失败"));
                     }
                 });
 
         mQueue.add(stringRequest);
     }
-
-    /**
-     * 查询股票今天的价格
-     * @param stockId
-     */
-//    public void queryStocksTodayPrice(String stockId){
-//        Log.d("lwd", String.format("%s 开始请求今天数据", stockId));
-//        queryStocksNDayPrice(stockId, 1, false);
-//    }
 
     /**
      * 查询股票的五日均价
@@ -117,7 +109,7 @@ public class SinaDataQueryer {
                                 List<Float> fiveDayClosePriceList = mMaGenerator.generateDayMA5(response);
                                 StockManager.setPreviousFourDayPriceList(fiveDayClosePriceList, stockId);
 
-                                StockManager.addFiveDayStockPriceList(stockPriceEveryDayList, stockId, isNewStock);
+                                StockManager.addFiveDayStockPriceListNew(stockPriceEveryDayList, stockId);
                             }
                             Log.d("lwd", String.format("%s %d日数据添加完毕", stockId, dayCount));
                         }
@@ -162,7 +154,7 @@ public class SinaDataQueryer {
                     public void onResponse(String response) {
                         try{
                             List<StockPrice> stockPriceList = mResponseStringToObject.sinaTodayPriceResponseToObjectList(response, StockPrice.QueryType.TODAY);
-                            StockManager.addOneDayStockPriceList(stockPriceList, stockId, true);
+                            StockManager.addOneDayStockPriceListNew(stockPriceList, stockId);
                             Log.d("lwd", String.format("%s 今日最准数据添加完毕", stockId));
                         }
                         // 得到的时间为空字符串，则抛出异常

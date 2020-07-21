@@ -85,88 +85,6 @@ public class StockManager {
         }
     }
 
-    /**
-     * 添加分钟股票价格
-     * 在添加了从开盘到现在的数据之后，再添加实时的每分钟的数据
-     * @param stockPriceList
-     */
-    public static void addMinuteStockPrice(List<StockPrice> stockPriceList){
-        for(StockPrice stockPrice : stockPriceList){
-            int stockIndex = mStockIdList.indexOf(stockPrice.stockId);
-            if(stockIndex == -1){
-                Log.e("lwd", String.format("没有找到价格对应的股票id：%s", stockPrice.stockId));
-                return;
-            }
-            Stock stock = mStockList.get(stockIndex);
-            // 设置股票名称
-            if(stockPrice.getName() != null && stock.getName().equals("")){
-                stock.setName(stockPrice.getName());
-                DBUtil.updateStock(stock);
-            }
-            if(stock != null && stock.isReceiveTodayData){
-                List<StrategyResult> strategyResultList = stock.addToWholeStockPriceListTemp(stockPrice);
-                for(StrategyResult strategyResult : strategyResultList){
-                    Log.d("lwd", "addMinuteStockPrice" + strategyResultList.toString());
-                    mBrainService.sendNotification(strategyResult.getNotificationId(),
-                            stock.getName() + " " + strategyResult.toString());
-                }
-            }
-        }
-    }
-
-    /**
-     * 添加一天股票价格
-     * @param stockPriceList
-     * @return stockId 获取成功的股票Id
-     */
-    public static void addOneDayStockPriceList(List<StockPrice> stockPriceList, String stockId, boolean isClearBeforeData){
-        int stockIndex = mStockIdList.indexOf(stockId);
-        Stock stock = mStockList.get(stockIndex);
-        if(stock != null && stockPriceList.size() > 0){
-            // 在添加今天的数据之前要清空之前的价格数据
-            if(stock.isReceiveTodayData){
-                stock.updateWholeStockPriceList(stockPriceList);
-            }
-
-            if(mMainActivityUIManager != null){
-                mMainActivityUIManager.flushLoadProgress(String.format("获取一日准确数据，time：%s",
-                        stockPriceList.get(stockPriceList.size()-1).getTime()));
-            }
-        }
-    }
-
-    /**
-     * 添加五天股票价格
-     * @param stockPriceEveryDayList
-     * @param stockId
-     */
-    public static void addFiveDayStockPriceList(List<List<StockPrice>> stockPriceEveryDayList, String stockId, boolean isNewStock){
-        int stockIndex = mStockIdList.indexOf(stockId);
-        Stock stock = mStockList.get(stockIndex);
-        if(isNewStock){
-            stock = new Stock(stock.getId(), stock.getName(), stock.getMonitorType(),
-                    stock.getDayMaPrice(), stock.getPreviousFourDayPriceList());
-        }
-        if(stock != null){
-            stock.setWholeStockPriceList(stockPriceEveryDayList);
-
-            // 策略结果列表
-//            SuccessRateAnalyser.analyse(strategyResultList);
-
-            if(mStockMonitorUIManager != null){
-                if(stock.getStrategyResultListSize() > 0){
-                    mStockMonitorPickedStockList.add(stock);
-                }
-            }
-            mNowLoadedStockListSize++;
-            if(mMainActivityUIManager != null){
-                mMainActivityUIManager.flushLoadProgress(String.format("初始化进度：%d/%d", mNowLoadedStockListSize, mAllStockListSize));
-            }
-            Log.d("lwd", String.format("%s 五日关键数据加载完毕 进度：%d/%d", stockId, mNowLoadedStockListSize, mAllStockListSize));
-        }
-        // 设置获取之前数据完毕，开始获取分时数据
-        stock.receiveTodayData();
-    }
 
     /**
      * 添加分钟股票价格
@@ -187,11 +105,9 @@ public class StockManager {
                 DBUtil.updateStock(stock);
             }
             if(stock != null && stock.isReceiveTodayData){
-                stock.addStockPrice(stockPrice, true);
+                List<StrategyResult> strategyResultList = stock.addStockPrice(stockPrice, true);
 
-                List<StrategyResult> strategyResultList = stock.addToWholeStockPriceListTemp(stockPrice);
                 for(StrategyResult strategyResult : strategyResultList){
-                    Log.d("lwd", "addMinuteStockPrice" + strategyResultList.toString());
                     mBrainService.sendNotification(strategyResult.getNotificationId(),
                             stock.getName() + " " + strategyResult.toString());
                 }

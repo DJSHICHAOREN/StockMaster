@@ -15,7 +15,7 @@ public class FallThroughSupportFormJudge extends BaseFormJudge {
     }
 
     @Override
-    public StockForm judge(String stockId, List<MaState> maStateList, int kLevel, Stock stock, List<StockPrice> stockPriceList) {
+    public StockForm judge(Stock stock, List<MaState> maStateList, int kLevel) {
         if(maStateList == null || maStateList.size() < 1){
             return null;
         }
@@ -26,7 +26,7 @@ public class FallThroughSupportFormJudge extends BaseFormJudge {
         if(lastMaState.price * 1.01 < lastMaState.getSupportPrice()){
 //            Log.d("lwd", String.format("time:%s, lastMaState:%f, getSupportPrice():%f",
 //                    lastMaState.getTime() ,lastMaState.price, lastMaState.getSupportPrice()));
-            return new StockForm(stockId, getFormId(), kLevel, lastMaState.getTime(), 1, lastMaState.getPrice());
+            return new StockForm(stock.getId(), getFormId(), kLevel, lastMaState.getTime(), 1, lastMaState.getPrice());
         }
         return null;
     }

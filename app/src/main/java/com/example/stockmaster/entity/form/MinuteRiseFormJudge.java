@@ -17,7 +17,7 @@ public class MinuteRiseFormJudge extends BaseFormJudge {
     }
 
     @Override
-    public StockForm judge(String stockId, List<MaState> maStateList, int kLevel, Stock stock, List<StockPrice> stockPriceList) {
+    public StockForm judge(Stock stock, List<MaState> maStateList, int kLevel) {
         if(maStateList == null || maStateList.size() < 3){
             return null;
         }
@@ -31,6 +31,7 @@ public class MinuteRiseFormJudge extends BaseFormJudge {
 //            }
 //        }
 
+        List<StockPrice> stockPriceList = stock.getStockPriceList();
         // 判断最新的三条线是否是按序排列且上升的
         int maStateListLength = maStateList.size();
         MaState lastMaState1 = maStateList.get(maStateListLength-1);
@@ -63,7 +64,7 @@ public class MinuteRiseFormJudge extends BaseFormJudge {
                     // 添加买点
                     StockPrice stockPrice = stock.lowerStockPriceList.get(lowerStockPriceListSize-1);
                     StockManager.addBuyAndSaleStockPrice(stock, stockPrice, Stock.DealType.BUY);
-                    return new StockForm(stockId, getFormId(), kLevel, lastMaState1.getTime(), 0, lastMaState1.getPrice());
+                    return new StockForm(stock.getId(), getFormId(), kLevel, lastMaState1.getTime(), 0, lastMaState1.getPrice());
                 }
             }
         }

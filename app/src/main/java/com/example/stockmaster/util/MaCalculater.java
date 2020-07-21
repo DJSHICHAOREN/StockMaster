@@ -16,7 +16,7 @@ public class MaCalculater {
     private static List<Integer> mCountedDayList = new ArrayList<>(Arrays.asList(5, 10, 20, 30));
 
     public static MaState calMaState(List<StockPrice> stockPriceList){
-        if(stockPriceList == null || stockPriceList.size() < 2){
+        if(stockPriceList == null || stockPriceList.size() < 5){
             return null;
         }
         // 创建均价对象

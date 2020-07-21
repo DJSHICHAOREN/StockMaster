@@ -39,7 +39,7 @@ public class LongToArrangeFormJudge extends BaseFormJudge {
      * @return
      */
     @Override
-    public StockForm judge(String stockId, List<MaState> maStateList, int kLevel, Stock stock, List<StockPrice> stockPriceList){
+    public StockForm judge(Stock stock, List<MaState> maStateList, int kLevel){
         if(maStateList == null || maStateList.size() < kLevel * 3){
             return null;
         }
@@ -124,7 +124,7 @@ public class LongToArrangeFormJudge extends BaseFormJudge {
 
         if(isSeriation && isRise && isDayMaUp && isHigherThanBeforeDays){
 //            Log.d("lwd", String.format("%s 买他，价格:%s", lastMaState1.getTime(), lastMaState1.getPrice()));
-            return new StockForm(stockId, getFormId(), kLevel, lastMaState1.getTime(), 0, lastMaState1.getPrice());
+            return new StockForm(stock.getId(), getFormId(), kLevel, lastMaState1.getTime(), 0, lastMaState1.getPrice());
         }
         return null;
     }

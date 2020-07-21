@@ -13,7 +13,7 @@ public abstract class BaseFormJudge {
         this.formId = formId;
     }
 
-    public abstract StockForm judge(String stockId, List<MaState> maStateList, int kLevel, Stock stock, List<StockPrice> stockPriceList);
+    public abstract StockForm judge(Stock stock, List<MaState> maStateList, int kLevel);
 
     public int getFormId() {
         return formId;

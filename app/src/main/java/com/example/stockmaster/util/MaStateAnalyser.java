@@ -23,12 +23,11 @@ public class MaStateAnalyser {
         mBaseFormJudgeList.add(new MinuteRiseFormJudge());
     }
 
-    public List<StockForm> analyse(String stockId, List<MaState> maStateList, int kLevel, String keyStockPriceTimeString,
-                                   Stock stock, List<StockPrice> stockPriceList){
+    public List<StockForm> analyse(Stock stock, List<MaState> maStateList, int kLevel){
         List<StockForm> stockFormList = new ArrayList<>();
 
         for(BaseFormJudge baseFormJudge : mBaseFormJudgeList){
-            StockForm stockForm = baseFormJudge.judge(stockId, maStateList, kLevel, stock, stockPriceList);
+            StockForm stockForm = baseFormJudge.judge(stock, maStateList, kLevel);
             if(stockForm != null){
 //                DBUtil.saveStockForm(stockForm);
                 stockFormList.add(stockForm);
