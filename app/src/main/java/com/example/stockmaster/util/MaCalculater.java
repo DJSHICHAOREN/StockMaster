@@ -31,6 +31,7 @@ public class MaCalculater {
                 float sum = 0;
                 for(int i=priceListLength-1; i >= priceListLength-countedDay; i--){
                     sum += stockPriceList.get(i).getPrice();
+//                    Log.d("lwd", "add price:" + stockPriceList.get(i).toString());
                 }
                 sum /= countedDay;
                 maState.setMaPrice(sum, countedDay);

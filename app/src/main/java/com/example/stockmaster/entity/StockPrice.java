@@ -120,13 +120,7 @@ public class StockPrice {
     @Override
     public String toString() {
         String dealTime = time.getHours()+":"+time.getMinutes()+":"+time.getSeconds();
-        if(dealType == Stock.DealType.BUY){
-            return String.format("买点，时间：%s，价格：%s", dealTime, getPriceString());
-        }
-        else if(dealType == Stock.DealType.SALE){
-            return String.format("卖点，时间：%s，价格：%s", dealTime , getPriceString());
-        }
-        return "非买卖点";
+        return String.format("stockId：%s, 时间：%s，价格：%s", getStockId(), dealTime , getPriceString());
     }
 
     public String toStringWithId(){
