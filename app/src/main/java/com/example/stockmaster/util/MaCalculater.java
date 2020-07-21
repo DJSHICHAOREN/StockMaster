@@ -19,6 +19,7 @@ public class MaCalculater {
         if(stockPriceList == null || stockPriceList.size() < 5){
             return null;
         }
+
         // 创建均价对象
         int priceListLength = stockPriceList.size();
         StockPrice lastStockPrice = stockPriceList.get(priceListLength-1);

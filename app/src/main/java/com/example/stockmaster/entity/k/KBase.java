@@ -1,5 +1,7 @@
 package com.example.stockmaster.entity.k;
 
+import android.util.Log;
+
 import com.example.stockmaster.entity.Stock;
 import com.example.stockmaster.entity.StockPrice;
 import com.example.stockmaster.entity.form.StockForm;
@@ -65,6 +67,7 @@ public class KBase {
                 break;
             }
         }
+
         // 计算Form
         // 求关键价格列表
         List<StockPrice> filteredStockPriceList = filterKeyStockPrice(stockPrice);

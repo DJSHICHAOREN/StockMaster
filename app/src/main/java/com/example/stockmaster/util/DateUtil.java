@@ -25,7 +25,16 @@ public class DateUtil {
      * @return
      */
     public static boolean isDateEqual(Date time1, Date time2){
-        if(time1.getHours() == time2.getHours() && time1.getMinutes() == time2.getMinutes()){
+        if(time1.getDate() == time2.getDate() && time1.getHours() == time2.getHours() && time1.getMinutes() == time2.getMinutes()){
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
+
+    public static boolean isDateEqual(Date time1, int day, int hour, int minute){
+        if(time1.getDate() == day && time1.getHours() == hour && time1.getMinutes() == minute){
             return true;
         }
         else{
@@ -34,8 +43,9 @@ public class DateUtil {
     }
 
     public static boolean isDateAfter(Date time1, Date time2){
-        if(time1.getHours() > time2.getHours() ||
-                (time1.getHours() == time2.getHours() && time1.getMinutes() > time2.getMinutes()) ){
+        if(     (time1.getDate() > time2.getDate()) ||
+                (time1.getDate() == time2.getDate() && time1.getHours() > time2.getHours()) ||
+                (time1.getDate() == time2.getDate() && time1.getHours() == time2.getHours() && time1.getMinutes() > time2.getMinutes()) ){
             return true;
         }
         else{
