@@ -36,7 +36,7 @@ public class MaCalculater {
                 maState.setMaPrice(sum, countedDay);
             }
         }
-//        Log.d("lwd", maState.toString());
+        Log.d("lwd", maState.toString());
         return maState;
     }
 

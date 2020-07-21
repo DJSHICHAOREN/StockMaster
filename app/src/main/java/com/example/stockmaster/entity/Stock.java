@@ -136,7 +136,7 @@ public class Stock {
      * @param stockPriceList
      */
     public void addStockPriceList(List<StockPrice> stockPriceList){
-        List<StockPrice> newPartStockPriceList = new ArrayList<>();
+        List<StockPrice> newPartStockPriceList = stockPriceList;
         // 删除老的价格段
         // 寻找新的价格段
         if(mLastExactStockPriceIndex != -1){
