@@ -81,6 +81,10 @@ public class KBase {
 
         List<StockForm> stockFormList = maStateAnalyser.analyse(mStock, maStateList, mKLevel);
 
+        for(StockForm stockForm : stockFormList){
+            Log.d("lwd", stockForm.toString());
+        }
+
         return stockFormList;
     }
 

@@ -33,7 +33,7 @@ public class LongToArrangeFormJudge extends BaseFormJudge {
      * 日K: ma5向上
      * (2)
      * 为上升形态
-     * @param stockId
+     * @param
      * @param maStateList
      * @param kLevel
      * @return
@@ -124,7 +124,7 @@ public class LongToArrangeFormJudge extends BaseFormJudge {
 
         if(isSeriation && isRise && isDayMaUp && isHigherThanBeforeDays){
 //            Log.d("lwd", String.format("%s 买他，价格:%s", lastMaState1.getTime(), lastMaState1.getPrice()));
-            return new StockForm(stock.getId(), getFormId(), kLevel, lastMaState1.getTime(), 0, lastMaState1.getPrice());
+            return new StockForm(stock.getId(), getFormId(), kLevel, lastMaState1.getTime(), 0, lastMaState1.getPrice(), getFormId());
         }
         return null;
     }

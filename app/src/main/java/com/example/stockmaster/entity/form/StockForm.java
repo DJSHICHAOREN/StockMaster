@@ -1,5 +1,7 @@
 package com.example.stockmaster.entity.form;
 
+import com.example.stockmaster.R;
+
 import org.xutils.db.annotation.Column;
 import org.xutils.db.annotation.Table;
 
@@ -29,11 +31,13 @@ public class StockForm {
     @Column(name = "price")
     public float price;
 
+    public int formType;
+
     public StockForm(){
 
     }
 
-    public StockForm(String stockId, int formId, int kLevel, Date time, int type, float price){
+    public StockForm(String stockId, int formId, int kLevel, Date time, int type, float price, int formType){
         this.id = stockId + "_" + formId + "_" + time.toString() + "_" + type + "_" + kLevel;
         this.stockId = stockId;
         this.formId = formId;
@@ -41,6 +45,7 @@ public class StockForm {
         this.type = type;
         this.kLevel = kLevel;
         this.price = price;
+        this.formType = formType;
     }
 
     public String getStockId() {
@@ -91,9 +96,35 @@ public class StockForm {
         this.price = price;
     }
 
+    public int getFormType() {
+        return formType;
+    }
+
+    public void setFormType(int formType) {
+        this.formType = formType;
+    }
+
     @Override
     public String toString(){
         String optionString = this.type == 0 ? "买点" : "卖点";
-        return String.format("%dK线%s，时间：%s", this.kLevel, optionString, this.time.toString().substring(0, this.time.toString().indexOf("GMT")));
+        String formTypeString = "";
+        switch (this.formType){
+            case R.integer.formLongToArrange:{
+                formTypeString = "long_to_arrange";
+                break;
+            }
+            case R.integer.formFallThroughSupport:{
+                formTypeString = "fall_through_support";
+                break;
+            }
+            case R.integer.formMinuteRise:{
+                formTypeString = "minute_rise";
+                break;
+            }
+
+        }
+        return String.format("%dK线, %s, %s, 时间：%s, 价格：%s",
+                this.kLevel, optionString, formTypeString, this.time.toString().substring(0, this.time.toString().indexOf("GMT")),
+                getPrice());
     }
 }

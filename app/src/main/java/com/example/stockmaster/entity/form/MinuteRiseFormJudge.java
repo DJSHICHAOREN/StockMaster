@@ -64,7 +64,7 @@ public class MinuteRiseFormJudge extends BaseFormJudge {
                     // 添加买点
                     StockPrice stockPrice = stock.lowerStockPriceList.get(lowerStockPriceListSize-1);
                     StockManager.addBuyAndSaleStockPrice(stock, stockPrice, Stock.DealType.BUY);
-                    return new StockForm(stock.getId(), getFormId(), kLevel, lastMaState1.getTime(), 0, lastMaState1.getPrice());
+                    return new StockForm(stock.getId(), getFormId(), kLevel, lastMaState1.getTime(), 0, lastMaState1.getPrice(), getFormId());
                 }
             }
         }
