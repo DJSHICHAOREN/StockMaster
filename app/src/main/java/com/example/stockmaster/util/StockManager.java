@@ -93,6 +93,7 @@ public class StockManager {
      */
     public static void addMinuteStockPriceNew(List<StockPrice> stockPriceList){
         for(StockPrice stockPrice : stockPriceList){
+            Log.d("lwd", "addMinuteStockPriceNew：" + stockPrice.toString());
             int stockIndex = mStockIdList.indexOf(stockPrice.stockId);
             if(stockIndex == -1){
                 Log.e("lwd", String.format("没有找到价格对应的股票id：%s", stockPrice.stockId));
@@ -125,6 +126,8 @@ public class StockManager {
         int stockIndex = mStockIdList.indexOf(stockId);
         Stock stock = mStockList.get(stockIndex);
         if(stock != null && stockPriceList.size() > 0){
+            Log.d("lwd", "addOneDayStockPriceListNew:" + stockPriceList.get(stockPriceList.size()-1).toString());
+
             // 在添加今天的数据之前要清空之前的价格数据
             if(stock.isReceiveTodayData){
                 stock.addStockPriceList(stockPriceList);

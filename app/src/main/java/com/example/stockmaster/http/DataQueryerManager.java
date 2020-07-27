@@ -80,7 +80,7 @@ public class DataQueryerManager {
                     mCachedThreadPool.execute(runnable);
                 }
             }
-        }, 0, 1000*60*2); // 1 seconds
+        }, 0, 1000*60*3); // 1 seconds
     }
 
     /**
@@ -159,7 +159,7 @@ public class DataQueryerManager {
             public void run() {
                 mSinaDataQueryer.queryStocksNowPrice(stockIdString);
             }
-        }, 0, 1000 * 3); // 1 seconds
+        }, 0, 1000 * 20); // 1 seconds
     }
 
     /**
