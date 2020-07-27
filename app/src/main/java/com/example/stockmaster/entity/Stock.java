@@ -101,8 +101,11 @@ public class Stock {
         if(isCheckLastStockPrice && mStockPriceList.size() > 1){
             // 判断是否比价格列表中的最后一个价格新
             StockPrice lastStockPrice = mStockPriceList.get(mStockPriceList.size()-1);
-            if(DateUtil.isDateAfter(stockPrice.getTime(), lastStockPrice.getTime())
-                    || (DateUtil.isDateEqual(stockPrice.getTime(), lastStockPrice.getTime()) &&
+            if(DateUtil.isDateAfter(stockPrice.getTime(), lastStockPrice.getTime()) ){
+                mStockPriceList.add(stockPrice);
+                isUpdateStockPrice = true;
+            }
+            else if((DateUtil.isDateEqual(stockPrice.getTime(), lastStockPrice.getTime()) &&
                     stockPrice.getPrice() != lastStockPrice.getPrice())){
                 mStockPriceList = mStockPriceList.subList(0, mStockPriceList.size()-1);
                 mStockPriceList.add(stockPrice);
@@ -113,6 +116,7 @@ public class Stock {
             mStockPriceList.add(stockPrice);
             isUpdateStockPrice = true;
         }
+
         // 若股票价格有更新，则进行形态、策略分析
         List<StrategyResult> strategyResultList = new ArrayList<>();
         if(isUpdateStockPrice) {

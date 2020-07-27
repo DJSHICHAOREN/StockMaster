@@ -61,7 +61,7 @@ public class SinaDataQueryer {
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        queryStocksNowPrice(list);
+//                        queryStocksNowPrice(list);
                         Toast.makeText(mContext,"分时数据请求失败", Toast.LENGTH_SHORT).show();
                         Log.e("lwd",String.format("分时数据请求失败"));
                     }
@@ -123,7 +123,7 @@ public class SinaDataQueryer {
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        queryStocksTodayPrice(stockId);
+                        queryStocksFiveDayPrice(stockId, false);
 //                        Toast.makeText(mContext,"数据请求失败", Toast.LENGTH_LONG).show();
                         Log.e("lwd",String.format("%s请求%s天数据失败", stockId, dayCount));
                         Log.e("lwd", "异常信息：" + error.getMessage());
@@ -210,7 +210,7 @@ public class SinaDataQueryer {
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        queryStocksMAPrice(stockId);
+//                        queryStocksMAPrice(stockId);
                         Log.e("lwd","请求均线数据失败");
                     }
                 });
@@ -238,7 +238,8 @@ public class SinaDataQueryer {
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        queryLastDealDate();
+                        // 不能在出错之后立刻请求，否则会一直出错
+//                        queryLastDealDate();
                         Log.e("lwd",String.format("请求最近交易日期失败"));
                     }
                 });

@@ -92,7 +92,7 @@ public class DataQueryerManager {
         // 请求最近交易时间
         mSinaDataQueryer.queryLastDealDate();
 
-        Calendar calendar = Calendar.getInstance();
+//        Calendar calendar = Calendar.getInstance();
         //获取系统时间
 //        int hour = calendar.get(Calendar.HOUR_OF_DAY);
 //        if(hour < 9 || hour > 16){
@@ -125,7 +125,7 @@ public class DataQueryerManager {
             Runnable runnable = new Runnable() {
                 @Override
                 public void run() {
-                    mSinaDataQueryer.queryStocksMAPrice(stockId);
+                    queryOneStockMaOnce(stockId);
                 }
             };
             mCachedThreadPool.execute(runnable);
@@ -177,7 +177,7 @@ public class DataQueryerManager {
                 if(hour < 9 || hour > 16){
                     return;
                 }
-                queryAllOnce();
+                queryAllMaOnce();
             }
         }, 0, 1000*60*30); // 1 seconds
     }
