@@ -59,6 +59,11 @@ public class BrainService extends Service {
                     mDataQueryerManager.beginQueryMinutePrice();
                     // 请求一次五日价格
                     mDataQueryerManager.queryFiveDayPrice();
+                    try {
+                        Thread.sleep(5000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
                     // 定时请求今天价格
                     mDataQueryerManager.beginQueryTodayPrice();
                     // 结束时请求：今日价格

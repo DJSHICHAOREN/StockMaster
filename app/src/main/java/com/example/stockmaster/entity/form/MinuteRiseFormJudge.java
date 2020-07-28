@@ -36,9 +36,9 @@ public class MinuteRiseFormJudge extends BaseFormJudge {
             lastMaState3 = maStateList.get(lastMaState3Index);
         }
 
-        Log.d("lwd", String.format("stockId:%s, ls1:%s,%f, ls2:%s,%f, ls3:%s,%f",
-                stock.getId(), lastMaState1.getShortMinuteString(), lastMaState1.getPrice(), lastMaState2.getShortMinuteString(),
-                lastMaState2.getPrice(), lastMaState3.getShortMinuteString(), lastMaState3.getPrice()) );
+//        Log.d("lwd", String.format("stockId:%s, ls1:%s,%f, ls2:%s,%f, ls3:%s,%f",
+//                stock.getId(), lastMaState1.getShortMinuteString(), lastMaState1.getPrice(), lastMaState2.getShortMinuteString(),
+//                lastMaState2.getPrice(), lastMaState3.getShortMinuteString(), lastMaState3.getPrice()) );
         // 将每天的第一个值添加为第一个极小值和极大值
         if(stock.lowerStockPriceList.size() == 0){
             stock.lowerStockPriceList.add(stockPriceList.get(stockPriceList.size()-2));

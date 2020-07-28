@@ -1,5 +1,7 @@
 package com.example.stockmaster.entity.form;
 
+import android.util.Log;
+
 import com.example.stockmaster.R;
 import com.example.stockmaster.entity.Stock;
 import com.example.stockmaster.entity.StockPrice;
@@ -106,9 +108,10 @@ public class LongToArrangeFormJudge extends BaseFormJudge {
 //            }
 //        }
 
+
         // 判断日K线是否发散
         if(stock.getMa5(lastMaState1.getPrice()) >= stock.getDayMaPrice().getMa10() &&
-        stock.getDayMaPrice().getMa10() >= stock.getDayMaPrice().getMa30()){
+                stock.getDayMaPrice().getMa10() >= stock.getDayMaPrice().getMa30()){
             isDayMaUp = true;
         }
 

@@ -8,6 +8,7 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.RequestFuture;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.stockmaster.entity.StockPrice;
@@ -22,8 +23,14 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.reflect.TypeToken;
 
+import java.io.IOException;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+
+import okhttp3.Call;
+import okhttp3.OkHttpClient;
 
 public class SinaDataQueryer {
 
@@ -31,10 +38,20 @@ public class SinaDataQueryer {
     private RequestQueue mQueue;
     private ResponseStringToObject mResponseStringToObject = new ResponseStringToObject();
     MAGenerator mMaGenerator = new MAGenerator();
+    private OkHttpClient mHttpClient = null;
 
 
     public SinaDataQueryer (Context context){
         mContext = context;
+
+        if (mHttpClient == null) {
+            mHttpClient = new OkHttpClient.Builder()
+                    .readTimeout(5, TimeUnit.SECONDS) //设置读超时
+                    .writeTimeout(5,TimeUnit.SECONDS) //设置写超时
+                    .connectTimeout(15,TimeUnit.SECONDS) //设置连接超时
+                    .retryOnConnectionFailure(true) //是否自动重连
+                    .build();
+        }
     }
 
     /**
@@ -70,12 +87,15 @@ public class SinaDataQueryer {
         mQueue.add(stringRequest);
     }
 
+
+
     /**
      * 查询股票的五日均价
      * @param stockId
      */
     public void queryStocksFiveDayPrice(String stockId, boolean isNewStock){
-        queryStocksNDayPrice(stockId, 5, isNewStock);
+        queryStocksNDayPrice(stockId, 5);
+//        queryStocksNDayPriceSync(stockId, 5);
     }
 
 
@@ -84,7 +104,7 @@ public class SinaDataQueryer {
      * https://quotes.sina.cn/hk/api/openapi.php/HK_MinlineService.getMinline?symbol=02400&day=1&callback=var%20hkT1=
      * @param stockIdCode
      */
-    public void queryStocksNDayPrice(String stockIdCode, final int dayCount, final boolean isNewStock){
+    public void queryStocksNDayPrice(String stockIdCode, final int dayCount){
         if(mQueue ==null)
             mQueue = Volley.newRequestQueue(mContext);
         // 为stockId添加hk
@@ -116,7 +136,7 @@ public class SinaDataQueryer {
                         // 得到的时间为空字符串，则抛出异常
                         catch (NumberFormatException ex){
                             Log.e("lwd","得到空的时间字符串");
-                            queryStocksNDayPrice(stockId, dayCount, isNewStock);
+                            queryStocksNDayPrice(stockId, dayCount);
                         }
                     }
                 },
@@ -131,6 +151,37 @@ public class SinaDataQueryer {
                 });
 
         mQueue.add(stringRequest);
+    }
+
+    public void queryStocksNDayPriceSync(String stockIdCode, final int dayCount){
+        // 为stockId添加hk
+        if(!stockIdCode.contains("hk")){
+            stockIdCode = "hk" + stockIdCode;
+        }
+        final String stockId = stockIdCode;
+
+        String url ="https://quotes.sina.cn/hk/api/openapi.php/HK_MinlineService.getMinline?symbol=" + stockId.replace("hk", "") + "&day="+ dayCount +"&callback=:::" + stockId + ":::";
+
+        okhttp3.Request request=new okhttp3.Request.Builder()
+                .url(url)
+                .get()
+                .build();
+        Call call=mHttpClient.newCall(request);
+        try {
+            okhttp3.Response response=call.execute();
+            String responseStr = response.body().string();
+
+            List<List<StockPrice>> stockPriceEveryDayList = mResponseStringToObject.sinaNDaysPriceResponseToObjectList(responseStr, false, StockPrice.QueryType.FIVEDAY);
+            List<Date> dateList = TextUtil.convertStringToDateList(responseStr);
+
+            // 为了求五日均线,得到收盘价列表
+            List<Float> fiveDayClosePriceList = mMaGenerator.generateDayMA5(responseStr);
+            StockManager.setPreviousFourDayPriceList(fiveDayClosePriceList, stockId);
+
+            StockManager.addFiveDayStockPriceListNew(stockPriceEveryDayList, stockId);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     /**

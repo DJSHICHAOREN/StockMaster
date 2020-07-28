@@ -1,5 +1,7 @@
 package com.example.stockmaster.util;
 
+import android.util.Log;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -12,7 +14,7 @@ public class DateUtil {
                 timeStr = timeStr.replaceAll("/", "-");
             }
             return mSimpleDateFormat.parse(timeStr);
-        } catch (ParseException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return null;
