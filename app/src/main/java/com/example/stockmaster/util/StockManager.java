@@ -106,7 +106,7 @@ public class StockManager {
                 DBUtil.updateStock(stock);
             }
             if(stock != null && stock.isReceiveTodayData){
-                List<StrategyResult> strategyResultList = stock.addStockPrice(stockPrice, true);
+                List<StrategyResult> strategyResultList = stock.addStockPrice(stockPrice);
 
                 for(StrategyResult strategyResult : strategyResultList){
                     mBrainService.sendNotification(strategyResult.getNotificationId(),

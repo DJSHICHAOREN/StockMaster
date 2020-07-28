@@ -6,6 +6,7 @@ import com.example.stockmaster.entity.StockPrice;
 import com.example.stockmaster.entity.ma.MaState;
 import com.example.stockmaster.entity.strategy.BaseStrategy;
 import com.example.stockmaster.entity.strategy.StrategyResult;
+import com.example.stockmaster.util.DateUtil;
 import com.example.stockmaster.util.StockManager;
 
 import java.util.List;
@@ -21,15 +22,6 @@ public class MinuteRiseFormJudge extends BaseFormJudge {
         if(maStateList == null || maStateList.size() < 3){
             return null;
         }
-//        MaState lastMaState1 = maStateList.get(maStateList.size()-1);
-//        if(lastMaState1.getMinPriceInOneHour() == -1){
-//            return null;
-//        }
-//        if(lastMaState1.getPrice() >= lastMaState1.getMinPriceInOneHour() * 1.04){
-//            if(lastMaState1.getPrice() > stock.getFiveDayHighestPrice() * 1.001){
-//                return new StockForm(stockId, getFormId(), kLevel, lastMaState1.getTime(), 0, lastMaState1.getPrice());
-//            }
-//        }
 
         List<StockPrice> stockPriceList = stock.getStockPriceList();
         // 判断最新的三条线是否是按序排列且上升的
@@ -49,10 +41,30 @@ public class MinuteRiseFormJudge extends BaseFormJudge {
             stock.lowerStockPriceList.add(stockPriceList.get(stockPriceList.size()-2));
             return null;
         }
+        // 若重复请求，则回退极小极大值点
+        if(stock.lowerStockPriceList.size() > 0) {
+            if(DateUtil.isDateEqual(stock.lowerStockPriceList.get(stock.lowerStockPriceList.size()-1).getTime(), lastMaState2.getTime())) {
+                if(stock.lowerStockPriceList.get(stock.lowerStockPriceList.size()-1).getPrice() != lastMaState2.getPrice()) {
+                    stock.lowerStockPriceList.remove(stock.lowerStockPriceList.size()-1);
+                }
+                else {
+                    return null;
+                }
+            }
+
+        }
+        if(stock.higherStockPriceList.size() > 0) {
+            if(DateUtil.isDateEqual(stock.higherStockPriceList.get(stock.higherStockPriceList.size()-1).getTime(), lastMaState2.getTime())) {
+                if(stock.higherStockPriceList.get(stock.higherStockPriceList.size()-1).getPrice() != lastMaState2.getPrice()) {
+                    stock.higherStockPriceList.remove(stock.higherStockPriceList.size()-1);
+                }
+                else {
+                    return null;
+                }
+            }
+        }
         // 寻找买点
         if(lastMaState2.price < lastMaState1.price && lastMaState2.price < lastMaState3.price){
-//                Log.d("lwd", String.format("%s lower price time:%s, price：%f",
-//                        stockPrice2.id, stockPrice2.time.toString(), stockPrice2.price));
             // 添加极小值点
             stock.lowerStockPriceList.add(stockPriceList.get(stockPriceList.size()-2));
             if(stock.lowerStockPriceList.size() >= 2){
@@ -63,67 +75,26 @@ public class MinuteRiseFormJudge extends BaseFormJudge {
 //                        Log.d("lwd", String.format("上一个低点价格： %s", stock.lowerStockPriceList.get(lowerStockPriceListSize-2).price));
                     // 添加买点
                     StockPrice stockPrice = stock.lowerStockPriceList.get(lowerStockPriceListSize-1);
-                    StockManager.addBuyAndSaleStockPrice(stock, stockPrice, Stock.DealType.BUY);
-                    return new StockForm(stock.getId(), getFormId(), kLevel, lastMaState1.getTime(), 0, lastMaState1.getPrice(), getFormId());
+                    return new StockForm(stock.getId(), getFormId(), kLevel, stockPrice.getTime(), 0, stockPrice.getPrice());
                 }
             }
         }
-//
-//
-//
-//        List<StockPrice> todayStockPriceList = stock.todayStockPriceList;
-//        if(todayStockPriceList.size() >= 3){
-//            int size = todayStockPriceList.size();
-//            int stockPrice1Index = size - 3;
-//            StockPrice stockPrice1 = todayStockPriceList.get(stockPrice1Index);
-//            StockPrice stockPrice2 = todayStockPriceList.get(size-2);
-//            StockPrice stockPrice3 = todayStockPriceList.get(size-1);
-//            // 若stockPrice2的价格等于stockPrice1，则一直向前找到不相等的stockPrice1，作为前一个价格
-//            while(stockPrice2.price == stockPrice1.price && stockPrice1Index - 1 >= 0){
-//                stockPrice1Index--;
-//                stockPrice1 = todayStockPriceList.get(stockPrice1Index);
-//            }
-//            // 寻找买点
-//            if(stockPrice2.price < stockPrice1.price && stockPrice2.price < stockPrice3.price){
-////                Log.d("lwd", String.format("%s lower price time:%s, price：%f",
-////                        stockPrice2.id, stockPrice2.time.toString(), stockPrice2.price));
-//                // 添加极小值点
-//                stock.lowerStockPriceList.add(stockPrice2);
-//                if(stock.lowerStockPriceList.size() >= 2){
-//                    int lowerStockPriceListSize = stock.lowerStockPriceList.size();
-//                    // 当底部呈上升期时
-//                    if(stock.lowerStockPriceList.get(lowerStockPriceListSize-1).price >
-//                            stock.lowerStockPriceList.get(lowerStockPriceListSize-2).price){
-////                        Log.d("lwd", String.format("上一个低点价格： %s", stock.lowerStockPriceList.get(lowerStockPriceListSize-2).price));
-//                        // 添加买点
-//                        StockPrice stockPrice = stock.lowerStockPriceList.get(lowerStockPriceListSize-1);
-//                        StockManager.addBuyAndSaleStockPrice(stock, stockPrice, Stock.DealType.BUY);
-//                    }
-//                }
-//            }
-//            // 寻找卖点
-//            if(stockPrice2.price > stockPrice1.price && stockPrice2.price > stockPrice3.price){
-////                Log.d("lwd", String.format("%s higher price time:%s, price：%f",
-////                        stockPrice2.id, stockPrice2.time.toString(), stockPrice2.price));
-//                // 添加极大值点
-//                stock.higherStockPriceList.add(stockPrice2);
-//                if(stock.higherStockPriceList.size() >= 2){
-//                    int higherStockPriceListSize = stock.higherStockPriceList.size();
-//                    // 当顶部呈下降期时
-//                    if(stock.higherStockPriceList.get(higherStockPriceListSize-1).price <=
-//                            stock.higherStockPriceList.get(higherStockPriceListSize-2).price){
-//                        // 添加卖点
-//                        StockPrice stockPrice = stock.higherStockPriceList.get(higherStockPriceListSize-1);
-//                        StockManager.addBuyAndSaleStockPrice(stock, stockPrice, Stock.DealType.SALE);
-//                    }
-//                }
-//            }
-//        }
-//        if(stock != null){
-////            Log.d("lwd", String.format("stockId:%s, ma5:%f", stock.id, stock.getMa5()));
-//        }
 
-
+        // 寻找卖点
+        if(lastMaState2.price > lastMaState1.price && lastMaState2.price > lastMaState3.price){
+            stock.higherStockPriceList.add(stockPriceList.get(stockPriceList.size()-2));
+            // 压力位下降
+            if(stock.higherStockPriceList.size() >= 2){
+                int higherStockPriceListSize = stock.higherStockPriceList.size();
+                // 当顶部呈下降期时
+                if(stock.higherStockPriceList.get(higherStockPriceListSize-1).price <=
+                        stock.higherStockPriceList.get(higherStockPriceListSize-2).price){
+                    // 添加卖点
+                    StockPrice stockPrice = stock.higherStockPriceList.get(higherStockPriceListSize-1);
+                    return new StockForm(stock.getId(), getFormId(), kLevel, stockPrice.getTime(), 1, stockPrice.getPrice());
+                }
+            }
+        }
 
         return null;
     }

@@ -5,10 +5,7 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 
 import com.example.stockmaster.entity.form.StockForm;
-import com.example.stockmaster.entity.k.K15Minutes;
 import com.example.stockmaster.entity.k.K30Minutes;
-import com.example.stockmaster.entity.k.K5Minutes;
-import com.example.stockmaster.entity.k.K60Minutes;
 import com.example.stockmaster.entity.k.KBase;
 import com.example.stockmaster.entity.ma.DayMaPrice;
 import com.example.stockmaster.entity.strategy.BaseStrategy;
@@ -22,6 +19,7 @@ import org.xutils.db.annotation.Table;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 @Table(name = "stock")
@@ -81,13 +79,26 @@ public class Stock {
     /**
      * 清空价格列表
      */
-    public void clearPriceList(){
-        todayStockPriceList.clear();
-        lowerStockPriceList.clear();
-        higherStockPriceList.clear();
-        buyStockPriceList.clear();
-        saleStockPriceList.clear();
-        dealPriceList.clear();
+    public void clearAdvanceState(Date time){
+        int lowerStockPriceListIndex = lowerStockPriceList.size() -1;
+        while (lowerStockPriceListIndex >= 0){
+            if(DateUtil.isDateAfter(lowerStockPriceList.get(lowerStockPriceListIndex).getTime(), time)
+                    || DateUtil.isDateEqual(lowerStockPriceList.get(lowerStockPriceListIndex).getTime(), time) ){
+                lowerStockPriceList.remove(lowerStockPriceListIndex);
+            }
+        }
+
+        int higherStockPriceListIndex = higherStockPriceList.size() -1;
+        while (higherStockPriceListIndex >= 0){
+            if(DateUtil.isDateAfter(higherStockPriceList.get(higherStockPriceListIndex).getTime(), time)
+                    || DateUtil.isDateEqual(higherStockPriceList.get(higherStockPriceListIndex).getTime(), time) ){
+                higherStockPriceList.remove(higherStockPriceListIndex);
+            }
+        }
+
+        for (KBase kBase : mKBaseList) {
+            kBase.clearAdvanceState(time);
+        }
     }
 
 
@@ -96,9 +107,9 @@ public class Stock {
      * 只对自己级别的准确度负责
      * @param stockPrice
      */
-    public List<StrategyResult> addStockPrice(StockPrice stockPrice, boolean isCheckLastStockPrice){
+    public List<StrategyResult> addStockPrice(StockPrice stockPrice){
         boolean isUpdateStockPrice = false;
-        if(isCheckLastStockPrice && mStockPriceList.size() > 1){
+        if(mStockPriceList.size() > 1){
             // 判断是否比价格列表中的最后一个价格新
             StockPrice lastStockPrice = mStockPriceList.get(mStockPriceList.size()-1);
             if(DateUtil.isDateAfter(stockPrice.getTime(), lastStockPrice.getTime()) ){
@@ -140,6 +151,7 @@ public class Stock {
      * @param stockPriceList
      */
     public void addStockPriceList(List<StockPrice> stockPriceList){
+
         List<StockPrice> newPartStockPriceList = stockPriceList;
         // 删除老的价格段
         // 寻找新的价格段
@@ -154,12 +166,14 @@ public class Stock {
                     mStockPriceList = mStockPriceList.subList(0, mLastExactStockPriceIndex);
                     // 截取新的价格段
                     newPartStockPriceList = stockPriceList.subList(i, stockPriceList.size());
+                    // 清除分时请求的超前的状态
+                    clearAdvanceState(newPartStockPriceList.get(0).getTime());
                 }
             }
         }
         // 添加新的价格段
         for(StockPrice stockPrice : newPartStockPriceList){
-            addStockPrice(stockPrice, false);
+            addStockPrice(stockPrice);
         }
     }
 

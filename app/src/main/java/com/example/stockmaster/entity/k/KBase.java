@@ -38,6 +38,19 @@ public class KBase {
         mStock = stock;
     }
 
+    /**
+     * 清除之前的状态
+     * @param time
+     */
+    public void clearAdvanceState(Date time){
+        int maStateListIndex = maStateList.size() -1;
+        while (maStateListIndex >= 0){
+            if(DateUtil.isDateAfter(maStateList.get(maStateListIndex).getTime(), time)
+                    || DateUtil.isDateEqual(maStateList.get(maStateListIndex).getTime(), time) ){
+                maStateList.remove(maStateListIndex);
+            }
+        }
+    }
 
     /**
      * 添加新的股票价格

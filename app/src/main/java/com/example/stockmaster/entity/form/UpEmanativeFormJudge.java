@@ -136,7 +136,7 @@ public class UpEmanativeFormJudge extends BaseFormJudge {
 
         if(isSeriation && isRise){
 //            Log.d("lwd", String.format("%s 买他", lastMaState1.getTime()));
-            return new StockForm(stock.getId(), getFormId(), kLevel, lastMaState1.getTime(), 0, lastMaState1.getPrice(), getFormId());
+            return new StockForm(stock.getId(), getFormId(), kLevel, lastMaState1.getTime(), 0, lastMaState1.getPrice());
         }
         return null;
     }
