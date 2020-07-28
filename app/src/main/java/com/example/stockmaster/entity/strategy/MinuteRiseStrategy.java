@@ -31,7 +31,7 @@ public class MinuteRiseStrategy extends BaseStrategy {
                 strategyResult = new StrategyResult(stockId, stockForm.getPrice(), getStrategyId(), stockForm.getTime(), 0);
                 mStrategyResultList.add(strategyResult);
 
-                Log.d("lwd", strategyResult.toLongString());
+//                Log.d("lwd", strategyResult.toLongString());
             }
             previousBuyFormTime = stockForm.getTime();
         }

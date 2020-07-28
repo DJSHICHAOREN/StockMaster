@@ -88,25 +88,10 @@ public class DataQueryerManager {
      * 请求今天股票数据为了分析今日买卖点
      * 请求分时股票数据为了得到股票名称
      */
-    public void queryAllOnce(){
+    public void queryBeginOnce(){
         // 请求最近交易时间
         mSinaDataQueryer.queryLastDealDate();
 
-//        Calendar calendar = Calendar.getInstance();
-        //获取系统时间
-//        int hour = calendar.get(Calendar.HOUR_OF_DAY);
-//        if(hour < 9 || hour > 16){
-//            // 请求一天股票数据
-//            for(final String stockId : StockManager.getDefaultStockMonitorStockIdList()) {
-//                Runnable runnable = new Runnable() {
-//                    @Override
-//                    public void run() {
-//                        mSinaDataQueryer.queryStocksTodayPrice(stockId);
-//                    }
-//                };
-//                mCachedThreadPool.execute(runnable);
-//            }
-//        }
         // 请求分时股票数据
         String stockIdStr = "";
         for(String stockId : StockManager.getDefaultStockMonitorStockIdList()) {
@@ -117,6 +102,18 @@ public class DataQueryerManager {
 
         // 请求均线数据
         queryAllMaOnce();
+    }
+
+    public void queryEndOnce(){
+        for(final String stockId : StockManager.getDefaultStockMonitorStockIdList()) {
+            Runnable runnable = new Runnable() {
+                @Override
+                public void run() {
+                    mSinaDataQueryer.queryStocksTodayPrice(stockId);
+                }
+            };
+            mCachedThreadPool.execute(runnable);
+        }
     }
 
     public void queryAllMaOnce(){

@@ -85,6 +85,10 @@ public class Stock {
             if(DateUtil.isDateAfter(lowerStockPriceList.get(lowerStockPriceListIndex).getTime(), time)
                     || DateUtil.isDateEqual(lowerStockPriceList.get(lowerStockPriceListIndex).getTime(), time) ){
                 lowerStockPriceList.remove(lowerStockPriceListIndex);
+                lowerStockPriceListIndex--;
+            }
+            else{
+                break;
             }
         }
 
@@ -93,6 +97,10 @@ public class Stock {
             if(DateUtil.isDateAfter(higherStockPriceList.get(higherStockPriceListIndex).getTime(), time)
                     || DateUtil.isDateEqual(higherStockPriceList.get(higherStockPriceListIndex).getTime(), time) ){
                 higherStockPriceList.remove(higherStockPriceListIndex);
+                higherStockPriceListIndex--;
+            }
+            else{
+                break;
             }
         }
 
@@ -168,6 +176,9 @@ public class Stock {
                     newPartStockPriceList = stockPriceList.subList(i, stockPriceList.size());
                     // 清除分时请求的超前的状态
                     clearAdvanceState(newPartStockPriceList.get(0).getTime());
+
+                    // 清理以后退出循环
+                    break;
                 }
             }
         }
@@ -286,7 +297,7 @@ public class Stock {
 
         // 打印买卖点信息
         for(StrategyResult strategyResult : strategyResultList){
-            Log.d("lwd", strategyResult.toString());
+            Log.d("lwd", strategyResult.toLongString());
         }
         return strategyResultList;
     }

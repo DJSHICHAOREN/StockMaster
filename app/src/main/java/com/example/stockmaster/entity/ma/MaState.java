@@ -2,6 +2,8 @@ package com.example.stockmaster.entity.ma;
 
 import android.util.Log;
 
+import com.example.stockmaster.util.DateUtil;
+
 import java.util.Date;
 
 public class MaState {
@@ -79,6 +81,10 @@ public class MaState {
 
     public Date getTime() {
         return time;
+    }
+
+    public String getShortMinuteString(){
+        return DateUtil.convertDateToShortMinuteString(getTime());
     }
 
     public void setTime(Date time) {

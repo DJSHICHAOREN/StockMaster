@@ -1,13 +1,12 @@
 package com.example.stockmaster.entity.form;
 
+import android.util.Log;
+
 import com.example.stockmaster.R;
 import com.example.stockmaster.entity.Stock;
 import com.example.stockmaster.entity.StockPrice;
 import com.example.stockmaster.entity.ma.MaState;
-import com.example.stockmaster.entity.strategy.BaseStrategy;
-import com.example.stockmaster.entity.strategy.StrategyResult;
 import com.example.stockmaster.util.DateUtil;
-import com.example.stockmaster.util.StockManager;
 
 import java.util.List;
 
@@ -36,11 +35,16 @@ public class MinuteRiseFormJudge extends BaseFormJudge {
             lastMaState3Index--;
             lastMaState3 = maStateList.get(lastMaState3Index);
         }
-        // 将第一个值添加为第一个极小值
+
+        Log.d("lwd", String.format("stockId:%s, ls1:%s,%f, ls2:%s,%f, ls3:%s,%f",
+                stock.getId(), lastMaState1.getShortMinuteString(), lastMaState1.getPrice(), lastMaState2.getShortMinuteString(),
+                lastMaState2.getPrice(), lastMaState3.getShortMinuteString(), lastMaState3.getPrice()) );
+        // 将每天的第一个值添加为第一个极小值和极大值
         if(stock.lowerStockPriceList.size() == 0){
             stock.lowerStockPriceList.add(stockPriceList.get(stockPriceList.size()-2));
             return null;
         }
+
         // 若重复请求，则回退极小极大值点
         if(stock.lowerStockPriceList.size() > 0) {
             if(DateUtil.isDateEqual(stock.lowerStockPriceList.get(stock.lowerStockPriceList.size()-1).getTime(), lastMaState2.getTime())) {

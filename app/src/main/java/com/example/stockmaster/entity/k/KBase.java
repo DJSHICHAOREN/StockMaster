@@ -48,6 +48,22 @@ public class KBase {
             if(DateUtil.isDateAfter(maStateList.get(maStateListIndex).getTime(), time)
                     || DateUtil.isDateEqual(maStateList.get(maStateListIndex).getTime(), time) ){
                 maStateList.remove(maStateListIndex);
+                maStateListIndex--;
+            }
+            else{
+                break;
+            }
+        }
+
+        int mKeyStockPriceListIndex = mKeyStockPriceList.size() -1;
+        while (mKeyStockPriceListIndex >= 0){
+            if(DateUtil.isDateAfter(mKeyStockPriceList.get(mKeyStockPriceListIndex).getTime(), time)
+                    || DateUtil.isDateEqual(mKeyStockPriceList.get(mKeyStockPriceListIndex).getTime(), time) ){
+                mKeyStockPriceList.remove(mKeyStockPriceListIndex);
+                mKeyStockPriceListIndex--;
+            }
+            else{
+                break;
             }
         }
     }

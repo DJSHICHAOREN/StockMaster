@@ -49,8 +49,8 @@ public class BrainService extends Service {
                     // 请求一次一日价格，为了计算短期买卖点
                     // 请求一次分时价格，为了得到股票名字
                     // 请求一次最近交易时间，均线需要用到
-                    // 请求一次日均价数据
-                    mDataQueryerManager.queryAllOnce();
+                    // 最开始时请求：分时数据、均价数据
+                    mDataQueryerManager.queryBeginOnce();
                     // 定时请求最近交易时间
                     mDataQueryerManager.beginQueryLastDealDate();
                     // 定时请求日均线数据
@@ -61,6 +61,9 @@ public class BrainService extends Service {
                     mDataQueryerManager.queryFiveDayPrice();
                     // 定时请求今天价格
                     mDataQueryerManager.beginQueryTodayPrice();
+                    // 结束时请求：今日价格
+//                    mDataQueryerManager.queryEndOnce();
+
                     // 从数据库加载股票价格的均线
 //                StockManager.loadStockPrice();
                 }
