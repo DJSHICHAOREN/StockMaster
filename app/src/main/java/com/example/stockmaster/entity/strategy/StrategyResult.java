@@ -88,6 +88,22 @@ public class StrategyResult {
         return Integer.parseInt(this.stockId.substring(2));
     }
 
+    public String toNotificationString(){
+        String saleType = this.type == 0 ? "B" : "S";
+        String strategyType = "";
+        switch (this.strategyId){
+            case R.integer.strategyVBB:{
+                strategyType = "vbb";
+                break;
+            }
+            case R.integer.strategyMinuteRise:{
+                strategyType = "mr";
+                break;
+            }
+        }
+        return String.format("%s %s，%s，%f，%s", strategyType, saleType, DateUtil.convertDateToShortMinuteString(time), getPrice(), getStockId());
+    }
+
     @Override
     public String toString(){
         String saleType = this.type == 0 ? "B" : "S";
