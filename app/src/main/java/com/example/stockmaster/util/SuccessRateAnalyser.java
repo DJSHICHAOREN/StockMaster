@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SuccessRateAnalyser {
-    private  static List<SuccessResult> successResultList = new ArrayList<>();
+    private static List<SuccessResult> successResultList = new ArrayList<>();
 
     public static void analyse(List<StrategyResult> strategyResultList){
         if(strategyResultList == null || strategyResultList.size() == 0){
@@ -31,7 +31,5 @@ public class SuccessRateAnalyser {
             }
         }
         Log.d("lwd", successResult.toString());
-
-
     }
 }

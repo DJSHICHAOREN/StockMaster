@@ -45,6 +45,7 @@ public class MinuteRiseFormJudge extends BaseFormJudge {
             return null;
         }
 
+        // 在分时请求中，对分时请求清除超前状态
         // 若重复请求，则回退极小极大值点
         if(stock.lowerStockPriceList.size() > 0) {
             if(DateUtil.isDateEqual(stock.lowerStockPriceList.get(stock.lowerStockPriceList.size()-1).getTime(), lastMaState2.getTime())) {

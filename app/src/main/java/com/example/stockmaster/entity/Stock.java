@@ -158,7 +158,7 @@ public class Stock {
      * 添加关键价格列表
      * @param stockPriceList
      */
-    public void addStockPriceList(List<StockPrice> stockPriceList){
+    public List<StrategyResult> addStockPriceList(List<StockPrice> stockPriceList){
 
         List<StockPrice> newPartStockPriceList = stockPriceList;
         // 删除老的价格段
@@ -183,19 +183,23 @@ public class Stock {
             }
         }
         // 添加新的价格段
+        List<StrategyResult> strategyResultList = new ArrayList<>();
         for(StockPrice stockPrice : newPartStockPriceList){
-            addStockPrice(stockPrice);
+            strategyResultList.addAll(addStockPrice(stockPrice));
         }
+        return strategyResultList;
     }
 
     /**
      * 添加关键价格列表的列表
      * @param stockPriceListList
      */
-    public void addStockPriceListList(List<List<StockPrice>> stockPriceListList) {
+    public List<StrategyResult> addStockPriceListList(List<List<StockPrice>> stockPriceListList) {
+        List<StrategyResult> strategyResultList = new ArrayList<>();
         for(List<StockPrice> stockPriceList : stockPriceListList){
-            addStockPriceList(stockPriceList);
+            strategyResultList.addAll(addStockPriceList(stockPriceList));
         }
+        return strategyResultList;
     }
 
     /**

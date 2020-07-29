@@ -74,6 +74,7 @@ public class KBase {
      * @return
      */
     public List<StockForm> addStockPrice(StockPrice stockPrice){
+        // 在分时请求中，删除之前分时请求的重叠状态
         // 删除要添加的stockPrice之前的state和keyPrice
         while (maStateList.size() > 0){
             // 得到最后一个状态

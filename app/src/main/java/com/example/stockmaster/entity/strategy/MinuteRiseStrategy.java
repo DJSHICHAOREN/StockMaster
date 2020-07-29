@@ -30,8 +30,6 @@ public class MinuteRiseStrategy extends BaseStrategy {
             if(previousBuyFormTime==null || calculateMinutesGap(previousBuyFormTime, stockForm.getTime()) > 5){
                 strategyResult = new StrategyResult(stockId, stockForm.getPrice(), getStrategyId(), stockForm.getTime(), 0);
                 mStrategyResultList.add(strategyResult);
-
-//                Log.d("lwd", strategyResult.toLongString());
             }
             previousBuyFormTime = stockForm.getTime();
         }
