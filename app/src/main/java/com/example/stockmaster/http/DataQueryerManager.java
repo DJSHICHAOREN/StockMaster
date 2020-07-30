@@ -146,14 +146,15 @@ public class DataQueryerManager {
         Calendar calendar = Calendar.getInstance();
         //获取系统时间
         int hour = calendar.get(Calendar.HOUR_OF_DAY);
-        if(hour < 9 || hour > 16){
-            return;
-        }
+
         // 设置计时器进行请求
         Timer timer = new Timer("beginQueryMinutePrice");
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
+                if(hour < 9 || hour > 16){
+                    return;
+                }
                 mSinaDataQueryer.queryStocksNowPrice(stockIdString);
             }
         }, 0, 1000 * 20); // 1 seconds
@@ -163,14 +164,14 @@ public class DataQueryerManager {
      * 每半小时请求一次日均线数据
      */
     public void beginQueryMaPrice(){
+        Calendar calendar = Calendar.getInstance();
+        //获取系统时间
+        int hour = calendar.get(Calendar.HOUR_OF_DAY);
         // 设置计时器进行请求
         Timer timer = new Timer("beginQueryMaPrice");
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
-                Calendar calendar = Calendar.getInstance();
-                //获取系统时间
-                int hour = calendar.get(Calendar.HOUR_OF_DAY);
                 if(hour < 9 || hour > 16){
                     return;
                 }
@@ -183,13 +184,13 @@ public class DataQueryerManager {
      * 每隔20分钟请求一次最近开盘日期
      */
     public void beginQueryLastDealDate(){
+        Calendar calendar = Calendar.getInstance();
+        //获取系统时间
+        int hour = calendar.get(Calendar.HOUR_OF_DAY);
         Timer timer = new Timer("queryLastDealDate");
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
-                Calendar calendar = Calendar.getInstance();
-                //获取系统时间
-                int hour = calendar.get(Calendar.HOUR_OF_DAY);
                 if(hour < 9 || hour > 16){
                     return;
                 }

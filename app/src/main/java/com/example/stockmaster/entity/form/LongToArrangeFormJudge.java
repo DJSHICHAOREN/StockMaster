@@ -55,6 +55,9 @@ public class LongToArrangeFormJudge extends BaseFormJudge {
             return null;
         }
         MaState lastMaState3 = getMaStateByTime(maStateList, lastMaState2.previousTime);
+        if(lastMaState3 == null){
+            return null;
+        }
 
         // 确保信息有效
         if(lastMaState3.getMa30() == 0){
