@@ -39,7 +39,7 @@ public class VBBStrategy extends BaseStrategy {
             }
         }
         else if(stockForm.getFormId() == R.integer.formFallThroughSupport){
-            if(lastFallThroughSupportStrategyResult == null){
+            if(lastFallThroughSupportStrategyResult == null && lastLongToArrangeStrategyResult != null){
                 strategyResult = new StrategyResult(stock.getId(), stockForm.getPrice(), getStrategyId(), stockForm.getTime(), 1);
                 lastFallThroughSupportStrategyResult = strategyResult;
             }
