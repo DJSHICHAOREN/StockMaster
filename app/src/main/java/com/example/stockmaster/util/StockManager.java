@@ -155,7 +155,7 @@ public class StockManager {
         if(stock != null){
             List<StrategyResult> strategyResultList = stock.addStockPriceListList(stockPriceEveryDayList);
             SuccessRateAnalyser.analyse(strategyResultList);
-            stock.calFiveDayHighestPrice(stockPriceEveryDayList);
+            stock.calFiveDayHighestAndLowestPrice(stockPriceEveryDayList);
             stock.calFiveDayHighestEndPrice(stockPriceEveryDayList);
             stock.setLastExactStockPriceIndex(stock.getStockPriceList().size()-1);
             // 更新UI

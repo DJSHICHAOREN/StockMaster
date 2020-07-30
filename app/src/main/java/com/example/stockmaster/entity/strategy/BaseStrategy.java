@@ -1,5 +1,6 @@
 package com.example.stockmaster.entity.strategy;
 
+import com.example.stockmaster.entity.Stock;
 import com.example.stockmaster.entity.form.StockForm;
 
 import java.util.ArrayList;
@@ -12,7 +13,7 @@ public abstract class BaseStrategy {
     public BaseStrategy(int strategyId){
         this.strategyId = strategyId;
     }
-    public abstract StrategyResult analyse(StockForm stockForm, String stockId);
+    public abstract StrategyResult analyse(StockForm stockForm, Stock stock);
 
     public int getStrategyId() {
         return strategyId;

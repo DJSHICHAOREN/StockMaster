@@ -3,6 +3,7 @@ package com.example.stockmaster.entity.strategy;
 import android.util.Log;
 
 import com.example.stockmaster.R;
+import com.example.stockmaster.entity.Stock;
 import com.example.stockmaster.entity.form.StockForm;
 
 import java.util.Date;
@@ -11,16 +12,14 @@ import java.util.List;
 import static com.example.stockmaster.util.DateUtil.calculateMinutesGap;
 
 public class VBBStrategy extends BaseStrategy {
-    private StrategyResult previousStrategyResult;
-    private Date previousBuyFormTime;
-
-
+    private StrategyResult lastLongToArrangeStrategyResult;
+    private StrategyResult lastFallThroughSupportStrategyResult;
     public VBBStrategy() {
         super(R.integer.strategyVBB);
     }
 
     @Override
-    public StrategyResult analyse(StockForm stockForm, String stockId) {
+    public StrategyResult analyse(StockForm stockForm, Stock stock) {
         if(stockForm == null){
             Log.d("lwd", "VBBStrategy analyse stockFormList == null");
             return null;
@@ -32,23 +31,23 @@ public class VBBStrategy extends BaseStrategy {
         // 添加买卖点
         // 出现多头向上形态
         StrategyResult strategyResult = null;
-        if(stockForm.getFormId() == R.integer.formLongToArrange){
-            // 之前没有买入或买入时间超过五分钟时
-            if(previousBuyFormTime==null || calculateMinutesGap(previousBuyFormTime, stockForm.getTime()) > 5){
-                strategyResult = new StrategyResult(stockId, stockForm.getPrice(), getStrategyId(), stockForm.getTime(), 0);
-                mStrategyResultList.add(strategyResult);
-                previousStrategyResult = strategyResult;
+        if(stockForm.getFormId() == R.integer.formLongToArrange) {
+            // 五天内第一次出现时
+            if (lastLongToArrangeStrategyResult == null) {
+                strategyResult = new StrategyResult(stock.getId(), stockForm.getPrice(), getStrategyId(), stockForm.getTime(), 0);
+                lastLongToArrangeStrategyResult = strategyResult;
             }
-            previousBuyFormTime = stockForm.getTime();
         }
-        // 之前有买入点，且出现突破前低点形态时
-        else if(previousStrategyResult != null && previousStrategyResult.getType() == 0 && stockForm.getFormId() == R.integer.formFallThroughSupport){
-            strategyResult = new StrategyResult(stockId, stockForm.getPrice(), getStrategyId(), stockForm.getTime(), 1);
-            mStrategyResultList.add(strategyResult);
-            previousStrategyResult = strategyResult;
+        else if(stockForm.getFormId() == R.integer.formFallThroughSupport){
+            if(lastFallThroughSupportStrategyResult == null){
+                strategyResult = new StrategyResult(stock.getId(), stockForm.getPrice(), getStrategyId(), stockForm.getTime(), 1);
+                lastFallThroughSupportStrategyResult = strategyResult;
+            }
         }
+
         return strategyResult;
     }
+
 
 
 

@@ -49,7 +49,8 @@ public class Stock {
     private DealType previousDealType = DealType.NULL;
     private List<Float> previousFourDayPriceList;
     private List<StockPrice> wholeStockPriceList = new ArrayList<>();
-    private float mFiveDayHighestPrice;
+    private float mFiveDayHighestPrice = -1;
+    private float mFiveDayLowestPrice = 100000;
     private float mFiveDayHighestEndPrice;
     private List<BaseStrategy> mStrategyList = Arrays.asList(new VBBStrategy(), new MinuteRiseStrategy());
 
@@ -206,7 +207,7 @@ public class Stock {
      * 计算前四日的最高价
      * @param stockPriceEveryDayList
      */
-    public void calFiveDayHighestPrice(List<List<StockPrice>> stockPriceEveryDayList){
+    public void calFiveDayHighestAndLowestPrice(List<List<StockPrice>> stockPriceEveryDayList){
         for(int i=0; i<stockPriceEveryDayList.size(); i++){
             if(i == stockPriceEveryDayList.size()-1){
                 break;
@@ -215,6 +216,9 @@ public class Stock {
             for(StockPrice stockPrice : stockPriceList){
                 if(stockPrice.getPrice() > mFiveDayHighestPrice){
                     mFiveDayHighestPrice = stockPrice.getPrice();
+                }
+                if(stockPrice.getPrice() < mFiveDayLowestPrice){
+                    mFiveDayLowestPrice = stockPrice.getPrice();
                 }
             }
         }
@@ -291,7 +295,7 @@ public class Stock {
         List<StrategyResult> strategyResultList = new ArrayList<>();
         if(stockForm != null) {
             for (BaseStrategy baseStrategy : mStrategyList) {
-                StrategyResult strategyResult = baseStrategy.analyse(stockForm, getId());
+                StrategyResult strategyResult = baseStrategy.analyse(stockForm, this);
                 if (strategyResult != null) {
                     strategyResultList.add(strategyResult);
                     mStrategyResultList.add(strategyResult);
@@ -446,6 +450,14 @@ public class Stock {
 
     public void setStockPriceList(List<StockPrice> mStockPriceList) {
         this.mStockPriceList = mStockPriceList;
+    }
+
+    public float getFiveDayLowestPrice() {
+        return mFiveDayLowestPrice;
+    }
+
+    public void setFiveDayLowestPrice(float mFiveDayLowestPrice) {
+        this.mFiveDayLowestPrice = mFiveDayLowestPrice;
     }
 
     @NonNull
