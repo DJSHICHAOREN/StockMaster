@@ -127,7 +127,7 @@ public class MinuteRiseFormJudge extends BaseFormJudge {
         boolean res = false;
         int hour = stockPrice.getTime().getHours();
         int minute = stockPrice.getTime().getMinutes();
-        Log.d("lwd", "hour:"+ hour + " minute:" + minute);
+//        Log.d("lwd", "hour:"+ hour + " minute:" + minute);
         if(hour < 10 || (hour == 10 && minute <= 30) ){
             res = true;
         }

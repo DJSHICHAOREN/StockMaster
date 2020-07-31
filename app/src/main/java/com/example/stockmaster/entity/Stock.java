@@ -324,9 +324,9 @@ public class Stock {
         }
 
         // 打印买卖点信息
-        for(StrategyResult strategyResult : strategyResultList){
-            Log.d("lwd", strategyResult.toLongString());
-        }
+//        for(StrategyResult strategyResult : strategyResultList){
+//            Log.d("lwd", strategyResult.toLongString());
+//        }
         return strategyResultList;
     }
 
