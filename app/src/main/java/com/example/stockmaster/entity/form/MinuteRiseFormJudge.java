@@ -78,8 +78,15 @@ public class MinuteRiseFormJudge extends BaseFormJudge {
                 if(stock.lowerStockPriceList.get(lowerStockPriceListSize-1).price >
                         stock.lowerStockPriceList.get(lowerStockPriceListSize-2).price){
 //                        Log.d("lwd", String.format("上一个低点价格： %s", stock.lowerStockPriceList.get(lowerStockPriceListSize-2).price));
-                    // 添加买点
+                    // 得到maState对应的价格
                     StockPrice stockPrice = stock.lowerStockPriceList.get(lowerStockPriceListSize-1);
+                    // 判断价格与均线的位置
+                    if(!judgePriceSite(stockPrice)){
+                        return null;
+                    }
+                    if(!judgeStockTime(stockPrice)){
+                        return null;
+                    }
                     return new StockForm(stock.getId(), getFormId(), kLevel, stockPrice.getTime(), 0, stockPrice.getPrice());
                 }
             }
@@ -103,4 +110,29 @@ public class MinuteRiseFormJudge extends BaseFormJudge {
 
         return null;
     }
+
+    private boolean judgePriceSite(StockPrice stockPrice){
+        boolean res = false;
+        if(stockPrice.getAvgPrice() == -1){
+            Log.d("lwd", String.format("empty avg_Price:%f, time:%s", stockPrice.getAvgPrice(), stockPrice.getTime()));
+        }
+        float distRate =  Math.abs(stockPrice.getAvgPrice() - stockPrice.getPrice())/stockPrice.getAvgPrice();
+        if(distRate < 0.01 ){
+            res = true;
+        }
+        return res;
+    }
+
+    public boolean judgeStockTime(StockPrice stockPrice){
+        boolean res = false;
+        int hour = stockPrice.getTime().getHours();
+        int minute = stockPrice.getTime().getMinutes();
+        Log.d("lwd", "hour:"+ hour + " minute:" + minute);
+        if(hour < 10 || (hour == 10 && minute <= 30) ){
+            res = true;
+        }
+        return res;
+    }
+
+
 }

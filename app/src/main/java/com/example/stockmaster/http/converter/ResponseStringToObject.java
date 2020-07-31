@@ -127,7 +127,8 @@ public class ResponseStringToObject {
                             continue;
                         }
                     }
-                    StockPrice stockPrice = new StockPrice(stockId, date+ " " +sinaStockPrice.getM(), sinaStockPrice.getPrice(), queryType);
+                    StockPrice stockPrice = new StockPrice(stockId, date+ " " +sinaStockPrice.getM(),
+                            sinaStockPrice.getPrice(), queryType, sinaStockPrice.getAvg_p());
                     stockPriceList.add(stockPrice);
                 }
             }
@@ -180,7 +181,7 @@ public class ResponseStringToObject {
                 }
 
                 String completeDate = dateString + " " +sinaStockPrice.getM();
-                StockPrice stockPrice = new StockPrice(stockId, completeDate, sinaStockPrice.getP(), queryType);
+                StockPrice stockPrice = new StockPrice(stockId, completeDate, sinaStockPrice.getP(), queryType, sinaStockPrice.getAvg_p());
                 stockPriceList.add(stockPrice);
             }
         }

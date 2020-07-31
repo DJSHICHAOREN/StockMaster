@@ -11,7 +11,7 @@ import java.util.Date;
 import static com.example.stockmaster.util.DateUtil.calculateMinutesGap;
 
 public class MinuteRiseStrategy extends BaseStrategy {
-    private Date previousBuyFormTime;
+    private StockForm lastStockForm;
     public MinuteRiseStrategy() {
         super(R.integer.strategyMinuteRise);
     }
@@ -27,18 +27,28 @@ public class MinuteRiseStrategy extends BaseStrategy {
         }
         StrategyResult strategyResult = null;
         if(stockForm.getFormId() == R.integer.formMinuteRise){
-            if(stockForm.getType() == 0 && stock.getMonitorType() != 1){
-                return null;
-            }
-            else if(stockForm.getType() == 1 && stock.getMonitorType() != 2){
-                return null;
-            }
+//            if(stockForm.getType() == 0 && stock.getMonitorType() != 1){
+//                return null;
+//            }
+//            else if(stockForm.getType() == 1 && stock.getMonitorType() != 2){
+//                return null;
+//            }
 
-            if(previousBuyFormTime==null || calculateMinutesGap(previousBuyFormTime, stockForm.getTime()) > 5){
-                strategyResult = new StrategyResult(stock.getId(), stockForm.getPrice(), getStrategyId(), stockForm.getTime(), 0);
-                mStrategyResultList.add(strategyResult);
+            //
+            boolean isGenStrategy = false;
+            if(lastStockForm == null){
+                isGenStrategy = true;
             }
-            previousBuyFormTime = stockForm.getTime();
+            else{
+                if((stockForm.getType() == 0 && lastStockForm.getType() == 1) || (stockForm.getType() == 1 && lastStockForm.getType() == 0) ){
+                    isGenStrategy = true;
+                }
+            }
+            if(isGenStrategy){
+                strategyResult = new StrategyResult(stock.getId(), stockForm.getPrice(), getStrategyId(), stockForm.getTime(), stockForm.getType());
+                mStrategyResultList.add(strategyResult);
+                Log.d("lwd", strategyResult.toLongString());
+            }
         }
         return strategyResult;
     }

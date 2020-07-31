@@ -19,7 +19,7 @@ public class StockPrice {
     public Date time;
     @Column(name="price")
     public float price;
-
+    public float avgPrice = -1;
     public String name;
 
 
@@ -33,11 +33,12 @@ public class StockPrice {
     public StockPrice(){
     }
 
-    public StockPrice(String stockId, String time, String price, QueryType queryType){
+    public StockPrice(String stockId, String time, String price, QueryType queryType, String avgPrice){
         setStockId(stockId);
         setTime(time);
         setPrice(price);
         setQueryType(queryType);
+        setAvgPrice(avgPrice);
     }
 
     public StockPrice(String stockId, Date time, float price, QueryType queryType) {
@@ -115,6 +116,18 @@ public class StockPrice {
 
     public int getNotificationId(){
         return Integer.parseInt(this.stockId.substring(2));
+    }
+
+    public float getAvgPrice() {
+        return avgPrice;
+    }
+
+    public void setAvgPrice(String avgPrice) {
+        this.avgPrice = Float.parseFloat(avgPrice);
+    }
+
+    public void setAvgPrice(float avgPrice) {
+        this.avgPrice = avgPrice;
     }
 
     @Override

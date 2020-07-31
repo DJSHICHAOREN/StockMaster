@@ -11,6 +11,7 @@ import com.example.stockmaster.entity.ma.DayMaPrice;
 import com.example.stockmaster.entity.strategy.BaseStrategy;
 import com.example.stockmaster.entity.strategy.MinuteRiseStrategy;
 import com.example.stockmaster.entity.strategy.StrategyResult;
+import com.example.stockmaster.entity.strategy.SuddenUpStrategy;
 import com.example.stockmaster.entity.strategy.VBBStrategy;
 import com.example.stockmaster.util.DateUtil;
 
@@ -52,7 +53,9 @@ public class Stock {
     private float mFiveDayHighestPrice = -1;
     private float mFiveDayLowestPrice = 100000;
     private float mFiveDayHighestEndPrice;
-    private List<BaseStrategy> mStrategyList = Arrays.asList(new VBBStrategy(), new MinuteRiseStrategy());
+    private List<BaseStrategy> mStrategyList = Arrays.asList(new VBBStrategy(), new MinuteRiseStrategy(), new SuddenUpStrategy());
+//    private List<BaseStrategy> mStrategyList = Arrays.asList(new SuddenUpStrategy());
+    private float mLatestAvgPrice = -1; // 所添加价格的最后一个均价
 
     private List<StockPrice> mStockPriceList = new ArrayList<>();
     private int mLastExactStockPriceIndex = -1;
@@ -140,6 +143,8 @@ public class Stock {
         // 若股票价格有更新，则进行形态、策略分析
         List<StrategyResult> strategyResultList = new ArrayList<>();
         if(isUpdateStockPrice) {
+            // 补充均价
+            saveOrReadLatestAveragePrice(stockPrice);
             // 得到形态
             List<StockForm> stockFormList = new ArrayList<>();
             for (KBase kBase : mKBaseList) {
@@ -153,6 +158,21 @@ public class Stock {
             }
         }
         return strategyResultList;
+    }
+
+    /**
+     * 保证每个价格对象都有最新的均价
+     * 若有均价，则存储
+     * 若没有均价，则读取
+     * @param stockPrice
+     */
+    private void saveOrReadLatestAveragePrice(StockPrice stockPrice){
+        if(stockPrice.getAvgPrice() != -1){
+            setLatestAvgPrice(stockPrice.getAvgPrice());
+        }
+        else{
+            stockPrice.setAvgPrice(getLatestAvgPrice());
+        }
     }
 
     /**
@@ -458,6 +478,14 @@ public class Stock {
 
     public void setFiveDayLowestPrice(float mFiveDayLowestPrice) {
         this.mFiveDayLowestPrice = mFiveDayLowestPrice;
+    }
+
+    public float getLatestAvgPrice() {
+        return mLatestAvgPrice;
+    }
+
+    public void setLatestAvgPrice(float mLatestAvgPrice) {
+        this.mLatestAvgPrice = mLatestAvgPrice;
     }
 
     @NonNull
