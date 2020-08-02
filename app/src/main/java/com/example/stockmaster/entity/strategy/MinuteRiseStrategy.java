@@ -37,7 +37,9 @@ public class MinuteRiseStrategy extends BaseStrategy {
             //
             boolean isGenStrategy = false;
             if(lastStockForm == null){
-                isGenStrategy = true;
+                if(stockForm.getType() == 0){
+                    isGenStrategy = true;
+                }
             }
             else{
                 if((stockForm.getType() == 0 && lastStockForm.getType() == 1) || (stockForm.getType() == 1 && lastStockForm.getType() == 0) ){

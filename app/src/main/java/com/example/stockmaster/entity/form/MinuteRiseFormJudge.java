@@ -87,6 +87,9 @@ public class MinuteRiseFormJudge extends BaseFormJudge {
                     if(!judgeStockTime(stockPrice)){
                         return null;
                     }
+                    if(!judgeLastHigherPriceHeight(stockPrice, stock)){
+                        return null;
+                    }
                     return new StockForm(stock.getId(), getFormId(), kLevel, stockPrice.getTime(), 0, stockPrice.getPrice());
                 }
             }
@@ -109,6 +112,21 @@ public class MinuteRiseFormJudge extends BaseFormJudge {
         }
 
         return null;
+    }
+
+    private boolean judgeLastHigherPriceHeight(StockPrice stockPrice, Stock stock){
+        int higherStockPriceListSize = stock.higherStockPriceList.size();
+        StockPrice higherStockPrice = stock.higherStockPriceList.get(higherStockPriceListSize-1);
+//        Log.d("lwd", "time:" + stockPrice.getTime() +
+//                " lowerStockPrice:" + stockPrice.getPrice() +
+//                " higherStockPrice:" + higherStockPrice.getPrice() +
+//                " rate:" + (higherStockPrice.getPrice() - stockPrice.getPrice()) / stockPrice.getPrice());
+        if((higherStockPrice.getPrice() - stockPrice.getPrice()) / stockPrice.getPrice() > 0.01){
+            return false;
+        }
+        else{
+            return true;
+        }
     }
 
     private boolean judgePriceSite(StockPrice stockPrice){
