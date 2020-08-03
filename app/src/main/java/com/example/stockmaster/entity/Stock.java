@@ -385,6 +385,10 @@ public class Stock {
      */
     public void ringMonitorType(){
         monitorType =  (monitorType + 1) % 3;
+
+        StockManager.flushPriceMonitorStockList(this);
+
+        StockManager.flushStockMonitorStockList(this);
     }
 
     public String getId() {

@@ -3,6 +3,7 @@ package com.example.stockmaster.ui.fragment.stock_monitor;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -44,6 +45,13 @@ public class StockMonitorFragment extends Fragment {
                     mStockMonitorAdapter.notifyDataSetChanged();
                     break;
                 }
+                case 2:{
+                    Bundle bundle = msg.getData();
+                    int itemIndex = bundle.getInt("itemIndex");
+                    Log.d("lwd", "price notifyItemChanged itemIndex:" + itemIndex);
+                    mStockMonitorAdapter.notifyItemChanged(itemIndex);
+                    break;
+                }
             }
         }
     };
@@ -67,14 +75,6 @@ public class StockMonitorFragment extends Fragment {
         return view;
     }
 
-    public class StockMonitorFragmentUIManager extends UIManager {
-        public void notifyStockListDateSetChanged(){
-            Message notifyListUpdateMsg = Message.obtain();
-            notifyListUpdateMsg.what = 1;
-            handler.sendMessage(notifyListUpdateMsg);
-        }
-    }
-
     @OnClick(R.id.btn_copy_stock_id_list)
     public void onCopyStockIdListClick(View view){
 //        ClipBoardUtil.CopyStringToClipBoard(getContext(), StockManager.getPickedStockIdListString());
@@ -82,4 +82,29 @@ public class StockMonitorFragment extends Fragment {
         FileUtil.writeStringToFile(StockManager.getPickedStockIdListString(), MainActivity.mDBFile.getPath(), "股票id列表.txt");
         Toast.makeText(getContext(), "已存入txt中", Toast.LENGTH_LONG).show();
     }
+
+    public class StockMonitorFragmentUIManager extends UIManager {
+        public void notifyStockListDateSetChanged(){
+            Message notifyListUpdateMsg = Message.obtain();
+            notifyListUpdateMsg.what = 1;
+            handler.sendMessage(notifyListUpdateMsg);
+        }
+
+        /**
+         * 刷新首页买卖点列表
+         */
+        public void notifyStockListItemChanged(int itemIndex){
+            Message notifyListUpdateMsg = Message.obtain();
+            notifyListUpdateMsg.what = 2;
+
+            Bundle bundle = new Bundle();
+            bundle.putInt("itemIndex", itemIndex);
+            notifyListUpdateMsg.setData(bundle);
+
+            handler.sendMessage(notifyListUpdateMsg);
+
+        }
+    }
+
+
 }

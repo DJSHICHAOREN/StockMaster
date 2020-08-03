@@ -80,7 +80,7 @@ public class DataQueryerManager {
                     mCachedThreadPool.execute(runnable);
                 }
             }
-        }, 0, 1000*60*3); // 1 seconds
+        }, 5000, 1000*60*3); // 1 seconds
     }
 
     /**
@@ -177,7 +177,7 @@ public class DataQueryerManager {
                 }
                 queryAllMaOnce();
             }
-        }, 0, 1000*60*30); // 1 seconds
+        }, 1000*60*30, 1000*60*30); // 1 seconds
     }
 
     /**

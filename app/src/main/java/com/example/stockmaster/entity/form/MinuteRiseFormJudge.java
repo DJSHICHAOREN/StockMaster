@@ -80,8 +80,14 @@ public class MinuteRiseFormJudge extends BaseFormJudge {
 //                        Log.d("lwd", String.format("上一个低点价格： %s", stock.lowerStockPriceList.get(lowerStockPriceListSize-2).price));
                     // 得到maState对应的价格
                     StockPrice stockPrice = stock.lowerStockPriceList.get(lowerStockPriceListSize-1);
+
+//                    Log.d("lwd", String.format("stockId:%s, time:%s, price:%s, judgePriceSite:%s, judgeStockTime:%s," +
+//                                    " judgeLastHigherPriceHeight:%s",
+//                            stock.getId(), stockPrice.getTime(), stockPrice.getPrice(), judgePriceSite(stockPrice),
+//                            judgeStockTime(stockPrice), judgeLastHigherPriceHeight(stockPrice, stock)));
                     // 判断价格与均线的位置
                     if(!judgePriceSite(stockPrice)){
+
                         return null;
                     }
                     if(!judgeStockTime(stockPrice)){

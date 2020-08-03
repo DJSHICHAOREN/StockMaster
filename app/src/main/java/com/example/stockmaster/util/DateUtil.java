@@ -45,9 +45,10 @@ public class DateUtil {
     }
 
     public static boolean isDateAfter(Date time1, Date time2){
-        if(     (time1.getDate() > time2.getDate()) ||
-                (time1.getDate() == time2.getDate() && time1.getHours() > time2.getHours()) ||
-                (time1.getDate() == time2.getDate() && time1.getHours() == time2.getHours() && time1.getMinutes() > time2.getMinutes()) ){
+        if(     (time1.getMonth() > time2.getMonth()) ||
+                (time1.getMonth() == time2.getMonth() && time1.getDate() > time2.getDate()) ||
+                (time1.getMonth() == time2.getMonth() && time1.getDate() == time2.getDate() && time1.getHours() > time2.getHours()) ||
+                (time1.getMonth() == time2.getMonth() && time1.getDate() == time2.getDate() && time1.getHours() == time2.getHours() && time1.getMinutes() > time2.getMinutes()) ){
             return true;
         }
         else{
