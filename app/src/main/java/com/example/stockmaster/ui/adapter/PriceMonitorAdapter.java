@@ -55,7 +55,6 @@ public class PriceMonitorAdapter extends RecyclerView.Adapter<PriceMonitorAdapte
                 Intent intent = new Intent(mPriceMonitorFragment.getActivity(), DetailActivity.class);
                 intent.putExtra("stockIndex", position);
                 mPriceMonitorFragment.startActivity(intent);
-
             }
         });
         holder.btn_monitor_type.setOnClickListener(new View.OnClickListener() {
@@ -63,7 +62,7 @@ public class PriceMonitorAdapter extends RecyclerView.Adapter<PriceMonitorAdapte
             public void onClick(View v) {
                 stock.ringMonitorType();
                 DBUtil.updateStock(stock);
-                setBtnSuperviseTypeColor(holder.btn_monitor_type, stock);
+//                setBtnSuperviseTypeColor(holder.btn_monitor_type, stock);
             }
         });
         setBtnSuperviseTypeColor(holder.btn_monitor_type, stock);

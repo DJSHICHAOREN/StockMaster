@@ -14,6 +14,7 @@ import com.example.stockmaster.entity.strategy.StrategyResult;
 import com.example.stockmaster.entity.strategy.SuddenUpStrategy;
 import com.example.stockmaster.entity.strategy.VBBStrategy;
 import com.example.stockmaster.util.DateUtil;
+import com.example.stockmaster.util.StockManager;
 
 import org.xutils.db.annotation.Column;
 import org.xutils.db.annotation.Table;

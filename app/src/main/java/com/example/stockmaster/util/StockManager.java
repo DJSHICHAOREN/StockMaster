@@ -57,7 +57,7 @@ public class StockManager {
                     mStockMonitorUIManager.notifyStockListDateSetChanged();
                 }
             }
-        }, 0, 2000); // 1 seconds
+        }, 0, 1000 * 20); // 1 seconds
     }
 
     /**
@@ -75,7 +75,7 @@ public class StockManager {
             mStockList.add(stock);
             mStockIdList.add(stockId);
             // 添加价格监控列表
-            if(DEFAULT_PRICE_MONITOR_STOCK_ID_LIST.indexOf(stockId) != -1){
+            if(stock.getMonitorType() != 0 || DEFAULT_PRICE_MONITOR_STOCK_ID_LIST.indexOf(stockId) != -1){
                 mPriceMonitorStockList.add(stock);
                 mPriceMonitorStockIdList.add(stockId);
             }
