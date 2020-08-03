@@ -22,6 +22,8 @@ import org.xutils.db.annotation.Table;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 @Table(name = "stock")
@@ -61,8 +63,14 @@ public class Stock {
     private List<StockPrice> mStockPriceList = new ArrayList<>();
     private int mLastExactStockPriceIndex = -1;
 
+    HashMap<Integer, List<StrategyResult>> mStrategyResultMap = new LinkedHashMap<>();
+
     public Stock(){
         this.mKBaseList = Arrays.asList(new K30Minutes(this));
+
+        for(BaseStrategy baseStrategy : mStrategyList){
+            mStrategyResultMap.put(baseStrategy.getStrategyId(), new ArrayList<StrategyResult>());
+        }
     }
 
     public Stock(String id, String name, int monitorType){
@@ -70,6 +78,10 @@ public class Stock {
         this.name = name;
         this.monitorType = monitorType;
         this.mKBaseList = Arrays.asList(new K30Minutes(this));
+
+        for(BaseStrategy baseStrategy : mStrategyList){
+            mStrategyResultMap.put(baseStrategy.getStrategyId(), new ArrayList<StrategyResult>());
+        }
     }
 
     public Stock(String id, String name, int monitorType, DayMaPrice dayMaPrice, List<Float> previousFourDayPriceList){
@@ -289,16 +301,11 @@ public class Stock {
      * 得到最近的买卖时间点
      */
     public String getRecentDealTips(){
-        String dealTip = "";
-        if(previousDealType == DealType.BUY && buyStockPriceList.size() > 0){
-            StockPrice stockPrice = buyStockPriceList.get(buyStockPriceList.size()-1);
-            dealTip = stockPrice.toString();
+        List<StrategyResult> strategyResultList = mStrategyResultMap.get(MinuteRiseStrategy.getStrategyId());
+        if(strategyResultList.size() > 0){
+            return strategyResultList.get(strategyResultList.size()-1).toString();
         }
-        else if(previousDealType == DealType.SALE && saleStockPriceList.size() > 0){
-            StockPrice stockPrice = saleStockPriceList.get(saleStockPriceList.size()-1);
-            dealTip = stockPrice.toString();
-        }
-        return dealTip;
+        return "";
     }
 
     /**
@@ -321,9 +328,11 @@ public class Stock {
                 StrategyResult strategyResult = baseStrategy.analyse(stockForm, this);
                 if (strategyResult != null) {
                     strategyResultList.add(strategyResult);
-                }
 
-                mStrategyResultList.add(strategyResult);
+                    mStrategyResultList.add(strategyResult);
+                    // 将策略结果分类加入字典
+                    mStrategyResultMap.get(strategyResult.getStrategyId()).add(strategyResult);
+                }
             }
         }
 
@@ -496,6 +505,14 @@ public class Stock {
         this.mLatestAvgPrice = mLatestAvgPrice;
     }
 
+    public HashMap<Integer, List<StrategyResult>> getStrategyResultMap() {
+        return mStrategyResultMap;
+    }
+
+    public void setStrategyResultMap(HashMap<Integer, List<StrategyResult>> mStrategyResultMap) {
+        this.mStrategyResultMap = mStrategyResultMap;
+    }
+
     @NonNull
     @Override
     public String toString() {
@@ -505,17 +522,19 @@ public class Stock {
         return super.toString();
     }
 
-    public String getStrategyAnalyseDescribeString(){
+    public String getVBBStrategyResultString(){
         if(this.mStrategyResultList == null){
             return "没有信息";
         }
         String resultString = "";
         for(StrategyResult strategyResult : this.mStrategyResultList){
-            if(strategyResult != null){
-                resultString += strategyResult.toLongString() + "\n";
+            if(strategyResult != null
+                    && (strategyResult.getStrategyId() == VBBStrategy.getStrategyId()
+                    || strategyResult.getStrategyId() == SuddenUpStrategy.getStrategyId())){
+                resultString += strategyResult.toString() + "\n";
             }
         }
         return resultString;
-
     }
+
 }

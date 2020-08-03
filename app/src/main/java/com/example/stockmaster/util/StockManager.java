@@ -7,6 +7,7 @@ import com.example.stockmaster.entity.Stock;
 import com.example.stockmaster.entity.StockPrice;
 import com.example.stockmaster.entity.ma.DayMaPrice;
 import com.example.stockmaster.entity.strategy.StrategyResult;
+import com.example.stockmaster.entity.strategy.VBBStrategy;
 import com.example.stockmaster.service.BrainService;
 import com.example.stockmaster.ui.activity.base.UIManager;
 
@@ -158,9 +159,10 @@ public class StockManager {
             stock.calFiveDayHighestAndLowestPrice(stockPriceEveryDayList);
             stock.calFiveDayHighestEndPrice(stockPriceEveryDayList);
             stock.setLastExactStockPriceIndex(stock.getStockPriceList().size()-1);
+
             // 更新UI
             if(mStockMonitorUIManager != null){
-                if(stock.getStrategyResultListSize() > 0){
+                if(stock.getStrategyResultMap().get(VBBStrategy.getStrategyId()).size() > 0){
                     mStockMonitorPickedStockList.add(stock);
                 }
             }

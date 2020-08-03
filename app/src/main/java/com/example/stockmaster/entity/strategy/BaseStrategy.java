@@ -15,7 +15,7 @@ public abstract class BaseStrategy {
     }
     public abstract StrategyResult analyse(StockForm stockForm, Stock stock);
 
-    public int getStrategyId() {
+    public static int getStrategyId() {
         return strategyId;
     }
 

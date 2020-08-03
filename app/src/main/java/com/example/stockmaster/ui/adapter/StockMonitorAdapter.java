@@ -1,7 +1,6 @@
 package com.example.stockmaster.ui.adapter;
 
 import android.app.AlertDialog;
-import android.content.Intent;
 import android.graphics.drawable.GradientDrawable;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,8 +14,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.stockmaster.R;
 import com.example.stockmaster.entity.Stock;
-import com.example.stockmaster.ui.activity.detail.DetailActivity;
-import com.example.stockmaster.ui.activity.detail.KMADetailActivity;
 import com.example.stockmaster.util.DBUtil;
 
 import java.util.List;
@@ -45,7 +42,7 @@ public class StockMonitorAdapter extends RecyclerView.Adapter<StockMonitorAdapte
         final Stock stock = mStockList.get(position);
         holder.tv_stock_id.setText(stock.getId());
         holder.tv_stock_name.setText(stock.getName());
-        holder.tv_deal_tip.setText(stock.getStrategyAnalyseDescribeString());
+        holder.tv_deal_tip.setText(stock.getVBBStrategyResultString());
         holder.ll_stock_item.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -55,7 +52,7 @@ public class StockMonitorAdapter extends RecyclerView.Adapter<StockMonitorAdapte
 
                 AlertDialog alertDialog1 = new AlertDialog.Builder(mStockMonitorFragment.getContext())
                         .setTitle(stock.getId() + " " + stock.getName())//标题
-                        .setMessage(stock.getStrategyAnalyseDescribeString())//内容
+                        .setMessage(stock.getVBBStrategyResultString())//内容
                         .create();
                 alertDialog1.show();
             }

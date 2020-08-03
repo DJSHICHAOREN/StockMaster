@@ -88,6 +88,10 @@ public class DateUtil {
         return minuteTime;
     }
 
+    public static String convertDateToShortString(Date time){
+        return convertDateToShortDayString(time) + " " + convertDateToShortMinuteString(time);
+    }
+
     private static String getDoubleNumString(int num){
         return num >= 10 ? num + "" : "0" + num;
     }

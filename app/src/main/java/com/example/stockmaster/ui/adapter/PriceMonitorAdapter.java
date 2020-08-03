@@ -47,8 +47,8 @@ public class PriceMonitorAdapter extends RecyclerView.Adapter<PriceMonitorAdapte
         holder.tv_stock_id.setText(stock.getId());
         holder.tv_stock_name.setText(stock.getName());
         holder.tv_deal_tip.setText(stock.getRecentDealTips());
-        Log.d("lwd", "onBindViewHolder， position:" + position + ",stockId："
-                + stock.getId()  + ",tips:" + stock.getRecentDealTips());
+//        Log.d("lwd", "onBindViewHolder， position:" + position + ",stockId："
+//                + stock.getId()  + ",tips:" + stock.getRecentDealTips());
         holder.ll_stock_item.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
