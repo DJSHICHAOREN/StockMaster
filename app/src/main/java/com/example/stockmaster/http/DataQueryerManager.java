@@ -46,6 +46,11 @@ public class DataQueryerManager {
                 @Override
                 public void run() {
                     queryOneStockFiveDayPrice(stockId, false);
+//                    try {
+//                        Thread.sleep(1000);
+//                    } catch (InterruptedException e) {
+//                        e.printStackTrace();
+//                    }
                 }
             };
             mCachedThreadPool.execute(runnable);

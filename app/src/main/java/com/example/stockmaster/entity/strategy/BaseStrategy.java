@@ -8,7 +8,7 @@ import java.util.Date;
 import java.util.List;
 
 public abstract class BaseStrategy {
-    private int strategyId;
+    private static int strategyId;
     public List<StrategyResult> mStrategyResultList = new ArrayList<>();
     public BaseStrategy(int strategyId){
         this.strategyId = strategyId;

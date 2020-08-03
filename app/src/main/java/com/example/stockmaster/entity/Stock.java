@@ -157,6 +157,8 @@ public class Stock {
                     strategyResultList.addAll(analyse(stockForm));
                 }
             }
+            // 将strategyResult分类型存储
+
         }
         return strategyResultList;
     }
@@ -319,8 +321,9 @@ public class Stock {
                 StrategyResult strategyResult = baseStrategy.analyse(stockForm, this);
                 if (strategyResult != null) {
                     strategyResultList.add(strategyResult);
-                    mStrategyResultList.add(strategyResult);
                 }
+
+                mStrategyResultList.add(strategyResult);
             }
         }
 
@@ -508,7 +511,9 @@ public class Stock {
         }
         String resultString = "";
         for(StrategyResult strategyResult : this.mStrategyResultList){
-            resultString += strategyResult.toLongString() + "\n";
+            if(strategyResult != null){
+                resultString += strategyResult.toLongString() + "\n";
+            }
         }
         return resultString;
 
