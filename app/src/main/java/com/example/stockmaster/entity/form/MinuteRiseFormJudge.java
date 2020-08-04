@@ -90,9 +90,9 @@ public class MinuteRiseFormJudge extends BaseFormJudge {
 
                         return null;
                     }
-                    if(!judgeStockTime(stockPrice)){
-                        return null;
-                    }
+//                    if(!judgeStockTime(stockPrice)){
+//                        return null;
+//                    }
                     if(!judgeLastHigherPriceHeight(stockPrice, stock)){
                         return null;
                     }

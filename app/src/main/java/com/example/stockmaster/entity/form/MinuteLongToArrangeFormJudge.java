@@ -1,19 +1,15 @@
 package com.example.stockmaster.entity.form;
 
-import android.util.Log;
-
 import com.example.stockmaster.R;
 import com.example.stockmaster.entity.Stock;
-import com.example.stockmaster.entity.StockPrice;
 import com.example.stockmaster.entity.ma.MaState;
 
 import java.util.Date;
 import java.util.List;
 
-public class LongToArrangeFormJudge extends BaseFormJudge {
-
-    public LongToArrangeFormJudge() {
-        super(R.integer.formLongToArrange);
+public class MinuteLongToArrangeFormJudge extends BaseFormJudge {
+    public MinuteLongToArrangeFormJudge() {
+        super(R.integer.formMinuteLongToArrange);
     }
 
     public MaState getMaStateByTime(List<MaState> maStateList, Date time){
@@ -25,23 +21,8 @@ public class LongToArrangeFormJudge extends BaseFormJudge {
         return null;
     }
 
-
-    /**0号交易策略，高确定性
-     * (1)
-     * 5K: ma5 > ma10 > ma20 > ma30 > ma60
-     * 15K: ma5 > ma10 > ma20 > ma30
-     * 30K: ma5 > ma10 > ma20
-     * 60K: ma5 > ma10
-     * 日K: ma5向上
-     * (2)
-     * 为上升形态
-     * @param
-     * @param maStateList
-     * @param kLevel
-     * @return
-     */
     @Override
-    public StockForm judge(Stock stock, List<MaState> maStateList, int kLevel){
+    public StockForm judge(Stock stock, List<MaState> maStateList, int kLevel) {
         if(maStateList == null || maStateList.size() < kLevel + 3){
             return null;
         }
@@ -72,7 +53,6 @@ public class LongToArrangeFormJudge extends BaseFormJudge {
         boolean isSeriation = false; // 均线是否是呈梯子型排列
         boolean isRise = false; // 均线是否上升
         boolean isHorizontalBefore = false; // 均线之前是否横盘
-        boolean isDayMaUp = false;
         boolean isHigherThanBeforeDays = false;
         boolean isMinutePriceUp = false;
         // 判断均线是否阶梯形排列
@@ -111,22 +91,13 @@ public class LongToArrangeFormJudge extends BaseFormJudge {
 //        }
 
 
-        // 判断日K线是否发散
-        if(stock.getMa5(lastMaState1.getPrice()) >= stock.getDayMaPrice().getMa10() &&
-                stock.getDayMaPrice().getMa10() >= stock.getDayMaPrice().getMa30()){
-            isDayMaUp = true;
-        }
-
-        // 判断是否比前四日的价格高
-//        if(lastMaState1.getPrice() > stock.getFiveDayHighestEndPrice() * 1.001){
-//            isHigherThanBeforeDays = true;
-//        }
-
-
-        if(isSeriation && isRise && isDayMaUp){
+        if(isSeriation && isRise){
 //            Log.d("lwd", String.format("%s 买他，价格:%s", lastMaState1.getTime(), lastMaState1.getPrice()));
             return new StockForm(stock.getId(), getFormId(), kLevel, lastMaState1.getTime(), 0, lastMaState1.getPrice());
         }
+
+
+
         return null;
     }
 }

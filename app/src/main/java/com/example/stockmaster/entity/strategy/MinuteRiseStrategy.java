@@ -27,14 +27,14 @@ public class MinuteRiseStrategy extends BaseStrategy {
         }
         StrategyResult strategyResult = null;
         if(stockForm.getFormId() == R.integer.formMinuteRise){
-//            if(stockForm.getType() == 0 && stock.getMonitorType() != 1){
-//                return null;
-//            }
-//            else if(stockForm.getType() == 1 && stock.getMonitorType() != 2){
-//                return null;
-//            }
+            if(stockForm.getType() == 0 && stock.getMonitorType() == 0){
+                return null;
+            }
+            else if(stockForm.getType() == 1 && stock.getMonitorType() != 2){
+                return null;
+            }
 
-            //
+            // 第一个要添加买点，然后买卖点交替添加
             boolean isGenStrategy = false;
             if(lastStockForm == null){
                 if(stockForm.getType() == 0){

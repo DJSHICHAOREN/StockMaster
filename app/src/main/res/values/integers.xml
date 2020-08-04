@@ -5,6 +5,7 @@
     <integer name="formFallThroughSupport">2</integer>
     <integer name="formMinuteRise">3</integer>
     <integer name="formSuddenUp">4</integer>
+    <integer name="formMinuteLongToArrange">5</integer>
     <integer name="strategyFlareUp">0</integer>
     <integer name="strategyLongToArrange">1</integer>
     <integer name="strategyVBB">2</integer>
