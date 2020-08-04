@@ -8,14 +8,14 @@ import java.util.Date;
 import java.util.List;
 
 public abstract class BaseStrategy {
-    private static int strategyId;
+    private int strategyId;
     public List<StrategyResult> mStrategyResultList = new ArrayList<>();
     public BaseStrategy(int strategyId){
         this.strategyId = strategyId;
     }
     public abstract StrategyResult analyse(StockForm stockForm, Stock stock);
 
-    public static int getStrategyId() {
+    public int getStrategyId() {
         return strategyId;
     }
 

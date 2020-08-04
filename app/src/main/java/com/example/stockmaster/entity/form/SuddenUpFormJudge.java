@@ -18,7 +18,6 @@ public class SuddenUpFormJudge extends BaseFormJudge {
             return null;
         }
 
-        // 判断最新的三条线是否是按序排列且上升的
         int maStateListLength = maStateList.size();
         MaState lastMaState1 = maStateList.get(maStateListLength-1);
 

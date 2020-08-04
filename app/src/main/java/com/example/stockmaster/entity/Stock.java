@@ -301,7 +301,7 @@ public class Stock {
      * 得到最近的买卖时间点
      */
     public String getRecentDealTips(){
-        List<StrategyResult> strategyResultList = mStrategyResultMap.get(MinuteRiseStrategy.getStrategyId());
+        List<StrategyResult> strategyResultList = mStrategyResultMap.get(new MinuteRiseStrategy().getStrategyId());
         if(strategyResultList.size() > 0){
             return strategyResultList.get(strategyResultList.size()-1).toString();
         }
@@ -332,6 +332,12 @@ public class Stock {
                     mStrategyResultList.add(strategyResult);
                     // 将策略结果分类加入字典
                     mStrategyResultMap.get(strategyResult.getStrategyId()).add(strategyResult);
+
+                    // 对价格界面进行更新
+                    if(strategyResult.getStrategyId() == new MinuteRiseStrategy().getStrategyId()
+                        && StockManager.isStockInPriceMonitorList(strategyResult.getStockId())){
+                        StockManager.notifyPriceMonitorStockListChange(strategyResult.getStockId());
+                    }
                 }
             }
         }
@@ -522,15 +528,15 @@ public class Stock {
         return super.toString();
     }
 
-    public String getVBBStrategyResultString(){
+    public String getVBBOrSuddenUpStrategyResultString(){
         if(this.mStrategyResultList == null){
             return "没有信息";
         }
         String resultString = "";
         for(StrategyResult strategyResult : this.mStrategyResultList){
             if(strategyResult != null
-                    && (strategyResult.getStrategyId() == VBBStrategy.getStrategyId()
-                    || strategyResult.getStrategyId() == SuddenUpStrategy.getStrategyId())){
+                    && (strategyResult.getStrategyId() == new VBBStrategy().getStrategyId()
+                    || strategyResult.getStrategyId() == new SuddenUpStrategy().getStrategyId())){
                 resultString += strategyResult.toString() + "\n";
             }
         }
