@@ -125,6 +125,9 @@ public class SinaDataQueryer {
                             if(dayCount == 5){
                                 List<List<StockPrice>> stockPriceEveryDayList = mResponseStringToObject.sinaNDaysPriceResponseToObjectList(response, false, StockPrice.QueryType.FIVEDAY);
                                 List<Date> dateList = TextUtil.convertStringToDateList(response);
+                                if(StockManager.getDealDateList() == null){
+                                    StockManager.setDealDateList(dateList);
+                                }
 
                                 // 为了求五日均线,得到收盘价列表
                                 List<Float> fiveDayClosePriceList = mMaGenerator.generateDayMA5(response);

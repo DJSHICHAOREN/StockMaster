@@ -21,7 +21,6 @@ public class BrainService extends Service {
     private boolean IS_QUERY = true;
     private String CHANNEL_ID = "BRAIN_SERVICE_NOTIFICATION";
     private DataQueryerManager mDataQueryerManager;
-    private StockManager mStockManager;
 
     public class MyBinder extends Binder {
         public BrainService getService(){

@@ -7,6 +7,7 @@ import com.example.stockmaster.R;
 import com.example.stockmaster.entity.Stock;
 import com.example.stockmaster.entity.form.StockForm;
 import com.example.stockmaster.util.DateUtil;
+import com.example.stockmaster.util.StockManager;
 
 import java.util.Date;
 
@@ -30,10 +31,9 @@ public class MinuteLongToArrangeStrategy extends BaseStrategy {
         if(stockForm.getFormId() == R.integer.formMinuteLongToArrange){
             if(lastStrategyResult == null || isTwoTimeSpaceIntervalBiggerThan(stockForm.getTime(), lastStrategyResult.getTime())){
                 strategyResult = new StrategyResult(stock.getId(), stockForm.getPrice(), getStrategyId(), stockForm.getTime(), stockForm.getType());
-                lastStrategyResult = strategyResult;
-
 //                Log.d("lwd", strategyResult.toString());
             }
+            lastStrategyResult = strategyResult;
         }
 
         return strategyResult;
@@ -49,11 +49,26 @@ public class MinuteLongToArrangeStrategy extends BaseStrategy {
             return true;
         }
 
-        float minuteInterval = Math.abs( time1.getTime() - time2.getTime() ) / (1000 * 60 * 60);
+        int dayIndex1 = StockManager.getDealDayList().indexOf(time1.getTime());
+        int dayIndex2 = StockManager.getDealDayList().indexOf(time2.getTime());
+
+        if(dayIndex1 == -1){
+            dayIndex1 = StockManager.getDealDayList().size();
+        }
+        if(dayIndex2 == -1){
+            dayIndex2 = StockManager.getDealDayList().size();
+        }
+
+        int dayGap = Math.abs(dayIndex1 - dayIndex2);
+
+        double minuteInterval = (Math.abs(time1.getTime() - time2.getTime()) + 1000 * 60 * 60 * 5.5 * dayGap) / (1000 * 60 * 60);
         Log.d("lwd", "minuteInterval:" + minuteInterval);
         if(minuteInterval > 2.5){
             return true;
         }
+
+
+
         return false;
     }
 }
