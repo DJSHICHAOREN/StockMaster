@@ -29,10 +29,13 @@ public class MinuteLongToArrangeStrategy extends BaseStrategy {
 
         StrategyResult strategyResult = null;
         if(stockForm.getFormId() == R.integer.formMinuteLongToArrange){
+//            Log.d("lwd", String.format("formMinuteLongToArrange time:%s, price:%s", stockForm.getTime(), stockForm.getPrice()));
             if(lastStrategyResult == null || isTwoTimeSpaceIntervalBiggerThan(stockForm.getTime(), lastStrategyResult.getTime())){
                 strategyResult = new StrategyResult(stock.getId(), stockForm.getPrice(), getStrategyId(), stockForm.getTime(), stockForm.getType());
-//                Log.d("lwd", strategyResult.toString());
+                Log.d("lwd", strategyResult.toString());
             }
+        }
+        if(strategyResult != null){
             lastStrategyResult = strategyResult;
         }
 
@@ -45,12 +48,8 @@ public class MinuteLongToArrangeStrategy extends BaseStrategy {
      * @return
      */
     private boolean isTwoTimeSpaceIntervalBiggerThan(Date time1, Date time2){
-        if(abs(time1.getDate() - time2.getDate()) > 0){
-            return true;
-        }
-
-        int dayIndex1 = StockManager.getDealDayList().indexOf(time1.getTime());
-        int dayIndex2 = StockManager.getDealDayList().indexOf(time2.getTime());
+        int dayIndex1 = StockManager.getDealDayList().indexOf(time1.getDate());
+        int dayIndex2 = StockManager.getDealDayList().indexOf(time2.getDate());
 
         if(dayIndex1 == -1){
             dayIndex1 = StockManager.getDealDayList().size();
@@ -61,13 +60,12 @@ public class MinuteLongToArrangeStrategy extends BaseStrategy {
 
         int dayGap = Math.abs(dayIndex1 - dayIndex2);
 
-        double minuteInterval = (Math.abs(time1.getTime() - time2.getTime()) + 1000 * 60 * 60 * 5.5 * dayGap) / (1000 * 60 * 60);
-        Log.d("lwd", "minuteInterval:" + minuteInterval);
+        double minuteInterval = (time1.getTime() - time2.getTime() - 1000 * 60 * 60 * 17.5 * dayGap) / (1000 * 60 * 60);
+//        Log.d("lwd",  String.format("time:%s dayGap:%d minuteInterval:%s", time1.toString(), dayGap, minuteInterval));
         if(minuteInterval > 2.5){
+//            Log.d("lwd", "return true");
             return true;
         }
-
-
 
         return false;
     }

@@ -65,7 +65,7 @@ public class DateUtil {
         String dayTime = "";
         if(time != null){
             String year = getDoubleNumString(time.getYear() + 1900);
-            String month = getDoubleNumString(time.getMonth());
+            String month = getDoubleNumString(time.getMonth() + 1);
             String day = getDoubleNumString(time.getDate());
             dayTime = year + "-" + month + "-" + day;
         }

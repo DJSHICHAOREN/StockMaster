@@ -1,5 +1,7 @@
 package com.example.stockmaster.entity.form;
 
+import android.util.Log;
+
 import com.example.stockmaster.R;
 import com.example.stockmaster.entity.Stock;
 import com.example.stockmaster.entity.ma.MaState;
@@ -46,7 +48,7 @@ public class MinuteLongToArrangeFormJudge extends BaseFormJudge {
         }
         // 打印开始信息
         if(isPrintBeginJudgeTime){
-//            Log.d("lwd", String.format("time=%s，ma60不等于0，开始分析", lastMaState1.getTime().toString()));
+            Log.d("lwd", String.format("MinuteLongToArrangeFormJudge 开始分析 time=%s，", lastMaState1.getTime().toString()));
             isPrintBeginJudgeTime = false;
         }
 
@@ -57,8 +59,8 @@ public class MinuteLongToArrangeFormJudge extends BaseFormJudge {
         boolean isMinutePriceUp = false;
         // 判断均线是否阶梯形排列
         if(lastMaState1.getMa5() >= lastMaState1.getMa10()
-                && lastMaState1.getMa10() > lastMaState1.getMa20()
-                && lastMaState1.getMa20() > lastMaState1.getMa30()){
+                &&
+                (lastMaState1.getMa10() > lastMaState1.getMa20() || lastMaState1.getMa10() > lastMaState1.getMa30())){
             isSeriation = true;
         }
 
@@ -69,8 +71,7 @@ public class MinuteLongToArrangeFormJudge extends BaseFormJudge {
                 && lastMaState2.getMa30() != 0){
             if(lastMaState1.getMa5() - lastMaState2.getMa5() > 0
                     && lastMaState1.getMa10() - lastMaState2.getMa10() > 0
-                    && lastMaState1.getMa20() - lastMaState2.getMa20() > 0
-                    && lastMaState1.getMa30() - lastMaState2.getMa30() > 0){
+                    && (lastMaState1.getMa20() - lastMaState2.getMa20() > 0 || lastMaState1.getMa30() - lastMaState2.getMa30() > 0)){
                 isRise = true;
             }
         }
@@ -95,7 +96,6 @@ public class MinuteLongToArrangeFormJudge extends BaseFormJudge {
 //            Log.d("lwd", String.format("%s 买他，价格:%s", lastMaState1.getTime(), lastMaState1.getPrice()));
             return new StockForm(stock.getId(), getFormId(), kLevel, lastMaState1.getTime(), 0, lastMaState1.getPrice());
         }
-
 
 
         return null;
