@@ -90,43 +90,24 @@ public class StrategyResult {
 
     public String toNotificationString(){
         String saleType = this.type == 0 ? "B" : "S";
-        String strategyType = "";
-        switch (this.strategyId){
-            case R.integer.strategyVBB:{
-                strategyType = "vbb";
-                break;
-            }
-            case R.integer.strategyMinuteRise:{
-                strategyType = "mr";
-                break;
-            }
-        }
-        return String.format("%s %s，%s，%f，%s", strategyType, saleType, DateUtil.convertDateToShortMinuteString(time), getPrice(), getStockId());
+        return String.format("%s %s，%s，%f，%s", getStrategyType(), saleType,
+                DateUtil.convertDateToShortMinuteString(time), getPrice(), getStockId());
     }
 
     @Override
     public String toString(){
         String saleType = this.type == 0 ? "B" : "S";
-        String strategyType = "";
-        switch (this.strategyId){
-            case R.integer.strategyVBB:{
-                strategyType = "vbb";
-                break;
-            }
-            case R.integer.strategyMinuteRise:{
-                strategyType = "mr";
-                break;
-            }
-            case R.integer.strategySuddenUp:{
-                strategyType = "su";
-                break;
-            }
-        }
-        return String.format("%s %s，时间：%s，价格：%.3f, stockId:%s", strategyType, saleType, DateUtil.convertDateToShortString(time), getPrice(), getStockId());
+        return String.format("%s %s，时间：%s，价格：%.3f, stockId:%s", getStrategyType(),
+                saleType, DateUtil.convertDateToShortString(time), getPrice(), getStockId());
     }
 
     public String toLongString(){
         String saleType = this.type == 0 ? "B" : "S";
+        return String.format("%s %s，时间：%s，价格：%.3f, stockId:%s", getStrategyType(),
+                saleType, getTime(), getPrice(), getStockId());
+    }
+
+    private String getStrategyType(){
         String strategyType = "";
         switch (this.strategyId){
             case R.integer.strategyVBB:{
@@ -141,7 +122,11 @@ public class StrategyResult {
                 strategyType = "su";
                 break;
             }
+            case R.integer.strategyMinuteLongToArrange:{
+                strategyType = "mlta";
+                break;
+            }
         }
-        return String.format("%s %s，时间：%s，价格：%.3f, stockId:%s", strategyType, saleType, getTime(), getPrice(), getStockId());
+        return strategyType;
     }
 }

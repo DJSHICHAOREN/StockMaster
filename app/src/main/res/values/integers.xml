@@ -11,6 +11,7 @@
     <integer name="strategyVBB">2</integer>
     <integer name="strategyMinuteRise">3</integer>
     <integer name="strategySuddenUp">4</integer>
+    <integer name="strategyMinuteLongToArrange">5</integer>
     <integer name="typeStrategyBuy">0</integer>
     <integer name="typeStrategySale">1</integer>
 

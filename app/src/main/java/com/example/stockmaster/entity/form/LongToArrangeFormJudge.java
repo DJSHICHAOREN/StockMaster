@@ -118,12 +118,12 @@ public class LongToArrangeFormJudge extends BaseFormJudge {
         }
 
         // 判断是否比前四日的价格高
-//        if(lastMaState1.getPrice() > stock.getFiveDayHighestEndPrice() * 1.001){
-//            isHigherThanBeforeDays = true;
-//        }
+        if(lastMaState1.getPrice() > stock.getFiveDayHighestEndPrice() * 1.001){
+            isHigherThanBeforeDays = true;
+        }
 
 
-        if(isSeriation && isRise && isDayMaUp){
+        if(isSeriation && isRise && isDayMaUp && isHigherThanBeforeDays){
 //            Log.d("lwd", String.format("%s 买他，价格:%s", lastMaState1.getTime(), lastMaState1.getPrice()));
             return new StockForm(stock.getId(), getFormId(), kLevel, lastMaState1.getTime(), 0, lastMaState1.getPrice());
         }

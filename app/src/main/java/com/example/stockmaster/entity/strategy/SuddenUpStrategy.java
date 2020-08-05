@@ -17,10 +17,7 @@ public class SuddenUpStrategy extends BaseStrategy {
     @Override
     public StrategyResult analyse(StockForm stockForm, Stock stock) {
         if(stockForm == null){
-            Log.d("lwd", "SuddenUp analyse stockFormList == null");
-            return null;
-        }
-        if(stockForm.getkLevel() != 30){
+//            Log.d("lwd", "SuddenUp analyse stockFormList == null");
             return null;
         }
 

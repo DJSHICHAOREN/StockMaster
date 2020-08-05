@@ -9,6 +9,7 @@ import com.example.stockmaster.entity.k.K30Minutes;
 import com.example.stockmaster.entity.k.KBase;
 import com.example.stockmaster.entity.ma.DayMaPrice;
 import com.example.stockmaster.entity.strategy.BaseStrategy;
+import com.example.stockmaster.entity.strategy.MinuteLongToArrangeStrategy;
 import com.example.stockmaster.entity.strategy.MinuteRiseStrategy;
 import com.example.stockmaster.entity.strategy.StrategyResult;
 import com.example.stockmaster.entity.strategy.SuddenUpStrategy;
@@ -56,7 +57,8 @@ public class Stock {
     private float mFiveDayHighestPrice = -1;
     private float mFiveDayLowestPrice = 100000;
     private float mFiveDayHighestEndPrice;
-    private List<BaseStrategy> mStrategyList = Arrays.asList(new VBBStrategy(), new MinuteRiseStrategy(), new SuddenUpStrategy());
+    private List<BaseStrategy> mStrategyList = Arrays.asList(new VBBStrategy(), new MinuteRiseStrategy(),
+            new SuddenUpStrategy(), new MinuteLongToArrangeStrategy());
 //    private List<BaseStrategy> mStrategyList = Arrays.asList(new SuddenUpStrategy());
     private float mLatestAvgPrice = -1; // 所添加价格的最后一个均价
 

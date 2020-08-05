@@ -21,10 +21,7 @@ public class VBBStrategy extends BaseStrategy {
     @Override
     public StrategyResult analyse(StockForm stockForm, Stock stock) {
         if(stockForm == null){
-            Log.d("lwd", "VBBStrategy analyse stockFormList == null");
-            return null;
-        }
-        if(stockForm.getkLevel() != 30){
+//            Log.d("lwd", "VBBStrategy analyse stockFormList == null");
             return null;
         }
 

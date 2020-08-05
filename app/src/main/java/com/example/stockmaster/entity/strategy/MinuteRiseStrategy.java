@@ -19,12 +19,10 @@ public class MinuteRiseStrategy extends BaseStrategy {
     @Override
     public StrategyResult analyse(StockForm stockForm, Stock stock) {
         if(stockForm == null){
-            Log.d("lwd", "VBBStrategy analyse stockFormList == null");
+//            Log.d("lwd", "MinuteRiseStrategy analyse stockFormList == null");
             return null;
         }
-        if(stockForm.getkLevel() != 30){
-            return null;
-        }
+
         StrategyResult strategyResult = null;
         if(stockForm.getFormId() == R.integer.formMinuteRise){
             if(stockForm.getType() == 0 && stock.getMonitorType() == 0){

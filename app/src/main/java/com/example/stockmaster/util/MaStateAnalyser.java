@@ -4,6 +4,7 @@ import com.example.stockmaster.entity.Stock;
 import com.example.stockmaster.entity.StockPrice;
 import com.example.stockmaster.entity.form.FallThroughSupportFormJudge;
 import com.example.stockmaster.entity.form.LongToArrangeFormJudge;
+import com.example.stockmaster.entity.form.MinuteLongToArrangeFormJudge;
 import com.example.stockmaster.entity.form.MinuteRiseFormJudge;
 import com.example.stockmaster.entity.form.SuddenUpFormJudge;
 import com.example.stockmaster.entity.ma.MaState;
@@ -23,6 +24,7 @@ public class MaStateAnalyser {
         mBaseFormJudgeList.add(new FallThroughSupportFormJudge());
         mBaseFormJudgeList.add(new MinuteRiseFormJudge());
         mBaseFormJudgeList.add(new SuddenUpFormJudge());
+        mBaseFormJudgeList.add(new MinuteLongToArrangeFormJudge());
     }
 
     public List<StockForm> analyse(Stock stock, List<MaState> maStateList, int kLevel){

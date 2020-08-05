@@ -110,7 +110,8 @@ public class StockManager {
             if(stock != null && stock.isReceiveTodayData){
                 List<StrategyResult> strategyResultList = stock.addStockPrice(stockPrice);
                 for(StrategyResult strategyResult : strategyResultList){
-                    if(strategyResult.getStrategyId() == R.integer.strategyMinuteRise){
+                    if(strategyResult.getStrategyId() == R.integer.strategyMinuteRise
+                    || strategyResult.getStrategyId() == R.integer.strategyMinuteLongToArrange){
                         mBrainService.sendNotification(strategyResult.getNotificationId(),
                                 stock.getName() + " " + strategyResult.toNotificationString());
                     }
