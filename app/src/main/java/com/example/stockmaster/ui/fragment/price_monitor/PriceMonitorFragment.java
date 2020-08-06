@@ -35,9 +35,6 @@ import butterknife.OnClick;
 
 public class PriceMonitorFragment extends Fragment {
 
-
-    @BindView(R.id.tv_deal_point)
-    public TextView tv_deal_point;
     @BindView(R.id.rv_stock_list)
     public RecyclerView rv_stock_list;
 
@@ -51,9 +48,6 @@ public class PriceMonitorFragment extends Fragment {
             super.handleMessage(msg);
             switch (msg.what) {
                 case 1:{
-                    Bundle bundle = msg.getData();
-                    String dealString = bundle.getString("dealString");
-                    tv_deal_point.setText(dealString);
                     break;
                 }
                 case 2:{
@@ -140,20 +134,6 @@ public class PriceMonitorFragment extends Fragment {
             }
         }
 
-        /**
-         * 更新最上方的买卖点，并发出通知
-         * @param dealString
-         */
-        public void refreshUIWhenGetNewDealPoint(String dealString, int notificationId, String notificationContent) {
-            Message changeTopTip = Message.obtain();
-            changeTopTip.what = 1;
-            Bundle bundle = new Bundle();
-            bundle.putString("dealString", dealString);
-            changeTopTip.setData(bundle);
-            handler.sendMessage(changeTopTip);
-
-//            sendNotification(notificationId, notificationContent);
-        }
 
         /**
          * 刷新首页买卖点列表

@@ -27,7 +27,6 @@ public class StockManager {
     private  static List<Stock> mStockMonitorPickedStockList = new ArrayList<>(); // 在股票监控界面显示的被选中的股票
     private  static List<Stock> mPriceMonitorStockList = new ArrayList<>(); // 在价格监视的股票
     private  static List<String> mPriceMonitorStockIdList = new ArrayList<>(); // 在价格监视的股票
-    private static ShortSwingAnalyser mShortSwingAnalyser = new ShortSwingAnalyser();
     private static UIManager mPriceMonitorUIManager;
     private static UIManager mStockMonitorUIManager;
     private static UIManager mMainActivityUIManager;
@@ -219,33 +218,6 @@ public class StockManager {
         }
     }
 
-    /**
-     * 添加买卖点
-     * @param stock
-     * @param stockPrice
-     * @param dealType
-     */
-    public static void addBuyAndSaleStockPrice(Stock stock, StockPrice stockPrice, Stock.DealType dealType){
-        if(stock.addBuyAndSaleStockPrice(stockPrice, dealType)){
-            if(mPriceMonitorUIManager != null && mPriceMonitorStockIdList.contains(stock.getId())){
-                mPriceMonitorUIManager.refreshUIWhenGetNewDealPoint(stock.getName() + " " +stockPrice.toStringWithId(),
-                        stockPrice.getNotificationId(), stockPrice.getNotificationContent());
-                mPriceMonitorUIManager.notifyStockListItemChanged(mPriceMonitorStockIdList.indexOf(stock.id));
-            }
-            // 若为请求的分时价格，则为实时的，则发送通知
-            if(mBrainService != null
-                    && stockPrice.getQueryType() == StockPrice.QueryType.MINUTE){
-                // 若为监控卖点则一定通知
-                // 若为监控买点且遇到买点则通知
-                if(stock.getMonitorType() == 2
-                        || (stock.getMonitorType() == 1 && dealType == Stock.DealType.BUY)){
-                    mBrainService.sendNotification(stockPrice.getNotificationId(),
-                            stock.getName() + " " + stockPrice.getNotificationContent());
-                }
-            }
-        }
-    }
-
     public static void notifyPriceMonitorStockListChange(String stockId){
         if(mPriceMonitorUIManager != null){
             mPriceMonitorUIManager.notifyStockListItemChanged(mPriceMonitorStockIdList.indexOf(stockId));
@@ -325,16 +297,6 @@ public class StockManager {
 
     public static List<Stock> getStockMonitorPickedStockList() {
         return mStockMonitorPickedStockList;
-    }
-
-    public static List<Stock> getLineUpStocks(){
-        List<Stock> lineUpStockList = new ArrayList<>();
-        for(Stock stock : mStockList){
-            if(ShortSwingAnalyser.isFiveDayLineUp(stock)){
-                lineUpStockList.add(stock);
-            }
-        }
-        return lineUpStockList;
     }
 
     public static Date getLastDealDate() {

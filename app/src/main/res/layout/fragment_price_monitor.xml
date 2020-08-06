@@ -2,20 +2,35 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:paddingLeft="10dp"
+    android:paddingRight="10dp">
 
-        <TextView
-            android:id="@+id/tv_deal_point"
-            android:layout_width="wrap_content"
-            android:layout_height="30dp"
-            android:text="newest tips"
-            android:visibility="visible"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+                <EditText
+                    android:layout_width="0dp"
+                    android:layout_height="50dp"
+                    android:layout_weight="2"
+                    android:layout_marginRight="10dp"
+                    android:textSize="20dp"
+                    android:hint="hk09989"/>
+
+                <Button
+                    android:layout_width="110dp"
+                    android:layout_height="50dp"
+                    android:text="添加"/>
+        </LinearLayout>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_stock_list"
             android:layout_width="match_parent"
             android:layout_height="600dp"
-            android:scrollbars="vertical"/>
+            android:scrollbars="vertical"
+            android:layout_marginTop="5dp"/>
 
         <Button
             android:id="@+id/btn_goto_command_stocks"
