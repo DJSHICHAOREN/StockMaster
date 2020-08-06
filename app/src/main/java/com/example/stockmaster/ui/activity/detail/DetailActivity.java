@@ -31,7 +31,7 @@ public class DetailActivity extends AppCompatActivity {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         rv_deal_list.setLayoutManager(linearLayoutManager);
 
-        mDealListAdapter = new DealListAdapter(StockManager.getThisStockDealPriceList(stockIndex));
+        mDealListAdapter = new DealListAdapter(StockManager.getThisStockMinuteRiseStrategyResultList(stockIndex));
         rv_deal_list.setAdapter(mDealListAdapter);
     }
 }

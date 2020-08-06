@@ -9,8 +9,6 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.stockmaster.R;
-import com.example.stockmaster.entity.Stock;
-import com.example.stockmaster.entity.StockPrice;
 
 import java.util.List;
 
@@ -18,9 +16,9 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class DealListAdapter extends RecyclerView.Adapter<DealListAdapter.DealListViewHolder> {
-    List<StockPrice> mStockPriceList;
-    public DealListAdapter(List<StockPrice> stockPriceList){
-        mStockPriceList = stockPriceList;
+    List<String> mStrategyResultStringList;
+    public DealListAdapter(List<String> stockPriceList){
+        mStrategyResultStringList = stockPriceList;
     }
 
     @NonNull
@@ -33,12 +31,12 @@ public class DealListAdapter extends RecyclerView.Adapter<DealListAdapter.DealLi
 
     @Override
     public void onBindViewHolder(@NonNull DealListViewHolder holder, int position) {
-        holder.tv_deal_point.setText(mStockPriceList.get(position).toString());
+        holder.tv_deal_point.setText(mStrategyResultStringList.get(position));
     }
 
     @Override
     public int getItemCount() {
-        return mStockPriceList.size();
+        return mStrategyResultStringList.size();
     }
 
     public static class DealListViewHolder extends RecyclerView.ViewHolder{

@@ -47,19 +47,14 @@ public class Stock {
     public List<StockPrice> todayStockPriceList = new ArrayList<>();
     public List<StockPrice> lowerStockPriceList = new ArrayList<>();
     public List<StockPrice> higherStockPriceList = new ArrayList<>();
-    public List<StockPrice> buyStockPriceList = new ArrayList<>();
-    public List<StockPrice> saleStockPriceList = new ArrayList<>();
     public List<StockPrice> dealPriceList = new ArrayList<>(); // 用来在detail页面显示全部交易列表
     public enum DealType{SALE, BUY, NULL}
-    private DealType previousDealType = DealType.NULL;
     private List<Float> previousFourDayPriceList;
-    private List<StockPrice> wholeStockPriceList = new ArrayList<>();
     private float mFiveDayHighestPrice = -1;
     private float mFiveDayLowestPrice = 100000;
     private float mFiveDayHighestEndPrice;
     private List<BaseStrategy> mStrategyList = Arrays.asList(new VBBStrategy(), new MinuteRiseStrategy(),
             new SuddenUpStrategy(), new MinuteLongToArrangeStrategy());
-//    private List<BaseStrategy> mStrategyList = Arrays.asList(new SuddenUpStrategy());
     private float mLatestAvgPrice = -1; // 所添加价格的最后一个均价
 
     private List<StockPrice> mStockPriceList = new ArrayList<>();
@@ -277,29 +272,6 @@ public class Stock {
     }
 
     /**
-     * 添加买点或者卖点，如果上一个是卖点，当前才是买点，上一个是买点，当前才是卖点
-     * @param stockPrice 股票价格、时间点
-     * @param dealType 交易类型：是买还是卖
-     */
-    public boolean addBuyAndSaleStockPrice(StockPrice stockPrice, DealType dealType){
-        if(previousDealType != DealType.BUY && dealType == DealType.BUY){
-            buyStockPriceList.add(stockPrice);
-            previousDealType = DealType.BUY;
-            stockPrice.setDealType(DealType.BUY);
-            dealPriceList.add(stockPrice);
-            return true;
-        }
-        else if(previousDealType != DealType.SALE && dealType == DealType.SALE){
-            saleStockPriceList.add(stockPrice);
-            previousDealType = DealType.SALE;
-            stockPrice.setDealType(DealType.SALE);
-            dealPriceList.add(stockPrice);
-            return true;
-        }
-        return false;
-    }
-
-    /**
      * 得到最近的买卖时间点
      */
     public String getRecentDealTips(){
@@ -308,6 +280,15 @@ public class Stock {
             return strategyResultList.get(strategyResultList.size()-1).toString();
         }
         return "";
+    }
+
+    public List<String> getAllMinuteRiseStrategyResult(){
+        List<StrategyResult> strategyResultList = mStrategyResultMap.get(new MinuteRiseStrategy().getStrategyId());
+        List<String> strategyResultStringList = new ArrayList<>();
+        for(StrategyResult strategyResult : strategyResultList){
+            strategyResultStringList.add(0, strategyResult.toString());
+        }
+        return strategyResultStringList;
     }
 
     /**
@@ -337,7 +318,7 @@ public class Stock {
 
                     // 对价格界面进行更新
                     if(strategyResult.getStrategyId() == new MinuteRiseStrategy().getStrategyId()
-                        && StockManager.isStockInPriceMonitorList(strategyResult.getStockId())){
+                        && getMonitorType() != 0){
                         StockManager.notifyPriceMonitorStockListChange(strategyResult.getStockId());
                     }
                 }
@@ -435,47 +416,6 @@ public class Stock {
         this.monitorType = monitorType;
     }
 
-    /**
-     * 打印挑选出的时间点
-     * @param stockPriceList
-     */
-    public void printQualifiedTimePoint(List<StockPrice> stockPriceList, int countedDay){
-        if(countedDay != 30)
-            return;
-        for(StockPrice stockPrice : stockPriceList){
-            String msg = String.format("合理买入点，时间点:%s，价格:%f",
-                    stockPrice.getTime().toString(),
-                    stockPrice.getPrice());
-            Log.d("lwd", msg);
-        }
-    }
-
-    public void setCurrentPrice(StockPrice currentPrice) {
-        this.currentPrice = currentPrice;
-    }
-
-    public boolean isReceiveTodayData() {
-        return isReceiveTodayData;
-    }
-
-    public void setReceiveTodayData(boolean receiveTodayData) {
-        isReceiveTodayData = receiveTodayData;
-    }
-
-    public List<StrategyResult> getStrategyAnalyseResultList() {
-        return mStrategyResultList;
-    }
-
-    public void setStrategyAnalyseResultList(List<StrategyResult> mStockFormList) {
-        this.mStrategyResultList = mStockFormList;
-    }
-
-    public float getCurrentPrice(){
-        if(currentPrice != null){
-            return currentPrice.price;
-        }
-        return -1;
-    }
 
     public List<StockPrice> getDealStockPriceList() {
         return dealPriceList;

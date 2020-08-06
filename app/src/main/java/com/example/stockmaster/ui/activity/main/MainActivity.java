@@ -66,7 +66,7 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
 
     public void initAllThing(){
         // 载入股票列表，需要操作数据库，必须在请求存储权限之后
-        StockManager.initStockManager();
+        StockManager.initStockManager(this);
 
         // 开启service
         if(!isStartedService){

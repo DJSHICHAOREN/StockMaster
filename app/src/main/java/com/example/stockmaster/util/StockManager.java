@@ -1,6 +1,8 @@
 package com.example.stockmaster.util;
 
+import android.content.Context;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.example.stockmaster.R;
 import com.example.stockmaster.entity.Stock;
@@ -41,8 +43,9 @@ public class StockManager {
     private static Date mLastDealDate = null;
     private static List<Date> mDealDateList = null;
     private static List<Integer> mDealDayList = new ArrayList<>();
-    public static void initStockManager(){
-
+    private static Context mContext;
+    public static void initStockManager(Context context){
+        mContext = context;
         List<String> ALL_STOCK_ID_LIST = new ArrayList<>();
         ALL_STOCK_ID_LIST.addAll(DEFAULT_STOCK_MONITOR_STOCK_ID_LIST);
         ALL_STOCK_ID_LIST.addAll(DEFAULT_PRICE_MONITOR_STOCK_ID_LIST);
@@ -81,6 +84,39 @@ public class StockManager {
                 mPriceMonitorStockIdList.add(stockId);
             }
 
+        }
+
+    }
+
+    /**
+     * 添加价格监控股票
+     * 判断股票id的长度是否合规
+     * 请求分时价格，查看是否存在这只股票，并得到股票名称
+     * 若已观察列表中没有这只股票，则将股票加入价格观察列表
+     * @param stockId
+     */
+    public static void addPriceMonitorStock(String stockId){
+        if(stockId.length() > 2 && !stockId.substring(0,2).equals("hk")){
+            stockId = "hk" + stockId;
+        }
+        if(stockId.length() != 7){
+            Toast.makeText(mContext,"股票id长度不正确", Toast.LENGTH_SHORT).show();
+        }
+
+        Stock stock = new Stock(stockId, "", 1);
+
+        // 在数据库中查找股票
+        stock = DBUtil.saveStock(stock);
+        stock.setMonitorType(1);
+
+        // 若在当前价格监控列表中没有
+        if(mPriceMonitorStockIdList.indexOf(stockId) == -1){
+            mPriceMonitorStockList.add(stock);
+            mPriceMonitorStockIdList.add(stock.getId());
+
+            if(mPriceMonitorUIManager != null){
+                mPriceMonitorUIManager.notifyStockListDateSetChanged();
+            }
         }
 
     }
@@ -351,8 +387,8 @@ public class StockManager {
         return mPriceMonitorStockList;
     }
 
-    public static List<StockPrice> getThisStockDealPriceList(int stockIndex){
-        return mPriceMonitorStockList.get(stockIndex).getDealStockPriceList();
+    public static List<String> getThisStockMinuteRiseStrategyResultList(int stockIndex){
+        return mPriceMonitorStockList.get(stockIndex).getAllMinuteRiseStrategyResult();
     }
 
     public static List<String> getDefaultStockMonitorStockIdList(){

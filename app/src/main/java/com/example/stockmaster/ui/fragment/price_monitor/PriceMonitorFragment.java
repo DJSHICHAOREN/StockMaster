@@ -14,6 +14,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -37,6 +38,9 @@ public class PriceMonitorFragment extends Fragment {
 
     @BindView(R.id.rv_stock_list)
     public RecyclerView rv_stock_list;
+
+    @BindView(R.id.et_stock_id)
+    public EditText et_stock_id;
 
 
     private RecyclerView.Adapter mPriceMonitorAdapter;
@@ -98,14 +102,17 @@ public class PriceMonitorFragment extends Fragment {
         }
     };
 
-
-
     @OnClick(R.id.btn_goto_command_stocks)
     public void onGotoCommandStocksClick(View view){
         Intent intent = new Intent(getContext(), RecommandActivity.class);
         startActivity(intent);
     }
 
+    @OnClick(R.id.btn_add_stock)
+    public void onAddPriceMonitorClick(View view){
+        String stockId = et_stock_id.getText().toString().trim();
+        StockManager.addPriceMonitorStock(stockId);
+    }
 
 
     public class PriceMonitorFragmentUIManager extends UIManager {
