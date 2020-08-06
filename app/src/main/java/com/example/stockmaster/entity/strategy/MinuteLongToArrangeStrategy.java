@@ -16,6 +16,7 @@ import static java.lang.Math.abs;
 public class MinuteLongToArrangeStrategy extends BaseStrategy {
 
     StrategyResult lastStrategyResult = null;
+    StockForm lastStockForm = null;
 
     public MinuteLongToArrangeStrategy() {
         super(R.integer.strategyMinuteLongToArrange);
@@ -30,15 +31,12 @@ public class MinuteLongToArrangeStrategy extends BaseStrategy {
         StrategyResult strategyResult = null;
         if(stockForm.getFormId() == R.integer.formMinuteLongToArrange){
 //            Log.d("lwd", String.format("formMinuteLongToArrange time:%s, price:%s", stockForm.getTime(), stockForm.getPrice()));
-            if(lastStrategyResult == null || isTwoTimeSpaceIntervalBiggerThan(stockForm.getTime(), lastStrategyResult.getTime())){
+            if(lastStockForm == null || isTwoTimeSpaceIntervalBiggerThan(stockForm.getTime(), lastStockForm.getTime())){
                 strategyResult = new StrategyResult(stock.getId(), stockForm.getPrice(), getStrategyId(), stockForm.getTime(), stockForm.getType());
                 Log.d("lwd", strategyResult.toString());
             }
+            lastStockForm = stockForm;
         }
-        if(strategyResult != null){
-            lastStrategyResult = strategyResult;
-        }
-
         return strategyResult;
     }
 

@@ -5,6 +5,7 @@ import android.util.Log;
 import com.example.stockmaster.R;
 import com.example.stockmaster.entity.Stock;
 import com.example.stockmaster.entity.ma.MaState;
+import com.example.stockmaster.util.DateUtil;
 
 import java.util.Date;
 import java.util.List;
@@ -59,8 +60,9 @@ public class MinuteLongToArrangeFormJudge extends BaseFormJudge {
         boolean isMinutePriceUp = false;
         // 判断均线是否阶梯形排列
         if(lastMaState1.getMa5() >= lastMaState1.getMa10()
-                &&
-                (lastMaState1.getMa10() > lastMaState1.getMa20() || lastMaState1.getMa10() > lastMaState1.getMa30())){
+                && lastMaState1.getMa5() >= lastMaState1.getMa20()
+                && lastMaState1.getMa5() >= lastMaState1.getMa30()
+                && (lastMaState1.getMa10() > lastMaState1.getMa20() || lastMaState1.getMa10() > lastMaState1.getMa30())){
             isSeriation = true;
         }
 
@@ -89,6 +91,10 @@ public class MinuteLongToArrangeFormJudge extends BaseFormJudge {
 //                if(lastMaState3.getMaPriceDispersion() <= 0.01 && lastMaState2.getMaPriceDispersion() <= 0.01)
 //                    isHorizontalBefore = true;
 //            }
+//        }
+
+//        if(DateUtil.isDateEqual(lastMaState1.getTime(), 5, 15, 42)){
+//            Log.d("lwd", "hello");
 //        }
 
 
