@@ -45,6 +45,8 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
 
     public static File mDBFile = null;
 
+    private static boolean isStartedService = false;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -67,8 +69,13 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
         StockManager.initStockManager();
 
         // 开启service
-        Intent intent = new Intent(this, BrainService.class);
-        startService(intent);
+        if(!isStartedService){
+            Intent intent = new Intent(this, BrainService.class);
+            startService(intent);
+
+            isStartedService = true;
+        }
+
     }
 
     @Override
