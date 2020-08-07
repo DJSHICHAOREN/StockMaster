@@ -147,14 +147,31 @@ public class StockManager {
             if(stock != null && stock.isReceiveTodayData){
                 List<StrategyResult> strategyResultList = stock.addStockPrice(stockPrice);
                 for(StrategyResult strategyResult : strategyResultList){
-                    if(strategyResult.getStrategyId() == R.integer.strategyMinuteRise
-                    || strategyResult.getStrategyId() == R.integer.strategyMinuteLongToArrange){
+                    if(isResultNotify(stock, strategyResult)){
                         mBrainService.sendNotification(strategyResult.getNotificationId(),
                                 stock.getName() + " " + strategyResult.toNotificationString());
                     }
                 }
             }
         }
+    }
+
+    public static boolean isResultNotify(Stock stock, StrategyResult strategyResult){
+        switch (strategyResult.getStrategyId()){
+            case R.integer.strategyMinuteLongToArrange:{
+                return true;
+            }
+            case R.integer.strategyMinuteRise:{
+                if(stock.getMonitorType() == 1 && strategyResult.getType()==0){
+                    return true;
+                }
+                else if(stock.getMonitorType() == 2 && strategyResult.getType()==1){
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 
 
