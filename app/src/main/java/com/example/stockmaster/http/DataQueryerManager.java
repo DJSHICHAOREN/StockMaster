@@ -1,6 +1,7 @@
 package com.example.stockmaster.http;
 
 import android.content.Context;
+import android.os.SystemClock;
 import android.util.Log;
 
 import com.example.stockmaster.util.StockManager;
@@ -54,6 +55,7 @@ public class DataQueryerManager {
                 }
             };
             mCachedThreadPool.execute(runnable);
+
         }
     }
 
@@ -149,14 +151,14 @@ public class DataQueryerManager {
         }
         final String stockIdString = stockIdStr;
         Calendar calendar = Calendar.getInstance();
-        //获取系统时间
-        int hour = calendar.get(Calendar.HOUR_OF_DAY);
 
         // 设置计时器进行请求
         Timer timer = new Timer("beginQueryMinutePrice");
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
+                //获取系统时间
+                int hour = calendar.get(Calendar.HOUR_OF_DAY);
                 if(hour < 9 || hour > 16){
                     return;
                 }
@@ -170,13 +172,13 @@ public class DataQueryerManager {
      */
     public void beginQueryMaPrice(){
         Calendar calendar = Calendar.getInstance();
-        //获取系统时间
-        int hour = calendar.get(Calendar.HOUR_OF_DAY);
         // 设置计时器进行请求
         Timer timer = new Timer("beginQueryMaPrice");
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
+                //获取系统时间
+                int hour = calendar.get(Calendar.HOUR_OF_DAY);
                 if(hour < 9 || hour > 16){
                     return;
                 }
@@ -190,12 +192,12 @@ public class DataQueryerManager {
      */
     public void beginQueryLastDealDate(){
         Calendar calendar = Calendar.getInstance();
-        //获取系统时间
-        int hour = calendar.get(Calendar.HOUR_OF_DAY);
         Timer timer = new Timer("queryLastDealDate");
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
+                //获取系统时间
+                int hour = calendar.get(Calendar.HOUR_OF_DAY);
                 if(hour < 9 || hour > 16){
                     return;
                 }

@@ -68,6 +68,8 @@ public class MinuteRiseFormJudge extends BaseFormJudge {
                 }
             }
         }
+
+
         // 寻找买点
         if(lastMaState2.price < lastMaState1.price && lastMaState2.price < lastMaState3.price){
             // 添加极小值点
@@ -86,10 +88,9 @@ public class MinuteRiseFormJudge extends BaseFormJudge {
 //                            stock.getId(), stockPrice.getTime(), stockPrice.getPrice(), judgePriceSite(stockPrice),
 //                            judgeStockTime(stockPrice), judgeLastHigherPriceHeight(stockPrice, stock)));
                     // 判断价格与均线的位置
-                    if(!judgePriceSite(stockPrice)){
-
-                        return null;
-                    }
+//                    if(!judgePriceSite(stockPrice)){
+//                        return null;
+//                    }
 //                    if(!judgeStockTime(stockPrice)){
 //                        return null;
 //                    }
@@ -120,6 +121,12 @@ public class MinuteRiseFormJudge extends BaseFormJudge {
         return null;
     }
 
+    /**
+     * 此时的低点与之前的高点的差距不能大于1%
+     * @param stockPrice
+     * @param stock
+     * @return
+     */
     private boolean judgeLastHigherPriceHeight(StockPrice stockPrice, Stock stock){
         int higherStockPriceListSize = stock.higherStockPriceList.size();
         StockPrice higherStockPrice = stock.higherStockPriceList.get(higherStockPriceListSize-1);

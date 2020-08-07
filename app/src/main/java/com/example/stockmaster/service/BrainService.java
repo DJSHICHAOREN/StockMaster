@@ -70,8 +70,6 @@ public class BrainService extends Service {
 //                    }
                     // 定时请求今天价格
                     mDataQueryerManager.beginQueryTodayPrice();
-                    // 结束时请求：今日价格
-//                    mDataQueryerManager.queryEndOnce();
 
                     // 从数据库加载股票价格的均线
 //                StockManager.loadStockPrice();
