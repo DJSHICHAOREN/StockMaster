@@ -140,7 +140,7 @@ public class SinaDataQueryer {
                         // 得到的时间为空字符串，则抛出异常
                         catch (NumberFormatException ex){
                             Log.e("lwd","得到空的时间字符串");
-                            queryStocksNDayPrice(stockId, dayCount);
+//                            queryStocksNDayPrice(stockId, dayCount);
                         }
                     }
                 },
@@ -215,7 +215,7 @@ public class SinaDataQueryer {
                         // 得到的时间为空字符串，则抛出异常
                         catch (NumberFormatException ex){
                             Log.e("lwd","得到空的时间字符串");
-                            queryStocksTodayPrice(stockId);
+//                            queryStocksTodayPrice(stockId);
                         }
                     }
                 },

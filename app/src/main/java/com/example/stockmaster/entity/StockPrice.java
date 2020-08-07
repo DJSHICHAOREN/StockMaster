@@ -132,6 +132,9 @@ public class StockPrice {
 
     @Override
     public String toString() {
+        if(time == null){
+            return "";
+        }
         String dealTime = time.getHours()+":"+time.getMinutes()+":"+time.getSeconds();
         return String.format("stockId：%s, 时间：%s，价格：%s", getStockId(), dealTime , getPriceString());
     }

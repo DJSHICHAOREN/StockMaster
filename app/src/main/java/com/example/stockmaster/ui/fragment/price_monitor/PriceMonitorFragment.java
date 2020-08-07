@@ -102,12 +102,6 @@ public class PriceMonitorFragment extends Fragment {
         }
     };
 
-    @OnClick(R.id.btn_goto_command_stocks)
-    public void onGotoCommandStocksClick(View view){
-        Intent intent = new Intent(getContext(), RecommandActivity.class);
-        startActivity(intent);
-    }
-
     @OnClick(R.id.btn_add_stock)
     public void onAddPriceMonitorClick(View view){
         String stockId = et_stock_id.getText().toString().trim();

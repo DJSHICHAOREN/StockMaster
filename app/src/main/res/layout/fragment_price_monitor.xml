@@ -34,11 +34,5 @@
             android:scrollbars="vertical"
             android:layout_marginTop="5dp"/>
 
-        <Button
-            android:id="@+id/btn_goto_command_stocks"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="enter command stocks">
-        </Button>
 
 </LinearLayout>

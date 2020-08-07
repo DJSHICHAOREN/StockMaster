@@ -127,6 +127,11 @@ public class ResponseStringToObject {
                             continue;
                         }
                     }
+
+                    // 如果sinaStockPrice有时间但是没有价格，说明这是一直新股，那时还没有发行
+                    if(!sinaStockPrice.getM().equals("") && sinaStockPrice.getPrice().equals("")){
+                        continue;
+                    }
                     StockPrice stockPrice = new StockPrice(stockId, date+ " " +sinaStockPrice.getM(),
                             sinaStockPrice.getPrice(), queryType, sinaStockPrice.getAvg_p());
                     stockPriceList.add(stockPrice);
