@@ -120,10 +120,10 @@ public class DateUtil {
         }
         //获取系统时间
         int hour = calendar.get(Calendar.HOUR_OF_DAY);
-        if(hour < 9 || hour > 16){
+        if(hour < 9 || hour > 15){
             return false;
         }
-        if(hour > 12 && hour < 13){
+        if(hour == 12){
             return false;
         }
         return true;
