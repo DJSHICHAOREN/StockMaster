@@ -470,6 +470,10 @@ public class Stock {
         return super.toString();
     }
 
+    public String getStockMonitorStrategyResultString(){
+        return getMLTAStrategyResultString();
+    }
+
     public String getVBBOrSuddenUpStrategyResultString(){
         if(this.mStrategyResultList == null){
             return "没有信息";
@@ -484,5 +488,20 @@ public class Stock {
         }
         return resultString;
     }
+
+    public String getMLTAStrategyResultString(){
+        if(this.mStrategyResultList == null){
+            return "没有信息";
+        }
+        String resultString = "";
+        for(StrategyResult strategyResult : this.mStrategyResultList){
+            if(strategyResult != null
+                    && strategyResult.getStrategyId() == new MinuteLongToArrangeStrategy().getStrategyId()){
+                resultString += strategyResult.toString() + "\n";
+            }
+        }
+        return resultString;
+    }
+
 
 }

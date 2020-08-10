@@ -42,7 +42,7 @@ public class StockMonitorAdapter extends RecyclerView.Adapter<StockMonitorAdapte
         final Stock stock = mStockList.get(position);
         holder.tv_stock_id.setText(stock.getId());
         holder.tv_stock_name.setText(stock.getName());
-        holder.tv_deal_tip.setText(stock.getVBBOrSuddenUpStrategyResultString());
+        holder.tv_deal_tip.setText(stock.getStockMonitorStrategyResultString());
         holder.ll_stock_item.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -52,7 +52,7 @@ public class StockMonitorAdapter extends RecyclerView.Adapter<StockMonitorAdapte
 
                 AlertDialog alertDialog1 = new AlertDialog.Builder(mStockMonitorFragment.getContext())
                         .setTitle(stock.getId() + " " + stock.getName())//标题
-                        .setMessage(stock.getVBBOrSuddenUpStrategyResultString())//内容
+                        .setMessage(stock.getStockMonitorStrategyResultString())//内容
                         .create();
                 alertDialog1.show();
             }

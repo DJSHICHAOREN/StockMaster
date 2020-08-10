@@ -4,6 +4,7 @@ import android.util.Log;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
 public class DateUtil {
@@ -106,5 +107,25 @@ public class DateUtil {
         long gapMinutes = (date2.getTime() - date1.getTime())/(1000 * 60);
         gapMinutes = Math.abs(gapMinutes);
         return gapMinutes;
+    }
+
+
+    public static boolean isDealTime(){
+        Calendar calendar = Calendar.getInstance();
+        //
+        int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
+        // 1:sunday,7:saturday
+        if(dayOfWeek == 1 || dayOfWeek == 7){
+            return false;
+        }
+        //获取系统时间
+        int hour = calendar.get(Calendar.HOUR_OF_DAY);
+        if(hour < 9 || hour > 16){
+            return false;
+        }
+        if(hour > 12 && hour < 13){
+            return false;
+        }
+        return true;
     }
 }

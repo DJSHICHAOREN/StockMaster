@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.SystemClock;
 import android.util.Log;
 
+import com.example.stockmaster.util.DateUtil;
 import com.example.stockmaster.util.StockManager;
 
 import java.util.Calendar;
@@ -71,10 +72,7 @@ public class DataQueryerManager {
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
-                Calendar calendar = Calendar.getInstance();
-                //获取系统时间
-                int hour = calendar.get(Calendar.HOUR_OF_DAY);
-                if(hour < 9 || hour > 16){
+                if(!DateUtil.isDealTime()){
                     return;
                 }
                 for(final String stockId : StockManager.getDefaultStockMonitorStockIdList()) {
@@ -111,18 +109,6 @@ public class DataQueryerManager {
         queryAllMaOnce();
     }
 
-    public void queryEndOnce(){
-        for(final String stockId : StockManager.getDefaultStockMonitorStockIdList()) {
-            Runnable runnable = new Runnable() {
-                @Override
-                public void run() {
-                    mSinaDataQueryer.queryStocksTodayPrice(stockId);
-                }
-            };
-            mCachedThreadPool.execute(runnable);
-        }
-    }
-
     public void queryAllMaOnce(){
 
         for(final String stockId : StockManager.getDefaultStockMonitorStockIdList()) {
@@ -150,19 +136,15 @@ public class DataQueryerManager {
             stockIdStr = stockIdStr + "rt_" + stockId + ",";
         }
         final String stockIdString = stockIdStr;
-        Calendar calendar = Calendar.getInstance();
 
         // 设置计时器进行请求
         Timer timer = new Timer("beginQueryMinutePrice");
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
-                //获取系统时间
-                int hour = calendar.get(Calendar.HOUR_OF_DAY);
-                if(hour < 9 || hour > 16){
-                    return;
+                if(DateUtil.isDealTime()){
+                    mSinaDataQueryer.queryStocksNowPrice(stockIdString);
                 }
-                mSinaDataQueryer.queryStocksNowPrice(stockIdString);
             }
         }, 0, 1000 * 20); // 1 seconds
     }
@@ -171,18 +153,15 @@ public class DataQueryerManager {
      * 每半小时请求一次日均线数据
      */
     public void beginQueryMaPrice(){
-        Calendar calendar = Calendar.getInstance();
         // 设置计时器进行请求
         Timer timer = new Timer("beginQueryMaPrice");
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
-                //获取系统时间
-                int hour = calendar.get(Calendar.HOUR_OF_DAY);
-                if(hour < 9 || hour > 16){
-                    return;
+                if(DateUtil.isDealTime()){
+                    queryAllMaOnce();
                 }
-                queryAllMaOnce();
+
             }
         }, 1000*60*30, 1000*60*30); // 1 seconds
     }
@@ -191,21 +170,18 @@ public class DataQueryerManager {
      * 每隔20分钟请求一次最近开盘日期
      */
     public void beginQueryLastDealDate(){
-        Calendar calendar = Calendar.getInstance();
         Timer timer = new Timer("queryLastDealDate");
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
-                //获取系统时间
-                int hour = calendar.get(Calendar.HOUR_OF_DAY);
-                if(hour < 9 || hour > 16){
-                    return;
+                if(DateUtil.isDealTime()){
+                    mSinaDataQueryer.queryLastDealDate();
                 }
-                mSinaDataQueryer.queryLastDealDate();
 
             }
         }, 0, 1000*60*10);
     }
+
 
 
 
