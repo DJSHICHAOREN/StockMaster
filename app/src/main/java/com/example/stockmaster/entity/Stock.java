@@ -4,6 +4,7 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 
+import com.example.stockmaster.R;
 import com.example.stockmaster.entity.form.StockForm;
 import com.example.stockmaster.entity.k.K30Minutes;
 import com.example.stockmaster.entity.k.KBase;
@@ -481,8 +482,8 @@ public class Stock {
         String resultString = "";
         for(StrategyResult strategyResult : this.mStrategyResultList){
             if(strategyResult != null
-                    && (strategyResult.getStrategyId() == new VBBStrategy().getStrategyId()
-                    || strategyResult.getStrategyId() == new SuddenUpStrategy().getStrategyId())){
+                    && (strategyResult.getStrategyId() == R.integer.strategyVBB
+                    || strategyResult.getStrategyId() == R.integer.strategySuddenUp)){
                 resultString += strategyResult.toString() + "\n";
             }
         }
@@ -496,7 +497,7 @@ public class Stock {
         String resultString = "";
         for(StrategyResult strategyResult : this.mStrategyResultList){
             if(strategyResult != null
-                    && strategyResult.getStrategyId() == new MinuteLongToArrangeStrategy().getStrategyId()){
+                    && strategyResult.getStrategyId() == R.integer.strategyMinuteLongToArrange){
                 resultString += strategyResult.toString() + "\n";
             }
         }
