@@ -182,7 +182,10 @@ public class StockManager {
                 return true;
             }
             case R.integer.strategyMinuteRise:{
-                if(stock.getMonitorType() != 0){
+                if(stock.getMonitorType() == 1 && strategyResult.getType() == 0){
+                    return true;
+                }
+                if(stock.getMonitorType() == 2 && strategyResult.getType() == 1){
                     return true;
                 }
             }
@@ -194,6 +197,7 @@ public class StockManager {
 
     /**
      * 添加一天股票价格
+     * 一天的价格策略结果虽然与五日的有部分冲突了，但是在mlta策略的具体分析中会自动过滤掉重复的，因为他们的时间是相同的，间隔肯定小于2.5个小时
      * @param stockPriceList
      * @return stockId 获取成功的股票Id
      */
@@ -205,8 +209,12 @@ public class StockManager {
 
             // 在添加今天的数据之前要清空之前的价格数据
             if(stock.isReceiveTodayData){
-                stock.addStockPriceList(stockPriceList);
+                List<StrategyResult> strategyResultList = stock.addStockPriceList(stockPriceList);
                 stock.setLastExactStockPriceIndex(stock.getStockPriceList().size()-1);
+                // 处理策略结果
+                if(strategyResultList.size() > 0){
+                    mStockMonitorPickedStockList.updateItemAt(mStockMonitorPickedStockList.indexOf(stock), stock);
+                }
             }
             // 刷新UI
             if(mMainActivityUIManager != null){
