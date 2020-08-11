@@ -1,7 +1,5 @@
 package com.example.stockmaster.util;
 
-import com.example.stockmaster.entity.StockPrice;
-
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;

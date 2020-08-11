@@ -1,9 +1,6 @@
 package com.example.stockmaster.entity.k;
 
-import com.example.stockmaster.entity.Stock;
-import com.example.stockmaster.entity.StockPrice;
-
-import java.util.List;
+import com.example.stockmaster.entity.stock.Stock;
 
 public class K60Minutes extends KBase {
 

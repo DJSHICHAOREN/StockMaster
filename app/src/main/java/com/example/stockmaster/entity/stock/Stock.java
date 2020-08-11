@@ -1,4 +1,4 @@
-package com.example.stockmaster.entity;
+package com.example.stockmaster.entity.stock;
 
 import android.util.Log;
 
@@ -458,6 +458,14 @@ public class Stock {
         return mStrategyResultMap;
     }
 
+    public StrategyResult getLastStrategyResult(int strategyId){
+        List<StrategyResult> strategyResultList = mStrategyResultMap.get(strategyId);
+        if(strategyResultList.size() < 1){
+            return null;
+        }
+        return strategyResultList.get(strategyResultList.size()-1);
+    }
+
     public void setStrategyResultMap(HashMap<Integer, List<StrategyResult>> mStrategyResultMap) {
         this.mStrategyResultMap = mStrategyResultMap;
     }
@@ -498,7 +506,7 @@ public class Stock {
         for(StrategyResult strategyResult : this.mStrategyResultList){
             if(strategyResult != null
                     && strategyResult.getStrategyId() == R.integer.strategyMinuteLongToArrange){
-                resultString += strategyResult.toString() + "\n";
+                resultString += strategyResult.toStockMonitorString() + "\n";
             }
         }
         return resultString;

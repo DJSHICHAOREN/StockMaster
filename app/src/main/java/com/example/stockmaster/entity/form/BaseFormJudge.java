@@ -1,7 +1,6 @@
 package com.example.stockmaster.entity.form;
 
-import com.example.stockmaster.entity.Stock;
-import com.example.stockmaster.entity.StockPrice;
+import com.example.stockmaster.entity.stock.Stock;
 import com.example.stockmaster.entity.ma.MaState;
 
 import java.util.List;

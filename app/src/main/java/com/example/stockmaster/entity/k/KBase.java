@@ -1,9 +1,7 @@
 package com.example.stockmaster.entity.k;
 
-import android.util.Log;
-
-import com.example.stockmaster.entity.Stock;
-import com.example.stockmaster.entity.StockPrice;
+import com.example.stockmaster.entity.stock.Stock;
+import com.example.stockmaster.entity.stock.StockPrice;
 import com.example.stockmaster.entity.form.StockForm;
 import com.example.stockmaster.entity.ma.MaState;
 import com.example.stockmaster.util.DateUtil;

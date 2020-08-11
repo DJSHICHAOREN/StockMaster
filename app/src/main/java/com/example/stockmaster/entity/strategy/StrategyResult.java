@@ -94,6 +94,12 @@ public class StrategyResult {
                 DateUtil.convertDateToShortMinuteString(time), getPrice(), getStockId());
     }
 
+    public String toStockMonitorString(){
+        String saleType = this.type == 0 ? "B" : "S";
+        return String.format("%s %s，时间：%s，价格：%.3f", getStrategyType(),
+                saleType, DateUtil.convertDateToShortString(time), getPrice());
+    }
+
     @Override
     public String toString(){
         String saleType = this.type == 0 ? "B" : "S";

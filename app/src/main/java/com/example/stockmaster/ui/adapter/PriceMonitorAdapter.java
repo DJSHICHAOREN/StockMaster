@@ -13,7 +13,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.stockmaster.R;
-import com.example.stockmaster.entity.Stock;
+import com.example.stockmaster.entity.stock.Stock;
 import com.example.stockmaster.ui.activity.detail.DetailActivity;
 import com.example.stockmaster.ui.fragment.price_monitor.PriceMonitorFragment;
 import com.example.stockmaster.util.DBUtil;

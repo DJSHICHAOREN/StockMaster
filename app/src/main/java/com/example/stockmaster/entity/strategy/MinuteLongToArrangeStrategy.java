@@ -1,12 +1,10 @@
 package com.example.stockmaster.entity.strategy;
 
 import android.util.Log;
-import android.util.TimeUtils;
 
 import com.example.stockmaster.R;
-import com.example.stockmaster.entity.Stock;
+import com.example.stockmaster.entity.stock.Stock;
 import com.example.stockmaster.entity.form.StockForm;
-import com.example.stockmaster.util.DateUtil;
 import com.example.stockmaster.util.StockManager;
 
 import java.util.Date;

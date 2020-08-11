@@ -11,9 +11,10 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.SortedList;
 
 import com.example.stockmaster.R;
-import com.example.stockmaster.entity.Stock;
+import com.example.stockmaster.entity.stock.Stock;
 import com.example.stockmaster.util.DBUtil;
 
 import java.util.List;
@@ -22,13 +23,14 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class StockMonitorAdapter extends RecyclerView.Adapter<StockMonitorAdapter.StockListViewHolder> {
-    private List<Stock> mStockList;
+    private SortedList<Stock> mStockList;
     private Fragment mStockMonitorFragment;
 
-    public StockMonitorAdapter(List<Stock> stockList, Fragment stockMonitorFragment){
+    public StockMonitorAdapter(SortedList<Stock> stockList, Fragment stockMonitorFragment){
         mStockList = stockList;
         mStockMonitorFragment = stockMonitorFragment;
     }
+
     @NonNull
     @Override
     public StockListViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -94,6 +96,14 @@ public class StockMonitorAdapter extends RecyclerView.Adapter<StockMonitorAdapte
     @Override
     public int getItemCount() {
         return mStockList.size();
+    }
+
+    public SortedList<Stock> getStockList() {
+        return mStockList;
+    }
+
+    public void setStockList(SortedList<Stock> mStockList) {
+        this.mStockList = mStockList;
     }
 
     public static class StockListViewHolder extends RecyclerView.ViewHolder {

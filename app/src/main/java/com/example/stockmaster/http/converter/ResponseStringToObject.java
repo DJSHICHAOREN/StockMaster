@@ -2,7 +2,7 @@ package com.example.stockmaster.http.converter;
 
 import android.util.Log;
 
-import com.example.stockmaster.entity.StockPrice;
+import com.example.stockmaster.entity.stock.StockPrice;
 import com.example.stockmaster.entity.sina.NDaysSinaResponse;
 import com.example.stockmaster.entity.sina.NDaysSinaStockPrice;
 import com.example.stockmaster.entity.sina.TodaySinaResponse;

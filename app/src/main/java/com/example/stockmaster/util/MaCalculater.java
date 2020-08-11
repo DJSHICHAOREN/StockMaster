@@ -1,8 +1,6 @@
 package com.example.stockmaster.util;
 
-import android.util.Log;
-
-import com.example.stockmaster.entity.StockPrice;
+import com.example.stockmaster.entity.stock.StockPrice;
 import com.example.stockmaster.entity.ma.MaState;
 
 import java.util.ArrayList;

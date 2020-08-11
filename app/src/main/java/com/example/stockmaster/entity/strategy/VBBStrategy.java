@@ -1,15 +1,10 @@
 package com.example.stockmaster.entity.strategy;
 
-import android.util.Log;
-
 import com.example.stockmaster.R;
-import com.example.stockmaster.entity.Stock;
+import com.example.stockmaster.entity.stock.Stock;
 import com.example.stockmaster.entity.form.StockForm;
 
-import java.util.Date;
 import java.util.List;
-
-import static com.example.stockmaster.util.DateUtil.calculateMinutesGap;
 
 public class VBBStrategy extends BaseStrategy {
     private StrategyResult lastLongToArrangeStrategyResult;

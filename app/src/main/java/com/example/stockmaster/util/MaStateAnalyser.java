@@ -1,7 +1,6 @@
 package com.example.stockmaster.util;
 
-import com.example.stockmaster.entity.Stock;
-import com.example.stockmaster.entity.StockPrice;
+import com.example.stockmaster.entity.stock.Stock;
 import com.example.stockmaster.entity.form.FallThroughSupportFormJudge;
 import com.example.stockmaster.entity.form.LongToArrangeFormJudge;
 import com.example.stockmaster.entity.form.MinuteLongToArrangeFormJudge;
@@ -10,7 +9,6 @@ import com.example.stockmaster.entity.form.SuddenUpFormJudge;
 import com.example.stockmaster.entity.ma.MaState;
 import com.example.stockmaster.entity.form.BaseFormJudge;
 import com.example.stockmaster.entity.form.StockForm;
-import com.example.stockmaster.entity.form.UpEmanativeFormJudge;
 
 import java.util.ArrayList;
 import java.util.List;

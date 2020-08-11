@@ -1,10 +1,10 @@
-package com.example.stockmaster.entity;
+package com.example.stockmaster.entity.stock;
+
+import com.example.stockmaster.entity.stock.Stock;
 
 import org.xutils.db.annotation.Column;
 import org.xutils.db.annotation.Table;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import static com.example.stockmaster.util.DateUtil.convertStringToDate;

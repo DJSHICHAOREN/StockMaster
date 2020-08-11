@@ -15,8 +15,10 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.SortedList;
 
 import com.example.stockmaster.R;
+import com.example.stockmaster.entity.stock.Stock;
 import com.example.stockmaster.ui.activity.base.UIManager;
 import com.example.stockmaster.ui.activity.main.MainActivity;
 import com.example.stockmaster.ui.adapter.StockMonitorAdapter;
@@ -34,7 +36,7 @@ public class StockMonitorFragment extends Fragment {
     @BindView(R.id.rv_stock_list)
     public RecyclerView rv_stock_list;
 
-    private RecyclerView.Adapter mStockMonitorAdapter;
+    private StockMonitorAdapter mStockMonitorAdapter;
 
     private Handler handler = new Handler(){
         @Override
@@ -62,15 +64,15 @@ public class StockMonitorFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_stock_monitor, container, false);
         ButterKnife.bind(this, view);
 
-        StockManager.setStockMonitorFragmentUIManager(new StockMonitorFragmentUIManager());
-
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
         rv_stock_list.setLayoutManager(linearLayoutManager);
 
-        mStockMonitorAdapter = new StockMonitorAdapter(StockManager.getStockMonitorPickedStockList(), this);
+        mStockMonitorAdapter = new StockMonitorAdapter(null, this);
         rv_stock_list.setAdapter(mStockMonitorAdapter);
 
-//        File dbFile = getActivity().getDatabasePath("English");
+        StockMonitorSortedListCallback stockMonitorSortedListCallback = new StockMonitorSortedListCallback(mStockMonitorAdapter);
+        SortedList<Stock> stockSortedList = StockManager.setStockMonitorFragmentUIManager(new StockMonitorFragmentUIManager(), stockMonitorSortedListCallback);
+        mStockMonitorAdapter.setStockList(stockSortedList);
 
         return view;
     }

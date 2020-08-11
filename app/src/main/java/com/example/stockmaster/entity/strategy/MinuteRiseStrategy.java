@@ -1,14 +1,8 @@
 package com.example.stockmaster.entity.strategy;
 
-import android.util.Log;
-
 import com.example.stockmaster.R;
-import com.example.stockmaster.entity.Stock;
+import com.example.stockmaster.entity.stock.Stock;
 import com.example.stockmaster.entity.form.StockForm;
-
-import java.util.Date;
-
-import static com.example.stockmaster.util.DateUtil.calculateMinutesGap;
 
 public class MinuteRiseStrategy extends BaseStrategy {
     private StockForm lastStockForm;

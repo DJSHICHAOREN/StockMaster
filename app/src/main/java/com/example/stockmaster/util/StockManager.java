@@ -4,14 +4,16 @@ import android.content.Context;
 import android.util.Log;
 import android.widget.Toast;
 
+import androidx.recyclerview.widget.SortedList;
+
 import com.example.stockmaster.R;
-import com.example.stockmaster.entity.Stock;
-import com.example.stockmaster.entity.StockPrice;
+import com.example.stockmaster.entity.stock.Stock;
+import com.example.stockmaster.entity.stock.StockPrice;
 import com.example.stockmaster.entity.ma.DayMaPrice;
 import com.example.stockmaster.entity.strategy.StrategyResult;
-import com.example.stockmaster.entity.strategy.VBBStrategy;
 import com.example.stockmaster.service.BrainService;
 import com.example.stockmaster.ui.activity.base.UIManager;
+import com.example.stockmaster.ui.fragment.stock_monitor.StockMonitorSortedListCallback;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -26,7 +28,7 @@ import java.util.TimerTask;
 public class StockManager {
     private static List<Stock> mStockList = new ArrayList<Stock>(); // 监控的全部股票列表
     private static List<String> mStockIdList = new ArrayList<String>();
-    private  static List<Stock> mStockMonitorPickedStockList = new ArrayList<>(); // 在股票监控界面显示的被选中的股票
+    private static SortedList<Stock> mStockMonitorPickedStockList;
     private  static List<Stock> mPriceMonitorStockList = new ArrayList<>(); // 在价格监视的股票
     private  static List<String> mPriceMonitorStockIdList = new ArrayList<>(); // 在价格监视的股票
     private static UIManager mPriceMonitorUIManager;
@@ -165,6 +167,10 @@ public class StockManager {
     public static boolean isResultNotify(Stock stock, StrategyResult strategyResult){
         switch (strategyResult.getStrategyId()){
             case R.integer.strategyMinuteLongToArrange:{
+                // 当出现均线向上的提醒时，监控分时价格买点提醒
+                if(stock.getMonitorType() == 0){
+                    stock.ringMonitorType();
+                }
                 return true;
             }
             case R.integer.strategyMinuteRise:{
@@ -354,9 +360,6 @@ public class StockManager {
         return false;
     }
 
-    public static List<Stock> getStockMonitorPickedStockList() {
-        return mStockMonitorPickedStockList;
-    }
 
     public static Date getLastDealDate() {
         return mLastDealDate;
@@ -368,8 +371,8 @@ public class StockManager {
 
     public static String getPickedStockIdListString(){
         String stockIdListString = "";
-        for(Stock stock : mStockMonitorPickedStockList){
-            stockIdListString += stock.getId().substring(2, stock.getId().length());
+        for(int i = 0; i < mStockMonitorPickedStockList.size(); i++){
+            stockIdListString += mStockMonitorPickedStockList.get(i).getId().substring(2);
             stockIdListString += "\r\n";
             stockIdListString += "\r\n";
         }
@@ -384,8 +387,11 @@ public class StockManager {
         mPriceMonitorUIManager = mainActivityUIManager;
     }
 
-    public static void setStockMonitorFragmentUIManager(UIManager stockMonitorUIManager){
+    public static SortedList<Stock> setStockMonitorFragmentUIManager(UIManager stockMonitorUIManager, StockMonitorSortedListCallback stockMonitorSortedListCallback){
         mStockMonitorUIManager = stockMonitorUIManager;
+        mStockMonitorPickedStockList = new SortedList<>(Stock.class, stockMonitorSortedListCallback);
+
+        return mStockMonitorPickedStockList;
     }
 
     public static void setMainActivityUIManager(UIManager mainActivityUIManager){

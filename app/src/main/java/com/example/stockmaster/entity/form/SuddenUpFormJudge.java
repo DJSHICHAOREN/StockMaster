@@ -1,7 +1,7 @@
 package com.example.stockmaster.entity.form;
 
 import com.example.stockmaster.R;
-import com.example.stockmaster.entity.Stock;
+import com.example.stockmaster.entity.stock.Stock;
 import com.example.stockmaster.entity.ma.MaState;
 import com.example.stockmaster.util.StockManager;
 
