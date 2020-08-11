@@ -152,8 +152,10 @@ public class StockManager {
                 stock.setName(stockPrice.getName());
                 DBUtil.updateStock(stock);
             }
+
             if(stock != null && stock.isReceiveTodayData){
                 List<StrategyResult> strategyResultList = stock.addStockPrice(stockPrice);
+                // 处理策略结果
                 for(StrategyResult strategyResult : strategyResultList){
                     if(isResultNotify(stock, strategyResult)){
                         mBrainService.sendNotification(strategyResult.getNotificationId(),
@@ -164,6 +166,12 @@ public class StockManager {
         }
     }
 
+    /**
+     * 判断是否将得到的策略结果通知
+     * @param stock
+     * @param strategyResult
+     * @return
+     */
     public static boolean isResultNotify(Stock stock, StrategyResult strategyResult){
         switch (strategyResult.getStrategyId()){
             case R.integer.strategyMinuteLongToArrange:{
@@ -294,14 +302,7 @@ public class StockManager {
      * @param stock
      */
     public static void flushStockMonitorStockList(Stock stock){
-        for(int i=0; i<mStockMonitorPickedStockList.size(); i++){
-            if(mStockMonitorPickedStockList.get(i).getId() == stock.getId()){
-                if(mStockMonitorUIManager != null){
-                    mStockMonitorUIManager.notifyStockListItemChanged(i);
-                }
-                break;
-            }
-        }
+        mStockMonitorPickedStockList.updateItemAt(mStockMonitorPickedStockList.indexOf(stock), stock);
     }
 
     /**

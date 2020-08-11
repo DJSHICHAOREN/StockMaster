@@ -112,7 +112,6 @@ public class DateUtil {
 
     public static boolean isDealTime(){
         Calendar calendar = Calendar.getInstance();
-        //
         int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
         // 1:sunday,7:saturday
         if(dayOfWeek == 1 || dayOfWeek == 7){
