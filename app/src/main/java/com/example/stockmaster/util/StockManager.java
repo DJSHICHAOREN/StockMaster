@@ -310,7 +310,10 @@ public class StockManager {
      * @param stock
      */
     public static void flushStockMonitorStockList(Stock stock){
-        mStockMonitorPickedStockList.updateItemAt(mStockMonitorPickedStockList.indexOf(stock), stock);
+        int stockIndex = mStockMonitorPickedStockList.indexOf(stock);
+        if(stockIndex != -1){
+            mStockMonitorPickedStockList.updateItemAt(stockIndex, stock);
+        }
     }
 
     /**
