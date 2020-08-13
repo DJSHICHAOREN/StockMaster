@@ -213,15 +213,7 @@ public class StockManager {
                 stock.setLastExactStockPriceIndex(stock.getStockPriceList().size()-1);
                 // 处理策略结果
                 if(strategyResultList.size() > 0){
-                    int index = mStockMonitorPickedStockList.indexOf(stock);
-                    if(index != -1){
-                        mStockMonitorPickedStockList.updateItemAt(index, stock);
-                    }
-                    else{
-                        // 第一次添加股票监控，将股票加入mStockMonitorPickedStockList
-                        int i = mStockMonitorPickedStockList.indexOf(stock);
-                    }
-
+                    updateDataAndFlushStockMonitorStockList(stock);
                 }
             }
             // 刷新UI
@@ -324,6 +316,7 @@ public class StockManager {
         }
         else{
             // 第一次添加股票监控，将股票加入mStockMonitorPickedStockList
+            mStockMonitorPickedStockList.add(stock);
 //            int a = mStockMonitorPickedStockList.indexOf(stock);
         }
     }
