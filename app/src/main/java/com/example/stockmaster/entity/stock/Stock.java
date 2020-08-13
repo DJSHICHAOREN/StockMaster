@@ -390,7 +390,7 @@ public class Stock {
 
         StockManager.flushPriceMonitorStockList(this);
 
-        StockManager.flushStockMonitorStockList(this);
+        StockManager.updateDataAndFlushStockMonitorStockList(this);
     }
 
     public String getId() {

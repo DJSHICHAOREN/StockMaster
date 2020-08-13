@@ -24,7 +24,7 @@ public class StockMonitorSortedListCallback extends SortedListAdapterCallback<St
         StrategyResult strategyResult1 = stock1.getLastStrategyResult(R.integer.strategyMinuteLongToArrange);
         StrategyResult strategyResult2 = stock2.getLastStrategyResult(R.integer.strategyMinuteLongToArrange);
 
-        if(strategyResult1 != null || strategyResult2 != null){
+        if(strategyResult1 != null && strategyResult2 != null){
             return -1 * strategyResult1.getTime().compareTo(strategyResult2.getTime());
         }
         return -1;
