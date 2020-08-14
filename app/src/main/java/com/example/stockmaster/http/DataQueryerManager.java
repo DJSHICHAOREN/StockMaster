@@ -97,6 +97,12 @@ public class DataQueryerManager {
         // 请求最近交易时间
         mSinaDataQueryer.queryLastDealDate();
 
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
         // 请求分时股票数据
         String stockIdStr = "";
         for(String stockId : StockManager.getDefaultStockMonitorStockIdList()) {

@@ -5,7 +5,9 @@ import org.xutils.db.annotation.Table;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 
 @Table(name = "DayMaPrice")
@@ -17,7 +19,7 @@ public class DayMaPrice {
     public String stockId;
 
     @Column(name = "date")
-    public String date;
+    public Date date;
 
     @Column(name = "ma10")
     public float ma10;
@@ -33,10 +35,15 @@ public class DayMaPrice {
     public float mHighestMaPrice;
     public float mLowestMaPrice;
 
-    public DayMaPrice(String stockId, String date, String ma10, String ma30, String ma50, String ma100, String ma250) {
+    public DayMaPrice(String stockId, Date date, String ma10, String ma30, String ma50, String ma100, String ma250) {
         this.id = stockId + "_" + date;
         this.stockId = stockId;
+
         this.date = date;
+        if(this.date == null){
+            this.date = new Date();
+        }
+
         setMAPrice(ma10, ma30, ma50, ma100, ma250);
     }
 
