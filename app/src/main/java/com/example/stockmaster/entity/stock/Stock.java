@@ -367,6 +367,7 @@ public class Stock {
             }
             sum += nowPrice;
             sum /= 5;
+            mDayMaPrice.setMa5(sum);
         }
         else{
             Log.d("lwd", "无法获取五日均价");

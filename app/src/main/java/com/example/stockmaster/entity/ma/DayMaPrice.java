@@ -21,6 +21,8 @@ public class DayMaPrice {
     @Column(name = "date")
     public Date date;
 
+    @Column(name = "ma5")
+    public float ma5;
     @Column(name = "ma10")
     public float ma10;
     @Column(name = "ma30")
@@ -36,7 +38,7 @@ public class DayMaPrice {
     public float mLowestMaPrice;
 
     public DayMaPrice(String stockId, Date date, String ma10, String ma30, String ma50, String ma100, String ma250) {
-        this.id = stockId + "_" + date;
+        this.id = stockId + "_" + date.toString();
         this.stockId = stockId;
 
         this.date = date;
@@ -83,6 +85,14 @@ public class DayMaPrice {
 
     public void setStockId(String stockId) {
         this.stockId = stockId;
+    }
+
+    public float getMa5() {
+        return ma5;
+    }
+
+    public void setMa5(float ma5) {
+        this.ma5 = ma5;
     }
 
     public float getMa10() {
