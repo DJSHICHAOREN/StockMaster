@@ -25,7 +25,7 @@ public class MinuteLongToArrangeFormJudge extends BaseFormJudge {
 
     @Override
     public StockForm judge(Stock stock, List<MaState> maStateList, int kLevel) {
-        if(maStateList == null || maStateList.size() < kLevel + 3){
+        if(maStateList == null || maStateList.size() < kLevel + 11){
             return null;
         }
 
@@ -54,6 +54,7 @@ public class MinuteLongToArrangeFormJudge extends BaseFormJudge {
 
         boolean isSeriation = false; // 均线是否是呈梯子型排列
         boolean isRise = false; // 均线是否上升
+        boolean biggerThanNMaStateBefore = true;
         boolean isHorizontalBefore = false; // 均线之前是否横盘
         boolean isHigherThanBeforeDays = false;
         boolean isMinutePriceUp = false;
@@ -77,6 +78,14 @@ public class MinuteLongToArrangeFormJudge extends BaseFormJudge {
             }
         }
 
+        MaState beforeMaState = lastMaState2;
+        for(int i=0; i<10; i++){
+            if(lastMaState1.getPrice() < beforeMaState.getEndPrice()
+             || lastMaState1.getPrice() < beforeMaState.getBeginPrice()){
+                biggerThanNMaStateBefore = false;
+            }
+            beforeMaState = getMaStateByTime(maStateList, beforeMaState.previousTime);
+        }
 
         // 判断均线在之前是否横盘
 //        if(lastMaState3.getMa5() != 0 && lastMaState3.getMa10() != 0 && lastMaState3.getMa20() != 0){
@@ -97,7 +106,7 @@ public class MinuteLongToArrangeFormJudge extends BaseFormJudge {
 //        }
 
 
-        if(isSeriation && isRise){
+        if(isSeriation && isRise && biggerThanNMaStateBefore){
 //            Log.d("lwd", String.format("%s 买他，价格:%s", lastMaState1.getTime(), lastMaState1.getPrice()));
             return new StockForm(stock.getId(), getFormId(), kLevel, lastMaState1.getTime(), 0, lastMaState1.getPrice());
         }

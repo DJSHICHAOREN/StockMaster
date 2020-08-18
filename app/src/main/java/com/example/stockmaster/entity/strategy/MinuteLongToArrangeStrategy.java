@@ -29,13 +29,23 @@ public class MinuteLongToArrangeStrategy extends BaseStrategy {
         StrategyResult strategyResult = null;
         if(stockForm.getFormId() == R.integer.formMinuteLongToArrange){
 //            Log.d("lwd", String.format("formMinuteLongToArrange time:%s, price:%s", stockForm.getTime(), stockForm.getPrice()));
-            if(lastStockForm == null || isTwoTimeSpaceIntervalBiggerThan(stockForm.getTime(), lastStockForm.getTime())){
+            if(
+                    (lastStockForm == null || isTwoTimeSpaceIntervalBiggerThan(stockForm.getTime(), lastStockForm.getTime()))
+                    && isPriceBiggerThan(stockForm.getPrice(), 2)
+            ){
                 strategyResult = new StrategyResult(stock.getId(), stockForm.getPrice(), getStrategyId(), stockForm.getTime(), stockForm.getType());
                 Log.d("lwd", strategyResult.toString());
             }
             lastStockForm = stockForm;
         }
         return strategyResult;
+    }
+
+    private boolean isPriceBiggerThan(float price1, float price2){
+        if(price1 > price2){
+            return true;
+        }
+        return false;
     }
 
     /**
