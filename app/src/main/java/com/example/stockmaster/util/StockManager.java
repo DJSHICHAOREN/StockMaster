@@ -7,6 +7,7 @@ import android.widget.Toast;
 import androidx.recyclerview.widget.SortedList;
 
 import com.example.stockmaster.R;
+import com.example.stockmaster.entity.stock.DealDate;
 import com.example.stockmaster.entity.stock.Stock;
 import com.example.stockmaster.entity.stock.StockPrice;
 import com.example.stockmaster.entity.ma.DayMaPrice;
@@ -446,7 +447,15 @@ public class StockManager {
     }
 
     public static void setDealDateList(List<Date> mDealDateList) {
-        StockManager.mDealDateList = mDealDateList;
+        if(StockManager.mDealDateList == null){
+            StockManager.mDealDateList = mDealDateList;
+
+            // 将DealDate存入数据库
+            for(Date date : mDealDateList){
+                DealDate dealDate = new DealDate(date);
+
+            }
+        }
     }
 
     public static List<Integer> getDealDayList() {

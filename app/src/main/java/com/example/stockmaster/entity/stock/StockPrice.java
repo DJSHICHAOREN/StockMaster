@@ -17,6 +17,8 @@ public class StockPrice {
     public String stockId;
     @Column(name="time")
     public Date time;
+    @Column(name="dealDate")
+    public Date dealDate; // 交易的日期
     @Column(name="price")
     public float price;
     public float avgPrice = -1;
@@ -41,20 +43,6 @@ public class StockPrice {
         setAvgPrice(avgPrice);
     }
 
-    public StockPrice(String stockId, Date time, float price, QueryType queryType) {
-        setStockId(stockId);
-        this.time = time;
-        this.price = price;
-        setQueryType(queryType);
-    }
-
-    public StockPrice(String stockId, Date time, String price, QueryType queryType){
-        setStockId(stockId);
-        this.time = time;
-        setPrice(price);
-        setQueryType(queryType);
-    }
-
     public void setStockId(String stockId) {
         this.stockId = stockId;
     }
@@ -65,6 +53,12 @@ public class StockPrice {
 
     public void setTime(String timeStr) throws NumberFormatException{
         this.time = convertStringToDate(timeStr);
+
+        Date date = (Date)this.time.clone();
+        date.setHours(0);
+        date.setMinutes(0);
+        date.setSeconds(0);
+        setDealDate(date);
     }
 
 
@@ -128,6 +122,14 @@ public class StockPrice {
 
     public void setAvgPrice(float avgPrice) {
         this.avgPrice = avgPrice;
+    }
+
+    public Date getDealDate() {
+        return dealDate;
+    }
+
+    public void setDealDate(Date dealDate) {
+        this.dealDate = dealDate;
     }
 
     @Override
