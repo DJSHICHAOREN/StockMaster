@@ -78,8 +78,7 @@ public class SinaDataQueryer {
                     public void onErrorResponse(VolleyError error) {
 //                        queryStocksNowPrice(list);
                         Toast.makeText(mContext,"分时数据请求失败", Toast.LENGTH_SHORT).show();
-                        Log.e("lwd",String.format("分时数据请求失败"));
-                        Log.e("lwd", "异常信息：" + error.getMessage());
+                        error.printStackTrace();
                     }
                 });
 

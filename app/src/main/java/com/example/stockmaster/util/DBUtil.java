@@ -2,6 +2,7 @@ package com.example.stockmaster.util;
 
 import android.util.Log;
 
+import com.example.stockmaster.entity.k.K30Minutes;
 import com.example.stockmaster.entity.stock.Stock;
 import com.example.stockmaster.entity.stock.StockPrice;
 import com.example.stockmaster.entity.form.StockForm;
@@ -98,8 +99,11 @@ public class DBUtil {
                     .and("time", "=", stockPrice.getTime())
                     .findFirst();
             // 之前没有存储价格，或价格有更新时，存储价格
-            if(oldStockPrice == null || oldStockPrice.getPrice() != stockPrice.getPrice()){
+            if(oldStockPrice == null){
                 db.saveBindingId(stockPrice);
+            }
+            else if(oldStockPrice.getPrice() != stockPrice.getPrice()){
+                db.saveOrUpdate(stockPrice);
             }
 
         } catch (DbException e) {
@@ -182,6 +186,25 @@ public class DBUtil {
             db.dropTable(StockForm.class);
         } catch (DbException e) {
             e.printStackTrace();
+        }
+    }
+
+    /**
+     * 将符合K30Minutes的价格存入数据库
+     * @param stockPrice
+     */
+    public static void saveOrUpdate30MinuteStockPrice(StockPrice stockPrice){
+        String timeContent = "10:00:00, 10:30:00, " +
+                "11:00:00, 11:30:00, " +
+                "12:00:00, " +
+                "13:30:00, " +
+                "14:00:00, 14:30:00, " +
+                "15:00:00, 15:30:00, " +
+                "16:00:00 ";
+        // 判断price是否是在K30Minute中
+        if(DateUtil.isTimeInContent(timeContent, stockPrice.getTime())){
+
+            saveStockPrice(stockPrice);
         }
     }
 
