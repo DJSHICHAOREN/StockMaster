@@ -127,4 +127,12 @@ public class DateUtil {
         }
         return true;
     }
+
+    public static boolean isTimeInContent(String content, Date time){
+        String minuteTime = convertDateToShortMinuteString(time);
+        if(content.indexOf(minuteTime) != -1){
+            return true;
+        }
+        return false;
+    }
 }

@@ -187,11 +187,7 @@ public class KBase {
     }
 
     private boolean isDateTheKeyTime(Date time){
-        String minuteTime = convertDateToShortMinuteString(time);
-        if(TIME_POINT_STRING.indexOf(minuteTime) != -1){
-            return true;
-        }
-        return false;
+        return DateUtil.isTimeInContent(TIME_POINT_STRING, time);
     }
 
 

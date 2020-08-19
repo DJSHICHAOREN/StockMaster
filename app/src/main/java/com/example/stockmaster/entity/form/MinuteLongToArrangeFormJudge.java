@@ -78,14 +78,15 @@ public class MinuteLongToArrangeFormJudge extends BaseFormJudge {
             }
         }
 
-        MaState beforeMaState = lastMaState2;
-        for(int i=0; i<10; i++){
-            if(lastMaState1.getPrice() < beforeMaState.getEndPrice()
-             || lastMaState1.getPrice() < beforeMaState.getBeginPrice()){
-                biggerThanNMaStateBefore = false;
-            }
-            beforeMaState = getMaStateByTime(maStateList, beforeMaState.previousTime);
-        }
+        // 判断是否超过十日收盘价
+//        MaState beforeMaState = lastMaState2;
+//        for(int i=0; i<10; i++){
+//            if(lastMaState1.getPrice() < beforeMaState.getEndPrice()
+//             || lastMaState1.getPrice() < beforeMaState.getBeginPrice()){
+//                biggerThanNMaStateBefore = false;
+//            }
+//            beforeMaState = getMaStateByTime(maStateList, beforeMaState.previousTime);
+//        }
 
         // 判断均线在之前是否横盘
 //        if(lastMaState3.getMa5() != 0 && lastMaState3.getMa10() != 0 && lastMaState3.getMa20() != 0){
@@ -106,7 +107,7 @@ public class MinuteLongToArrangeFormJudge extends BaseFormJudge {
 //        }
 
 
-        if(isSeriation && isRise && biggerThanNMaStateBefore){
+        if(isSeriation && isRise){
 //            Log.d("lwd", String.format("%s 买他，价格:%s", lastMaState1.getTime(), lastMaState1.getPrice()));
             return new StockForm(stock.getId(), getFormId(), kLevel, lastMaState1.getTime(), 0, lastMaState1.getPrice());
         }

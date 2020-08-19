@@ -22,6 +22,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * 管理股票类：新建股票类，建立新的价格
@@ -46,6 +48,7 @@ public class StockManager {
     private static List<Date> mDealDateList = null;
     private static List<Integer> mDealDayList = new ArrayList<>();
     private static Context mContext;
+    static final ExecutorService mDBThreadPool = Executors.newCachedThreadPool();
     public static void initStockManager(Context context){
         mContext = context;
         List<String> ALL_STOCK_ID_LIST = new ArrayList<>();
@@ -235,6 +238,20 @@ public class StockManager {
         int stockIndex = mStockIdList.indexOf(stockId);
         Stock stock = mStockList.get(stockIndex);
         if(stock != null){
+
+            // 存储StockPrice
+            Runnable runnable = new Runnable() {
+                @Override
+                public void run() {
+                    for(List<StockPrice> stockPriceList : stockPriceEveryDayList){
+                        for(StockPrice stockPrice : stockPriceList){
+                            DBUtil.saveOrUpdate30MinuteStockPrice(stockPrice);
+                        }
+                    }
+                }
+            };
+            mDBThreadPool.execute(runnable);
+
             List<StrategyResult> strategyResultList = stock.addStockPriceListList(stockPriceEveryDayList);
             SuccessRateAnalyser.analyse(strategyResultList);
             stock.calFiveDayHighestAndLowestPrice(stockPriceEveryDayList);
