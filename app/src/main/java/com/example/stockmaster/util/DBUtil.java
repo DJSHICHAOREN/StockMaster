@@ -160,6 +160,20 @@ public class DBUtil {
         return dealDate;
     }
 
+    public static List<DealDate> getAllDealDate(){
+        try {
+            initDBUtil();
+            List<DealDate> dealDateList = db.selector(DealDate.class).orderBy("date").findAll();
+            if(dealDateList == null){
+                return new ArrayList<>();
+            }
+            return dealDateList;
+        } catch (DbException e) {
+            e.printStackTrace();
+        }
+        return new ArrayList<>();
+    }
+
 
 
     public static void  dropStockFormTable(){

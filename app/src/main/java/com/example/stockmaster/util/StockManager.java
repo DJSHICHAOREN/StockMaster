@@ -48,7 +48,9 @@ public class StockManager {
     private static List<Date> mDealDateList = null;
     private static List<Integer> mDealDayList = new ArrayList<>();
     private static Context mContext;
-    static final ExecutorService mDBThreadPool = Executors.newCachedThreadPool();
+    private static final ExecutorService mDBThreadPool = Executors.newCachedThreadPool(); // 存储股票价格线程池
+    private static List<DealDate> mALLDealDateList = new ArrayList<>(); // 数据库存储的所有的交易日期
+    private static DealDate mBeforeDealDate = null; // 今日请求五日交易时间的前一天
     public static void initStockManager(Context context){
         mContext = context;
         List<String> ALL_STOCK_ID_LIST = new ArrayList<>();
@@ -56,7 +58,7 @@ public class StockManager {
         ALL_STOCK_ID_LIST.addAll(DEFAULT_PRICE_MONITOR_STOCK_ID_LIST);
         mAllStockListSize = ALL_STOCK_ID_LIST.size();
         createStocks(ALL_STOCK_ID_LIST, false);
-        DBUtil.dropStockFormTable();
+        mALLDealDateList = DBUtil.getAllDealDate();
 
         Timer timer = new Timer("MinuteStocks");
         timer.schedule(new TimerTask() {
@@ -463,15 +465,31 @@ public class StockManager {
         return mDealDateList;
     }
 
-    public static void setDealDateList(List<Date> mDealDateList) {
-        if(StockManager.mDealDateList == null){
-            StockManager.mDealDateList = mDealDateList;
+    public static void setDealDateList(List<Date> dealDateList) {
+        // 当mDealDateList为null时才更新交易时间，所以到了新的交易日应该将mDealDateList设置为null，
+        // 或者每次进入此函数时比较dealDateList与老的是否相同
+        if(mDealDateList == null && dealDateList != null){
+            mDealDateList = dealDateList;
 
-            // 将DealDate存入数据库
-            for(Date date : mDealDateList){
+            // 将新的DealDate存入数据库
+            for(Date date : dealDateList){
                 DealDate dealDate = new DealDate(date);
                 DBUtil.saveDealDate(dealDate);
             }
+
+            // 寻找前一天的dealDate
+            if(dealDateList.size() > 0 && mALLDealDateList.size() > 0){
+                int dealDateIndex = -1;
+                for(int i=0; i<mALLDealDateList.size(); i++){
+                    if(mALLDealDateList.get(i).getDate().equals(dealDateList.get(0))){
+                        dealDateIndex = i;
+                    }
+                }
+                if(dealDateIndex > 0){
+                    mBeforeDealDate = mALLDealDateList.get(dealDateIndex -1);
+                }
+            }
+
         }
     }
 
