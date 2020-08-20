@@ -118,9 +118,10 @@ public class DBUtil {
             if(oldStockPrice == null){
                 db.saveBindingId(stockPrice);
             }
-            else if(oldStockPrice.getPrice() != stockPrice.getPrice()){
-                db.saveOrUpdate(stockPrice);
-            }
+            // 价格是float，很有可能数字相同但是不相等
+//            else if(oldStockPrice.getPrice() != stockPrice.getPrice()){
+//                db.saveOrUpdate(stockPrice);
+//            }
 
         } catch (DbException e) {
             e.printStackTrace();
@@ -129,9 +130,13 @@ public class DBUtil {
 
     public static List<StockPrice> getOneDayStockPriceList(String stockId, Date date){
         try {
+//            List<StockPrice> dealDateList = db.selector(StockPrice.class)
+//                    .where("stockId", "=", stockId)
+//                    .and("dealDate", "=", date)
+//                    .findAll();
+
             List<StockPrice> dealDateList = db.selector(StockPrice.class)
                     .where("stockId", "=", stockId)
-                    .and("dealDate", "=", date)
                     .findAll();
             if(dealDateList != null){
                 return dealDateList;

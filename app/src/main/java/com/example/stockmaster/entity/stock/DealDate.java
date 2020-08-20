@@ -18,6 +18,7 @@ public class DealDate {
     }
 
     public DealDate(Date date){
+        id = date.toString();
         setDate(date);
     }
 

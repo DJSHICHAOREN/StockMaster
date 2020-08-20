@@ -36,6 +36,7 @@ public class StockPrice {
     }
 
     public StockPrice(String stockId, String time, String price, QueryType queryType, String avgPrice){
+        id = stockId + time.toString();
         setStockId(stockId);
         setTime(time);
         setPrice(price);
