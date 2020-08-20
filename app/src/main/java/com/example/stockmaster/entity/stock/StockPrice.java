@@ -138,7 +138,7 @@ public class StockPrice {
             return "";
         }
         String dealTime = time.getHours()+":"+time.getMinutes()+":"+time.getSeconds();
-        return String.format("stockId：%s, 时间：%s，价格：%s", getStockId(), dealTime , getPriceString());
+        return String.format("stockId：%s, 时间：%s，价格：%s", getStockId(), getTime() , getPriceString());
     }
 
     public String toStringWithId(){

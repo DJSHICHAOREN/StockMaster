@@ -1,5 +1,7 @@
 package com.example.stockmaster.util;
 
+import android.util.Log;
+
 import com.example.stockmaster.entity.stock.StockPrice;
 import com.example.stockmaster.entity.ma.MaState;
 
@@ -23,6 +25,7 @@ public class MaCalculater {
         StockPrice lastStockPrice = stockPriceList.get(priceListLength-1);
         MaState maState = new MaState(lastStockPrice.getTime(), lastStockPrice.getPrice(), stockPriceList.get(priceListLength-2).getTime());
 
+//        Log.d("lwd", "calMaState stockPriceList.size:" + stockPriceList.size());
         // 计算均价
         for(int countedDay : mCountedDayList){
             // 计算均价

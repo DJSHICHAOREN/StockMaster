@@ -220,7 +220,7 @@ public class SinaDataQueryer {
 //                        queryStocksTodayPrice(stockId);
 //                        Toast.makeText(mContext,"数据请求失败", Toast.LENGTH_LONG).show();
                         Log.e("lwd",String.format("%s今日数据请求失败", stockId));
-                        Log.e("lwd", "今日数据请求失败 异常信息：" + error.getMessage());
+                        error.printStackTrace();
                     }
                 });
 

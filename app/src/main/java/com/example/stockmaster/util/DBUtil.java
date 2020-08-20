@@ -214,7 +214,6 @@ public class DBUtil {
                 "16:00:00 ";
         // 判断price是否是在K30Minute中
         if(DateUtil.isTimeInContent(timeContent, stockPrice.getTime())){
-
             saveStockPrice(stockPrice);
         }
     }
