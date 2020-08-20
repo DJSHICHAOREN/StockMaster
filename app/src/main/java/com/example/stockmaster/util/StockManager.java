@@ -470,7 +470,7 @@ public class StockManager {
             // 将DealDate存入数据库
             for(Date date : mDealDateList){
                 DealDate dealDate = new DealDate(date);
-
+                DBUtil.saveDealDate(dealDate);
             }
         }
     }

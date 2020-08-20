@@ -7,8 +7,10 @@ import java.util.Date;
 
 @Table(name = "dealDate")
 public class DealDate {
+    @Column(name = "id", isId = true)
+    public String id;
 
-    @Column(name = "date", isId = true)
+    @Column(name = "date")
     public Date date;
 
     public DealDate(){

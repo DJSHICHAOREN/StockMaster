@@ -3,6 +3,7 @@ package com.example.stockmaster.util;
 import android.util.Log;
 
 import com.example.stockmaster.entity.k.K30Minutes;
+import com.example.stockmaster.entity.stock.DealDate;
 import com.example.stockmaster.entity.stock.Stock;
 import com.example.stockmaster.entity.stock.StockPrice;
 import com.example.stockmaster.entity.form.StockForm;
@@ -14,6 +15,7 @@ import org.xutils.x;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class DBUtil {
@@ -90,6 +92,20 @@ public class DBUtil {
         }
     }
 
+    public static List<Stock> getAllStocks(){
+        try {
+            initDBUtil();
+            List<Stock> stockList = db.selector(Stock.class).orderBy("id").findAll();
+            if(stockList == null){
+                return new ArrayList<>();
+            }
+            return stockList;
+        } catch (DbException e) {
+            e.printStackTrace();
+        }
+        return new ArrayList<>();
+    }
+
     public static void saveStockPrice(StockPrice stockPrice){
         try {
             initDBUtil();
@@ -111,19 +127,6 @@ public class DBUtil {
         }
     }
 
-    public static List<Stock> getAllStocks(){
-        try {
-            initDBUtil();
-            List<Stock> stockList = db.selector(Stock.class).orderBy("id").findAll();
-            if(stockList == null){
-                return new ArrayList<>();
-            }
-            return stockList;
-        } catch (DbException e) {
-            e.printStackTrace();
-        }
-        return new ArrayList<>();
-    }
 
     public static List<StockPrice> getStockPriceList(String stockId){
         try {
@@ -141,44 +144,23 @@ public class DBUtil {
         return new ArrayList<>();
     }
 
-
-    public static void saveStockForm(StockForm stockForm){
+    public static DealDate saveDealDate(DealDate dealDate) {
         try {
             initDBUtil();
-            db.saveOrUpdate(stockForm);
-
-        } catch (DbException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public static List<StockForm> getAllStrategyAnalyseResult(){
-        try {
-            initDBUtil();
-            List<StockForm> stockFormList = db.selector(StockForm.class).findAll();
-            if(stockFormList == null){
-                return new ArrayList<>();
+            DealDate oldDealStock = db.selector(DealDate.class)
+                    .where("date", "=", dealDate.getDate())
+                    .findFirst();
+            if (oldDealStock != null) {
+                return oldDealStock;
             }
-            return stockFormList;
+            db.save(dealDate);
         } catch (DbException e) {
             e.printStackTrace();
         }
-        return null;
+        return dealDate;
     }
 
-    public static List<StockForm> getStockFormByStockId(String stockId){
-        try {
-            initDBUtil();
-            List<StockForm> stockFormList = db.selector(StockForm.class)
-                    .where("stockId", "=", stockId)
-                    .findAll();
 
-            return stockFormList;
-        } catch (DbException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
 
     public static void  dropStockFormTable(){
         try {
