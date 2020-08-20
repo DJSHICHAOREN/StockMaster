@@ -254,6 +254,12 @@ public class StockManager {
             };
             mDBThreadPool.execute(runnable);
 
+            if(mBeforeDealDate != null){
+                List<StockPrice> beforeStockPriceList = DBUtil.getOneDayStockPriceList(stock.getId(), mBeforeDealDate.getDate());
+                stockPriceEveryDayList.add(0, beforeStockPriceList);
+            }
+
+
             List<StrategyResult> strategyResultList = stock.addStockPriceListList(stockPriceEveryDayList);
             SuccessRateAnalyser.analyse(strategyResultList);
             stock.calFiveDayHighestAndLowestPrice(stockPriceEveryDayList);

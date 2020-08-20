@@ -127,6 +127,21 @@ public class DBUtil {
         }
     }
 
+    public static List<StockPrice> getOneDayStockPriceList(String stockId, Date date){
+        try {
+            List<StockPrice> dealDateList = db.selector(StockPrice.class)
+                    .where("stockId", "=", stockId)
+                    .and("dealDate", "=", date)
+                    .findAll();
+            if(dealDateList != null){
+                return dealDateList;
+            }
+        } catch (DbException e) {
+            e.printStackTrace();
+        }
+        return new ArrayList<>();
+    }
+
 
     public static List<StockPrice> getStockPriceList(String stockId){
         try {
