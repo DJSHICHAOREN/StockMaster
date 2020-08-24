@@ -3,6 +3,7 @@ package com.example.stockmaster.entity.form;
 import com.example.stockmaster.entity.stock.Stock;
 import com.example.stockmaster.entity.ma.MaState;
 
+import java.util.Date;
 import java.util.List;
 
 public abstract class BaseFormJudge {
@@ -20,5 +21,14 @@ public abstract class BaseFormJudge {
 
     public void setFormId(int formId) {
         this.formId = formId;
+    }
+
+    public MaState getMaStateByTime(List<MaState> maStateList, Date time){
+        for(int i=maStateList.size()-1; i>=0; i--){
+            if(maStateList.get(i).getTime() == time || maStateList.get(i).getTime().before(time)){
+                return maStateList.get(i);
+            }
+        }
+        return null;
     }
 }
