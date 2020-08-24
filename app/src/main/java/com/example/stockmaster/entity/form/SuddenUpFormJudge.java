@@ -43,7 +43,7 @@ public class SuddenUpFormJudge extends BaseFormJudge {
             lastMaState = getMaStateByTime(maStateList, lastMaState.previousTime);
             float lastAvgPrice = (lastMaState.getHighestPrice() + lastMaState.getLowestPrice())/2;
 
-            float increaseRate = Math.abs(thisAvgPrice - lastAvgPrice) / lastAvgPrice;
+            float increaseRate = (thisAvgPrice - lastAvgPrice) / lastAvgPrice;
             increaseRateList.add(increaseRate);
         }
 
@@ -52,7 +52,7 @@ public class SuddenUpFormJudge extends BaseFormJudge {
         }
 
         for(int i=0; i<increaseRateList.size()-1; i++){
-            if(increaseRateList.get(i) > 0.005){
+            if(Math.abs(increaseRateList.get(i)) > 0.005){
                 isGentlyBefore = false;
             }
         }
