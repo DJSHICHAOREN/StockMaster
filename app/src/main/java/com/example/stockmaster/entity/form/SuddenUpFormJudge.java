@@ -1,10 +1,12 @@
 package com.example.stockmaster.entity.form;
 
+import android.text.format.DateUtils;
 import android.util.Log;
 
 import com.example.stockmaster.R;
 import com.example.stockmaster.entity.stock.Stock;
 import com.example.stockmaster.entity.ma.MaState;
+import com.example.stockmaster.util.DateUtil;
 import com.example.stockmaster.util.StockManager;
 
 import java.util.ArrayList;
@@ -26,9 +28,13 @@ public class SuddenUpFormJudge extends BaseFormJudge {
         int maStateListLength = maStateList.size();
         MaState lastMaState = maStateList.get(maStateListLength-1);
 
+//        if(DateUtil.isDateEqual(lastMaState.getTime(), 24, 9, 30)){
+//            Log.d("lwd", "hello");
+//        }
+
         // 打印开始信息
         if(isPrintBeginJudgeTime){
-            Log.d("lwd", String.format("MinuteLongToArrangeFormJudge 开始分析 time=%s，", lastMaState.getTime().toString()));
+            Log.d("lwd", String.format("SuddenUpFormJudge 开始分析 time=%s，", lastMaState.getTime().toString()));
             isPrintBeginJudgeTime = false;
         }
 
@@ -37,15 +43,24 @@ public class SuddenUpFormJudge extends BaseFormJudge {
         boolean isGentlyBefore = true;
         // 存储前n个块的均价的波动幅度
         List<Float> increaseRateList = new ArrayList<>();
+        String res = "SuddenUpFormJudge endTime:" + lastMaState.getTime();
         for(int i=0; i<testNum; i++){
             float thisAvgPrice = (lastMaState.getHighestPrice() + lastMaState.getLowestPrice())/2;
-
             lastMaState = getMaStateByTime(maStateList, lastMaState.previousTime);
-            float lastAvgPrice = (lastMaState.getHighestPrice() + lastMaState.getLowestPrice())/2;
+            if(lastMaState == null){
+                return null;
+            }
 
+            float lastAvgPrice = (lastMaState.getHighestPrice() + lastMaState.getLowestPrice())/2;
             float increaseRate = (thisAvgPrice - lastAvgPrice) / lastAvgPrice;
-            increaseRateList.add(increaseRate);
+            increaseRateList.add(0, increaseRate);
+
+            res += String.format("(time:%s, lastAvgPrice: %f, thisAvgPrice: %f, increaseRate: %f)"
+                    , DateUtil.convertDateToShortString(lastMaState.getTime()), lastAvgPrice, thisAvgPrice, increaseRate);
         }
+//        Log.d("lwd", res);
+
+
 
         if(increaseRateList.get(increaseRateList.size()-1) > 0.01){
             isSuddenUp = true;

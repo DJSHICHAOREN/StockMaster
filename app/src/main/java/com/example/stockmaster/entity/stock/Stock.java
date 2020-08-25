@@ -131,6 +131,7 @@ public class Stock {
      * @param stockPrice
      */
     public List<StrategyResult> addStockPrice(StockPrice stockPrice){
+//        Log.d("lwd", "addStockPrice time:" + stockPrice.getTime());
         boolean isUpdateStockPrice = false;
         if(mStockPriceList.size() > 1){
             // 判断是否比价格列表中的最后一个价格新
@@ -154,6 +155,7 @@ public class Stock {
         // 若股票价格有更新，则进行形态、策略分析
         List<StrategyResult> strategyResultList = new ArrayList<>();
         if(isUpdateStockPrice) {
+
             // 补充均价
             saveOrReadLatestAveragePrice(stockPrice);
             // 得到形态
