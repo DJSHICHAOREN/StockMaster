@@ -18,7 +18,7 @@ public class SuddenUpFormJudge extends BaseFormJudge {
     @Override
     public StockForm judge(Stock stock, List<MaState> maStateList, int kLevel) {
         int testNum = 5;
-        if(maStateList == null || maStateList.size() < kLevel + testNum + 1){
+        if(maStateList == null || maStateList.size() < kLevel * (testNum + 1)){
             return null;
         }
 
