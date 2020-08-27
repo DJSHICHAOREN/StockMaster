@@ -130,14 +130,11 @@ public class DBUtil {
 
     public static List<StockPrice> getOneDayStockPriceList(String stockId, Date date){
         try {
-//            List<StockPrice> dealDateList = db.selector(StockPrice.class)
-//                    .where("stockId", "=", stockId)
-//                    .and("dealDate", "=", date)
-//                    .findAll();
-
             List<StockPrice> dealDateList = db.selector(StockPrice.class)
                     .where("stockId", "=", stockId)
+                    .and("dealDate", "=", date)
                     .findAll();
+
             if(dealDateList != null){
                 return dealDateList;
             }
