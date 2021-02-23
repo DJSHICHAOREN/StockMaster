@@ -12,6 +12,8 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
 import android.widget.TextView;
 
@@ -46,6 +48,21 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
     public static File mDBFile = null;
 
     private static boolean isStartedService = false;
+
+    private Handler handler = new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            switch (msg.what) {
+                case 1:{
+                    Bundle bundle = msg.getData();
+                    String content = bundle.getString("content");
+                    tv_load_progress.setText(content);
+                    break;
+                }
+            }
+        }
+    };
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -140,7 +157,16 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
 
     public class MainActivityUIManager extends UIManager {
         public void flushLoadProgress(String content){
-            tv_load_progress.setText(content);
+            Message notifyTipsMsg = Message.obtain();
+            notifyTipsMsg.what = 1;
+
+            Bundle bundle = new Bundle();
+            bundle.putString("content", content);
+            notifyTipsMsg.setData(bundle);
+
+            handler.sendMessage(notifyTipsMsg);
+
+
         }
     }
 }

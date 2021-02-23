@@ -42,7 +42,7 @@ public class TestFragment extends Fragment {
             }
 
             mDataQueryerManager.queryOneStockMaOnce(stockId);
-            mDataQueryerManager.queryOneStockFiveDayPrice(stockId, true);
+            mDataQueryerManager.queryOneStockFiveDayPrice(stockId);
         }
     }
 }

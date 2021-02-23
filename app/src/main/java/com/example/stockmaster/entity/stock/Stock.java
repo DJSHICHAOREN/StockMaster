@@ -44,7 +44,7 @@ public class Stock {
     public List<KBase> mKBaseList;
     public List<StrategyResult> mStrategyResultList = new ArrayList<>();
 
-    public boolean isReceiveTodayData = false; //在为true时，才可以接收分钟的数据
+    public boolean isReceiveTodayData = false; //在为true时，才可以分析分钟的数据
     public List<StockPrice> todayStockPriceList = new ArrayList<>();
     public List<StockPrice> lowerStockPriceList = new ArrayList<>();
     public List<StockPrice> higherStockPriceList = new ArrayList<>();

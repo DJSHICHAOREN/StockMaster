@@ -45,7 +45,6 @@ public class BrainService extends Service {
                 public void run() {
                     createNotificationChannel();
                     // 如果在非交易时间
-                    // 请求一次一日价格，为了计算短期买卖点
                     // 请求一次分时价格，为了得到股票名字
                     // 请求一次最近交易时间，均线需要用到
                     // 最开始时请求：分时数据、均价数据
@@ -55,24 +54,22 @@ public class BrainService extends Service {
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
-                    // 定时请求最近交易时间
+
+//                    // 定时请求最近交易时间
                     mDataQueryerManager.beginQueryLastDealDate();
+
                     // 定时请求日均线数据
                     mDataQueryerManager.beginQueryMaPrice();
+
                     // 定时请求分时价格
                     mDataQueryerManager.beginQueryMinutePrice();
-                    // 请求一次五日价格
-                    mDataQueryerManager.queryFiveDayPrice();
-//                    try {
-//                        Thread.sleep(5000);
-//                    } catch (InterruptedException e) {
-//                        e.printStackTrace();
-//                    }
-                    // 定时请求今天价格
-                    mDataQueryerManager.beginQueryTodayPrice();
 
-                    // 从数据库加载股票价格的均线
-//                StockManager.loadStockPrice();
+//                    // 请求一次五日价格
+                    mDataQueryerManager.queryFiveDayPrice();
+
+//                    // 定时请求今天价格
+//                    mDataQueryerManager.beginQueryTodayPrice();
+
                 }
             }).start();
         }

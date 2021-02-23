@@ -215,14 +215,15 @@ public class StockManager {
             Log.d("lwd", "addOneDayStockPriceListNew:" + stockPriceList.get(stockPriceList.size()-1).toString());
 
             // 在添加今天的数据之前要清空之前的价格数据
-            if(stock.isReceiveTodayData){
-                List<StrategyResult> strategyResultList = stock.addStockPriceList(stockPriceList);
-                stock.setLastExactStockPriceIndex(stock.getStockPriceList().size()-1);
-                // 处理策略结果
-                if(strategyResultList.size() > 0){
-                    updateDataAndFlushStockMonitorStockList(stock);
-                }
-            }
+//            if(stock.isReceiveTodayData){
+//                List<StrategyResult> strategyResultList = stock.addStockPriceList(stockPriceList);
+//                stock.setLastExactStockPriceIndex(stock.getStockPriceList().size()-1);
+//                // 处理策略结果
+//                if(strategyResultList.size() > 0){
+//                    updateDataAndFlushStockMonitorStockList(stock);
+//                }
+//            }
+
             // 刷新UI
             if(mMainActivityUIManager != null){
                 mMainActivityUIManager.flushLoadProgress(String.format("获取一日准确数据，time：%s",
@@ -242,29 +243,32 @@ public class StockManager {
         Stock stock = mStockList.get(stockIndex);
         if(stock != null){
 
-            if(mBeforeNDealDateList.size() > 0) {
-                for (int i = 0; i < mBeforeNDealDateList.size(); i++) {
-                    List<StockPrice> beforeStockPriceList = DBUtil.getOneDayStockPriceList(stock.getId(), mBeforeNDealDateList.get(i).getDate());
-                    stockPriceEveryDayList.add(i, beforeStockPriceList);
-                }
-            }
+//            if(mBeforeNDealDateList.size() > 0) {
+//                for (int i = 0; i < mBeforeNDealDateList.size(); i++) {
+//                    List<StockPrice> beforeStockPriceList = DBUtil.getOneDayStockPriceList(stock.getId(), mBeforeNDealDateList.get(i).getDate());
+//                    stockPriceEveryDayList.add(i, beforeStockPriceList);
+//                }
+//            }
+//
+//            List<StrategyResult> strategyResultList = stock.addStockPriceListList(stockPriceEveryDayList);
+//            SuccessRateAnalyser.analyse(strategyResultList);
+//            stock.calFiveDayHighestAndLowestPrice(stockPriceEveryDayList);
+//            stock.calFiveDayHighestEndPrice(stockPriceEveryDayList);
+//            stock.setLastExactStockPriceIndex(stock.getStockPriceList().size()-1);
+//
+//            // 更新UI
+//            if(mStockMonitorUIManager != null){
+//                if(stock.getStrategyResultMap().get(R.integer.strategyMinuteLongToArrange).size() > 0){
+//                    mStockMonitorPickedStockList.add(stock);
+//                }
+//            }
 
-            List<StrategyResult> strategyResultList = stock.addStockPriceListList(stockPriceEveryDayList);
-            SuccessRateAnalyser.analyse(strategyResultList);
-            stock.calFiveDayHighestAndLowestPrice(stockPriceEveryDayList);
-            stock.calFiveDayHighestEndPrice(stockPriceEveryDayList);
-            stock.setLastExactStockPriceIndex(stock.getStockPriceList().size()-1);
-
-            // 更新UI
-            if(mStockMonitorUIManager != null){
-                if(stock.getStrategyResultMap().get(R.integer.strategyMinuteLongToArrange).size() > 0){
-                    mStockMonitorPickedStockList.add(stock);
-                }
-            }
+            // 首页提示
             mNowLoadedStockListSize++;
             if(mMainActivityUIManager != null){
                 mMainActivityUIManager.flushLoadProgress(String.format("初始化进度：%d/%d", mNowLoadedStockListSize, mAllStockListSize));
             }
+
             Log.d("lwd", String.format("%s 五日关键数据加载完毕 进度：%d/%d", stockId, mNowLoadedStockListSize, mAllStockListSize));
 
             // 存储StockPrice，

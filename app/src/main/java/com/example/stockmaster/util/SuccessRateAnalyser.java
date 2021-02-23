@@ -17,21 +17,21 @@ public class SuccessRateAnalyser {
             return;
         }
         SuccessResult successResult = new SuccessResult(strategyResultList.get(0).getStockId());
-        StrategyResult buyStrategy = null;
-        StrategyResult saleStrategy = null;
+        StrategyResult buyStrategyResult = null;
+        StrategyResult saleStrategyResult = null;
         for (StrategyResult strategyResult: strategyResultList) {
             if(strategyResult.getStrategyId() != R.integer.strategyMinuteRise){
                 continue;
             }
-            if(buyStrategy == null && strategyResult.getType()==0){
-                buyStrategy = strategyResult;
+            if(buyStrategyResult == null && strategyResult.getType()==0){
+                buyStrategyResult = strategyResult;
             }
-            else if(buyStrategy != null && strategyResult.getType()==1){
-                saleStrategy = strategyResult;
-                successResult.addBuyAndSaleStrategyResult(buyStrategy, saleStrategy);
+            else if(buyStrategyResult != null && strategyResult.getType()==1){
+                saleStrategyResult = strategyResult;
+                successResult.addBuyAndSaleStrategyResult(buyStrategyResult, saleStrategyResult);
 
-                buyStrategy = null;
-                saleStrategy = null;
+                buyStrategyResult = null;
+                saleStrategyResult = null;
             }
         }
         Log.d("lwd", successResult.toString());

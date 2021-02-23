@@ -20,7 +20,6 @@ import java.util.concurrent.Executors;
 public class DataQueryerManager {
     private static DataQueryerManager instance;
     private SinaDataQueryer mSinaDataQueryer;
-    final ExecutorService mCachedThreadPool = Executors.newCachedThreadPool();
 
     public DataQueryerManager(Context context){
         // 创建工具实例
@@ -34,8 +33,8 @@ public class DataQueryerManager {
         return instance;
     }
 
-    public void queryOneStockFiveDayPrice(String stockId, boolean isNewStock){
-        mSinaDataQueryer.queryStocksFiveDayPrice(stockId, isNewStock);
+    public void queryOneStockFiveDayPrice(String stockId){
+        mSinaDataQueryer.queryStocksFiveDayPrice(stockId);
     }
 
     /**
@@ -44,26 +43,13 @@ public class DataQueryerManager {
     public void queryFiveDayPrice(){
         // 每天只请求一次五日的价格
         for(final String stockId : StockManager.getDefaultStockMonitorStockIdList()) {
-            Runnable runnable = new Runnable() {
-                @Override
-                public void run() {
-                    queryOneStockFiveDayPrice(stockId, false);
-//                    try {
-//                        Thread.sleep(1000);
-//                    } catch (InterruptedException e) {
-//                        e.printStackTrace();
-//                    }
-                }
-            };
-            mCachedThreadPool.execute(runnable);
-
+            queryOneStockFiveDayPrice(stockId);
         }
     }
 
 
     /**
      * 请求股票今天的价格
-     * 每半个小时请求一次今日价格和均价
      */
     public void beginQueryTodayPrice(){
         Log.d("lwd","获取今天股票数据");
@@ -76,21 +62,14 @@ public class DataQueryerManager {
                     return;
                 }
                 for(final String stockId : StockManager.getDefaultStockMonitorStockIdList()) {
-                    Runnable runnable = new Runnable() {
-                        @Override
-                        public void run() {
-                            mSinaDataQueryer.queryStocksTodayPrice(stockId);
-                        }
-                    };
-                    mCachedThreadPool.execute(runnable);
+                    mSinaDataQueryer.queryStocksTodayPrice(stockId);
                 }
             }
-        }, 5000, 1000*60*3); // 1 seconds
+        }, 5000, 1000*60*30);
     }
 
     /**
      * 如果不在交易时间，则只请求一次今天的股票数据和分时股票数据
-     * 请求今天股票数据为了分析今日买卖点
      * 请求分时股票数据为了得到股票名称
      */
     public void queryBeginOnce(){
@@ -118,13 +97,7 @@ public class DataQueryerManager {
     public void queryAllMaOnce(){
 
         for(final String stockId : StockManager.getDefaultStockMonitorStockIdList()) {
-            Runnable runnable = new Runnable() {
-                @Override
-                public void run() {
-                    queryOneStockMaOnce(stockId);
-                }
-            };
-            mCachedThreadPool.execute(runnable);
+            queryOneStockMaOnce(stockId);
         }
     }
 
@@ -169,7 +142,7 @@ public class DataQueryerManager {
                 }
 
             }
-        }, 1000*60*30, 1000*60*30); // 1 seconds
+        }, 1000*60*60, 1000*60*60); // 1 seconds
     }
 
     /**

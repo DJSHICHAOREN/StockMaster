@@ -76,7 +76,6 @@ public class SinaDataQueryer {
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-//                        queryStocksNowPrice(list);
                         Toast.makeText(mContext,"分时数据请求失败", Toast.LENGTH_SHORT).show();
                         error.printStackTrace();
                     }
@@ -91,7 +90,7 @@ public class SinaDataQueryer {
      * 查询股票的五日均价
      * @param stockId
      */
-    public void queryStocksFiveDayPrice(String stockId, boolean isNewStock){
+    public void queryStocksFiveDayPrice(String stockId){
         queryStocksNDayPrice(stockId, 5);
 //        queryStocksNDayPriceSync(stockId, 5);
     }
@@ -142,7 +141,7 @@ public class SinaDataQueryer {
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        queryStocksFiveDayPrice(stockId, false);
+                        queryStocksFiveDayPrice(stockId);
 //                        Toast.makeText(mContext,"数据请求失败", Toast.LENGTH_LONG).show();
                         Log.e("lwd",String.format("%s请求%s天数据失败", stockId, dayCount));
                         Log.e("lwd", "异常信息：" + error.getMessage());
@@ -204,7 +203,7 @@ public class SinaDataQueryer {
                     public void onResponse(String response) {
                         try{
                             List<StockPrice> stockPriceList = mResponseStringToObject.sinaTodayPriceResponseToObjectList(response, StockPrice.QueryType.TODAY);
-                            StockManager.addOneDayStockPriceListNew(stockPriceList, stockId);
+//                            StockManager.addOneDayStockPriceListNew(stockPriceList, stockId);
                             Log.d("lwd", String.format("%s 今日最准数据添加完毕", stockId));
                         }
                         // 得到的时间为空字符串，则抛出异常
@@ -241,7 +240,7 @@ public class SinaDataQueryer {
             stockIdCode = "hk" + stockIdCode;
         }
         final String stockId = stockIdCode;
-        String url = "http://web.ifzq.gtimg.cn/appstock/hk/Hkinchot/averageVolatility?code="+ stockId.replace("hk", "") + "&callback=:::" + stockId + ":::";
+        String url = "https://web.ifzq.gtimg.cn/appstock/hk/Hkinchot/averageVolatility?code="+ stockId.replace("hk", "") + "&callback=:::" + stockId + ":::";
 
         // Request a string response from the provided URL.
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
